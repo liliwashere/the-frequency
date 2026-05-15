@@ -20,47 +20,37 @@ body {
 }
 
 /* ── HEADER ── */
-.masthead {
-  background: #fff;
-  border-bottom: 1px solid #e8e5df;
-  padding: 20px 28px 0;
+.header {
   position: sticky; top: 0; z-index: 100;
+  background: #fff; border-bottom: 1px solid #e8e5df;
+  padding: 10px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
 }
-.masthead-top {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding-bottom: 14px;
-  gap: 12px; flex-wrap: wrap;
-}
-.masthead-meta {
-  display: flex; align-items: center; gap: 10px;
-}
+.header-left { display: flex; align-items: center; gap: 10px; }
 .logo {
-  width: 36px; height: 36px;
+  width: 38px; height: 38px;
   background: linear-gradient(135deg, #6c47ff, #a855f7);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
+  font-size: 20px; color: #fff; flex-shrink: 0;
 }
-.header-title { font-size: 17px; font-weight: 700; color: #111; }
-.header-sub { font-size: 12px; color: #888; margin-top: 1px; }
+.title { font-size: 17px; font-weight: 700; color: #1a1a1a; }
+.subtitle { font-size: 12px; color: #888; }
+.header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .issue-badge {
-  background: #f0edff; color: #6c47ff;
-  font-size: 11px; font-weight: 600;
-  padding: 4px 10px; border-radius: 20px;
-  letter-spacing: 0.3px;
+  font-size: 11px; background: #ede9ff; color: #6c47ff;
+  padding: 3px 9px; border-radius: 20px; font-weight: 600;
 }
-.masthead-actions { display: flex; gap: 8px; align-items: center; }
-.btn-ghost {
+.share-btn {
   font-size: 12px; font-weight: 600;
-  padding: 6px 13px;
-  border: 1px solid #d4cff7; border-radius: 20px;
-  background: #fff; color: #6c47ff;
-  cursor: pointer; text-decoration: none;
-  transition: background 0.15s;
-  font-family: inherit;
+  padding: 7px 14px; background: #6c47ff; color: #fff;
+  border: none; border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  text-decoration: none; font-family: inherit;
 }
-.btn-ghost:hover { background: #f0edff; }
+.share-btn:hover { background: #5538e6; }
+.share-btn.ghost { background: #f0edff; color: #6c47ff; }
 
 /* Nav tabs */
 .nav {
@@ -85,36 +75,10 @@ body {
 .panel { display: none; }
 .panel.active { display: block; }
 
-/* ── SUBSCRIBE STRIP ── */
-.sub-strip {
-  background: linear-gradient(135deg, #6c47ff, #9333ea);
-  color: #fff;
-  padding: 14px 20px;
-  border-radius: 12px;
-  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
-  margin-bottom: 24px;
-}
-.sub-strip-text { flex: 1; min-width: 180px; font-size: 13px; font-weight: 500; line-height: 1.4; }
-.sub-strip-text strong { font-weight: 700; }
-.sub-note { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px; }
-.sub-form { display: flex; gap: 8px; flex-wrap: wrap; }
-.sub-input {
-  font-size: 13px; padding: 8px 13px;
-  border: 1.5px solid rgba(255,255,255,0.3);
-  border-radius: 8px; background: rgba(255,255,255,0.15);
-  color: #fff; width: 200px; outline: none;
-  transition: border-color 0.12s; font-family: inherit;
-}
-.sub-input::placeholder { color: rgba(255,255,255,0.5); }
-.sub-input:focus { border-color: rgba(255,255,255,0.7); }
-.sub-btn {
-  font-size: 12px; font-weight: 700;
-  padding: 8px 18px; background: #fff; color: #6c47ff;
-  border: none; border-radius: 8px; cursor: pointer;
-  transition: background 0.12s; white-space: nowrap;
-  font-family: inherit;
-}
-.sub-btn:hover { background: #f0edff; }
+/* ── SUBSCRIBE NOTE ── */
+.subscribe-note { font-size: 12px; color: #888; margin-bottom: 20px; }
+.subscribe-note a { color: #6c47ff; text-decoration: none; font-weight: 500; }
+.subscribe-note a:hover { text-decoration: underline; }
 
 /* ── OVERVIEW ── */
 .issue-header {
@@ -356,7 +320,7 @@ body {
 .footer-link:hover { text-decoration: underline; }
 
 @media(max-width:600px){
-  .masthead { padding: 14px 16px 0; }
+  .header { padding: 10px 16px; }
   .body-wrap { padding: 20px 16px 48px; }
   .stats-row { grid-template-columns: repeat(2,1fr); }
   .lead { grid-template-columns: 1fr; }
@@ -366,52 +330,35 @@ body {
 <body>
 
 <!-- HEADER -->
-<div class="masthead">
-  <div class="masthead-top">
-    <div class="masthead-meta">
-      <div class="logo">🧠</div>
-      <div>
-        <div class="header-title">AI Radar</div>
-        <div class="header-sub">Curated intelligence · Real builders · Zero hype</div>
-      </div>
-      <span class="issue-badge">Issue #1 · May 15, 2026</span>
-    </div>
-    <div class="masthead-actions">
-      <a class="btn-ghost" href="archive.html">Archive</a>
-      <button class="btn-ghost" onclick="shareDigest()">↗ Share</button>
+<header class="header">
+  <div class="header-left">
+    <div class="logo">🧠</div>
+    <div>
+      <div class="title">AI Radar</div>
+      <div class="subtitle">Lilit's curated digest · Twice a week</div>
     </div>
   </div>
-  <div class="nav">
-    <div class="nav-tab active" onclick="switchTab('overview')" data-tab="overview">Overview</div>
-    <div class="nav-tab" onclick="switchTab('builders')" data-tab="builders">Builders</div>
-    <div class="nav-tab" onclick="switchTab('pods')" data-tab="pods">Podcasts</div>
-    <div class="nav-tab" onclick="switchTab('research')" data-tab="research">Research</div>
-    <div class="nav-tab" onclick="switchTab('business')" data-tab="business">AI × Business</div>
-    <div class="nav-tab" onclick="switchTab('authors')" data-tab="authors">Authors</div>
-    <div class="nav-tab" onclick="switchTab('sources')" data-tab="sources">Sources</div>
+  <div class="header-right">
+    <span class="issue-badge">Issue #1 · May 15, 2026</span>
+    <a class="share-btn ghost" href="archive.html">Archive</a>
+    <button class="share-btn" onclick="shareDigest()">↗ Share</button>
   </div>
+</header>
+<div class="nav">
+  <div class="nav-tab active" onclick="switchTab('overview')" data-tab="overview">Overview</div>
+  <div class="nav-tab" onclick="switchTab('builders')" data-tab="builders">Builders</div>
+  <div class="nav-tab" onclick="switchTab('pods')" data-tab="pods">Podcasts</div>
+  <div class="nav-tab" onclick="switchTab('research')" data-tab="research">Research</div>
+  <div class="nav-tab" onclick="switchTab('business')" data-tab="business">AI × Business</div>
+  <div class="nav-tab" onclick="switchTab('authors')" data-tab="authors">Authors</div>
+  <div class="nav-tab" onclick="switchTab('sources')" data-tab="sources">Sources</div>
 </div>
 
 <!-- BODY -->
 <div class="body-wrap">
 
-  <!-- ══ SUBSCRIBE STRIP ══
-       Sign up free at substack.com, create a publication, then
-       replace YOUR-PUBLICATION below with your Substack subdomain.
-       e.g. if your Substack is airadar.substack.com use "airadar"
-  -->
-  <div class="sub-strip">
-    <div class="sub-strip-text">
-      <strong>Get AI Radar in your inbox.</strong>
-      Every Tuesday &amp; Thursday — curated, not aggregated.
-      <div class="sub-note">Free · No spam · Unsubscribe anytime · Powered by Substack</div>
-    </div>
-    <form class="sub-form" action="https://lilitaidigest.substack.com/api/v1/free?nojs=true" method="post" target="_blank" onsubmit="trackSubscribe(event)">
-      <div>
-        <input class="sub-input" type="email" name="email" placeholder="your@email.com" required>
-      </div>
-      <button class="sub-btn" type="submit">Subscribe</button>
-    </form>
+  <div class="subscribe-note">
+    Want AI Radar in your inbox? <a href="mailto:lilitalent@gmail.com?subject=Subscribe to AI Radar">Email me to subscribe</a> — free, every Tuesday &amp; Thursday.
   </div>
 
   <!-- ══ OVERVIEW ══ -->
