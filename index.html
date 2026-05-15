@@ -77,10 +77,11 @@ body {
 
 /* ── SUBSCRIBE FORM ── */
 .sub-bar {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  display: flex; flex-direction: column; gap: 8px;
   margin-bottom: 20px;
 }
-.sub-bar-label { font-size: 12px; color: #888; flex-shrink: 0; }
+.sub-bar-label { font-size: 12px; color: #888; }
+.sub-bar-inputs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .sub-bar-input {
   font-size: 13px; padding: 6px 12px;
   border: 1.5px solid #e8e5df; border-radius: 8px;
@@ -377,9 +378,12 @@ body {
 
   <div class="sub-bar">
     <span class="sub-bar-label">Get AI Radar in your inbox — free, twice a week.</span>
-    <input class="sub-bar-input" type="email" id="sub-email" placeholder="your@email.com">
-    <button class="sub-bar-btn" onclick="handleSubscribe()">Subscribe</button>
-    <span class="sub-bar-msg" id="sub-msg"></span>
+    <div class="sub-bar-inputs">
+      <input class="sub-bar-input" type="text" id="sub-name" placeholder="First name" style="width:130px">
+      <input class="sub-bar-input" type="email" id="sub-email" placeholder="your@email.com">
+      <button class="sub-bar-btn" onclick="handleSubscribe()">Subscribe</button>
+      <span class="sub-bar-msg" id="sub-msg"></span>
+    </div>
   </div>
 
   <!-- ══ OVERVIEW ══ -->
@@ -945,15 +949,17 @@ body {
     }
   }
 
-  const SUPABASE_URL = 'YOUR_SUPABASE_URL';       // e.g. https://xxxx.supabase.co
-  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // anon/public key from project settings
-  // Requires a `subscribers` table with an `email` column (text, unique)
+  const SUPABASE_URL = 'https://mhociwppaqolnlnsynfu.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ob2Npd3BwYXFvbG5sbnN5bmZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDQ1NjcsImV4cCI6MjA5NDQyMDU2N30.Qgtu4BiJfvmOsnlbzwG4CD8WsMHC1qOOzwqFWHUgqIk';
+  // Requires a `subscribers` table: email (text, unique), name (text, nullable)
   // RLS: enable it, add INSERT policy for anon role only — no SELECT/DELETE
 
   async function handleSubscribe() {
     const input = document.getElementById('sub-email');
+    const nameInput = document.getElementById('sub-name');
     const msg = document.getElementById('sub-msg');
     const email = input.value.trim();
+    const name = nameInput.value.trim();
     if (!email) return;
     msg.style.color = '#888';
     msg.textContent = 'Saving…';
@@ -966,12 +972,12 @@ body {
           'Content-Type': 'application/json',
           'Prefer': 'return=minimal'
         },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, name: name || null })
       });
       if (res.ok || res.status === 409) {
         msg.style.color = '#16a34a';
         msg.textContent = res.status === 409 ? 'Already subscribed!' : '✓ You\'re on the list.';
-        input.value = '';
+        input.value = ''; nameInput.value = '';
         umami.track('Subscribe');
       } else {
         throw new Error(res.status);
