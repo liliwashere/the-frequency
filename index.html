@@ -77,10 +77,11 @@ body {
 
 /* ── SUBSCRIBE FORM ── */
 .sub-bar {
-  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  display: flex; flex-direction: column; gap: 8px;
   margin-bottom: 20px;
 }
-.sub-bar-label { font-size: 12px; color: #888; flex-shrink: 0; }
+.sub-bar-label { font-size: 12px; color: #888; }
+.sub-bar-inputs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .sub-bar-input {
   font-size: 13px; padding: 6px 12px;
   border: 1.5px solid #e8e5df; border-radius: 8px;
@@ -377,10 +378,12 @@ body {
 
   <div class="sub-bar">
     <span class="sub-bar-label">Get AI Radar in your inbox — free, twice a week.</span>
-    <input class="sub-bar-input" type="text" id="sub-name" placeholder="First name" style="width:130px">
-    <input class="sub-bar-input" type="email" id="sub-email" placeholder="your@email.com">
-    <button class="sub-bar-btn" onclick="handleSubscribe()">Subscribe</button>
-    <span class="sub-bar-msg" id="sub-msg"></span>
+    <div class="sub-bar-inputs">
+      <input class="sub-bar-input" type="text" id="sub-name" placeholder="First name" style="width:130px">
+      <input class="sub-bar-input" type="email" id="sub-email" placeholder="your@email.com">
+      <button class="sub-bar-btn" onclick="handleSubscribe()">Subscribe</button>
+      <span class="sub-bar-msg" id="sub-msg"></span>
+    </div>
   </div>
 
   <!-- ══ OVERVIEW ══ -->
