@@ -995,6 +995,11 @@ body {
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('ref') === 'newsletter') {
+      umami.track('Newsletter Click', { issue: params.get('issue') || 'unknown' });
+    }
+
     document.querySelectorAll('a[target="_blank"]').forEach(link => {
       link.addEventListener('click', () => {
         const label = link.closest('[class*="article"],[class*="hit"],[class*="pod"],[class*="source"]')
