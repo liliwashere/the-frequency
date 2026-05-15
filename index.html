@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AI Radar — Lilit's Digest</title>
 <meta name="description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
-<meta property="og:title" content="AI Radar — Issue #2 · May 14, 2026">
+<meta property="og:title" content="AI Radar — Issue #1 · May 14, 2026">
 <meta property="og:description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
 <meta property="og:type" content="website">
 
@@ -85,6 +85,17 @@
     font-size: 11px; font-weight: 600;
     padding: 4px 10px; border-radius: 20px; letter-spacing: 0.3px;
   }
+  .archive-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--white);
+    color: var(--purple);
+    border: 1px solid var(--purple-mid); cursor: pointer;
+    font-size: 12px; font-weight: 600;
+    padding: 6px 13px; border-radius: 20px;
+    transition: background 0.15s;
+    font-family: inherit; text-decoration: none;
+  }
+  .archive-btn:hover { background: var(--purple-light); }
   .share-btn {
     display: flex; align-items: center; gap: 5px;
     background: var(--purple);
@@ -283,6 +294,38 @@
     border-radius: 12px; padding: 16px 20px; color: #fff;
     margin-bottom: 20px; display: flex; align-items: center; gap: 14px;
   }
+  /* ── SUBSCRIBE BANNER ── */
+  .subscribe-banner {
+    background: var(--white);
+    border: 1.5px solid var(--purple-mid);
+    border-radius: 14px;
+    padding: 22px 24px;
+    margin: 28px 0 0;
+    display: flex; align-items: center; gap: 20px;
+    flex-wrap: wrap;
+  }
+  .subscribe-left { flex: 1; min-width: 200px; }
+  .subscribe-title { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 4px; }
+  .subscribe-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .subscribe-form { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
+  .subscribe-input {
+    font-size: 13px; font-family: inherit;
+    padding: 9px 14px; border-radius: 8px;
+    border: 1px solid var(--border);
+    outline: none; width: 210px;
+    transition: border-color 0.15s;
+  }
+  .subscribe-input:focus { border-color: var(--purple); }
+  .subscribe-btn {
+    font-size: 13px; font-weight: 600; font-family: inherit;
+    padding: 9px 18px; border-radius: 8px;
+    background: var(--purple); color: #fff;
+    border: none; cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+  .subscribe-btn:hover { background: #5a38e8; }
+  .subscribe-note { font-size: 11px; color: #aaa; margin-top: 7px; }
   .schedule-icon { font-size: 28px; }
   .schedule-title { font-size: 14px; font-weight: 700; }
   .schedule-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
@@ -333,11 +376,12 @@
     <div class="logo">🧠</div>
     <div>
       <div class="header-title">AI Radar</div>
-      <div class="header-sub">Lilit's curated digest · Twice a week</div>
+      <div class="header-sub">Lilit's curated digest · Tuesdays & Thursdays</div>
     </div>
   </div>
   <div class="header-right">
-    <div class="issue-badge">Issue #2 · May 14, 2026</div>
+    <div class="issue-badge">Issue #1 · May 14, 2026</div>
+    <a class="archive-btn" href="archive.html">📂 Archive</a>
     <button class="share-btn" onclick="shareDigest()">
       ↗ Share digest
     </button>
@@ -375,7 +419,7 @@
   <!-- ══ OVERVIEW ══ -->
   <div class="panel active" id="panel-overview">
     <div class="date-banner">
-      📅 <strong>Wednesday, May 14 2026</strong> — Next issue Saturday. Curated from 17 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news.
+      📅 <strong>Tuesday, May 14 2026</strong> — Next issue Thursday. Curated from 17 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
     </div>
     <div class="stat-strip">
       <div class="stat-box"><div class="stat-number">8</div><div class="stat-label">Stories this issue</div></div>
@@ -384,7 +428,28 @@
       <div class="stat-box"><div class="stat-number">9</div><div class="stat-label">Authors on radar</div></div>
     </div>
 
-    <div class="section-label">🔥 Editor's pick</div>
+    <!-- SUBSCRIBE BANNER
+         To activate: sign up free at beehiiv.com, create a publication,
+         go to Settings → Forms → Embed Form, and replace the action URL below
+         with your Beehiiv embed action URL. It will look like:
+         https://embeds.beehiiv.com/XXXXXXXX
+         Until then the form still collects emails visually (replace with your Beehiiv URL to make it live).
+    -->
+    <div class="subscribe-banner">
+      <div class="subscribe-left">
+        <div class="subscribe-title">📬 Get it in your inbox</div>
+        <div class="subscribe-sub">New issue every Tuesday & Thursday morning. No spam, no AI-generated filler — just the digest.</div>
+        <div class="subscribe-note">Free · Unsubscribe anytime · Powered by Beehiiv</div>
+      </div>
+      <form class="subscribe-form" action="https://embeds.beehiiv.com/REPLACE-WITH-YOUR-BEEHIIV-URL" method="post" target="_blank" onsubmit="trackSubscribe(event)">
+        <div>
+          <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" required>
+        </div>
+        <button class="subscribe-btn" type="submit">Subscribe →</button>
+      </form>
+    </div>
+
+    <div class="section-label" style="margin-top:28px">🔥 Editor's pick</div>
     <div class="card featured clickable" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
       <div class="featured-badge">✦ Must read</div>
       <div class="card-header">
@@ -923,7 +988,7 @@
     <div class="schedule-banner">
       <div class="schedule-icon">📬</div>
       <div>
-        <div class="schedule-title">Refreshes every Wednesday & Saturday at 9am</div>
+        <div class="schedule-title">Refreshes every Tuesday & Thursday at 9am</div>
         <div class="schedule-sub">17 sources tracked. Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
       </div>
     </div>
@@ -1021,6 +1086,12 @@
 <div class="toast" id="toast">✓ Link copied to clipboard</div>
 
 <script>
+  // ── Subscribe tracking
+  function trackSubscribe(e) {
+    umami.track('Subscribe Click');
+    // form submits normally to Beehiiv after tracking
+  }
+
   // ── Tab switching + Plausible event
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
