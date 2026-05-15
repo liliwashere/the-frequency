@@ -3,923 +3,1096 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Radar — Lilit's Digest</title>
+<title>AI Radar — Issue #1 · May 15, 2026</title>
 <meta name="description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
-<meta property="og:title" content="AI Radar — Issue #1 · May 14, 2026">
+<meta property="og:title" content="AI Radar — Issue #1 · May 15, 2026">
 <meta property="og:description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
 <meta property="og:type" content="website">
-
-<!-- ═══ UMAMI ANALYTICS (FREE) ═══
-     Setup steps (3 minutes):
-     1. Sign up free at https://cloud.umami.is — no credit card needed
-     2. Click "Add website" → enter your Netlify URL
-     3. Umami gives you a script tag with YOUR unique data-website-id
-     4. Replace YOUR-WEBSITE-ID below with that ID
-     5. Re-upload this file to Netlify
-     Free tier: 100k events/month, 3 sites, forever free.
-     Tracks: page views, visitors, countries, referrers + custom events below.
--->
 <script defer src="https://cloud.umami.is/script.js" data-website-id="06dbf26f-457b-473a-a135-27e85ed3ea7c"></script>
-<script>
-  // Umami custom event helper — safe to call even before script loads
-  window.umami = window.umami || { track: function() {} };
-</script>
-
+<script>window.umami = window.umami || { track: function() {} };</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    color-scheme: light;
-    --purple: #6c47ff;
-    --purple-light: #f0edff;
-    --purple-mid: #c4b5fd;
-    --green: #16a34a;
-    --green-light: #f0faf3;
-    --orange: #ea580c;
-    --orange-light: #fff8ef;
-    --blue: #2563eb;
-    --blue-light: #eff6ff;
-    --red: #dc2626;
-    --red-light: #fff1f1;
-    --gray: #888;
-    --border: #e8e5df;
-    --bg: #f7f6f3;
-    --white: #fff;
-    --text: #1a1a1a;
-    --muted: #555;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
+:root {
+  color-scheme: light;
+  /* Editorial palette — ink on paper */
+  --ink:       #0f0f0f;
+  --ink-2:     #2a2a2a;
+  --ink-3:     #4a4a4a;
+  --ink-4:     #7a7a7a;
+  --rule:      #d8d4cc;
+  --rule-dark: #999;
+  --bg:        #faf9f7;
+  --paper:     #ffffff;
+  --tint:      #f4f2ee;
+  /* Accent — single bold red like editorial covers */
+  --red:       #c0392b;
+  --red-light: #fdf3f2;
+  /* Section colors */
+  --s-green:   #1a6b3c;
+  --s-blue:    #1a3a6b;
+  --s-orange:  #8b4a0f;
+  /* Typography */
+  --serif:     'Playfair Display', Georgia, serif;
+  --body-serif:'Source Serif 4', Georgia, serif;
+  --sans:      'Inter', system-ui, sans-serif;
+}
 
-  /* ── HEADER ── */
-  .header {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .header-left { display: flex; align-items: center; gap: 12px; }
-  .logo {
-    width: 38px; height: 38px;
-    background: linear-gradient(135deg, #6c47ff, #a855f7);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 19px; flex-shrink: 0;
-  }
-  .header-title { font-size: 17px; font-weight: 700; color: #111; }
-  .header-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
-  .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .issue-badge {
-    background: var(--purple-light);
-    color: var(--purple);
-    font-size: 11px; font-weight: 600;
-    padding: 4px 10px; border-radius: 20px; letter-spacing: 0.3px;
-  }
-  .archive-btn {
-    display: flex; align-items: center; gap: 5px;
-    background: var(--white);
-    color: var(--purple);
-    border: 1px solid var(--purple-mid); cursor: pointer;
-    font-size: 12px; font-weight: 600;
-    padding: 6px 13px; border-radius: 20px;
-    transition: background 0.15s;
-    font-family: inherit; text-decoration: none;
-  }
-  .archive-btn:hover { background: var(--purple-light); }
-  .share-btn {
-    display: flex; align-items: center; gap: 5px;
-    background: var(--purple);
-    color: #fff;
-    border: none; cursor: pointer;
-    font-size: 12px; font-weight: 600;
-    padding: 6px 13px; border-radius: 20px;
-    transition: background 0.15s, transform 0.1s;
-    font-family: inherit;
-  }
-  .share-btn:hover { background: #5a38e8; transform: translateY(-1px); }
-  .share-btn:active { transform: translateY(0); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  /* share toast */
-  .toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: #1a1a1a; color: #fff;
-    padding: 10px 20px; border-radius: 30px;
-    font-size: 13px; font-weight: 500;
-    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-    z-index: 9999; pointer-events: none;
-    white-space: nowrap;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
+body {
+  font-family: var(--body-serif);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
 
-  /* ── TABS ── */
-  .tabs-bar {
-    background: var(--white);
-    border-bottom: 1px solid var(--border);
-    padding: 0 28px;
-    display: flex; gap: 0;
-    overflow-x: auto; scrollbar-width: none;
-  }
-  .tabs-bar::-webkit-scrollbar { display: none; }
-  .tab {
-    padding: 12px 15px;
-    font-size: 13px; font-weight: 500; color: var(--gray);
-    border-bottom: 2px solid transparent;
-    cursor: pointer; white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
-    display: flex; align-items: center; gap: 6px;
-    user-select: none;
-  }
-  .tab:hover { color: #444; }
-  .tab.active { color: var(--purple); border-bottom-color: var(--purple); font-weight: 600; }
-  .tab-dot { width: 6px; height: 6px; border-radius: 50%; }
+/* ══ MASTHEAD ══ */
+.masthead {
+  background: var(--paper);
+  border-bottom: 3px solid var(--ink);
+  padding: 0 40px;
+}
+.masthead-top {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 16px 0 14px;
+  border-bottom: 1px solid var(--rule);
+  gap: 12px; flex-wrap: wrap;
+}
+.masthead-meta {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 600;
+  color: var(--ink-4);
+  letter-spacing: 1px; text-transform: uppercase;
+}
+.masthead-meta span { margin: 0 8px; color: var(--rule-dark); }
+.masthead-actions { display: flex; gap: 8px; align-items: center; }
+.btn-ghost {
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 600;
+  padding: 6px 14px;
+  border: 1.5px solid var(--rule-dark);
+  border-radius: 3px;
+  background: transparent; color: var(--ink-2);
+  cursor: pointer; text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+  letter-spacing: 0.3px;
+}
+.btn-ghost:hover { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.btn-primary {
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 700;
+  padding: 6px 16px;
+  border: 1.5px solid var(--ink);
+  border-radius: 3px;
+  background: var(--ink); color: var(--paper);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  letter-spacing: 0.3px;
+}
+.btn-primary:hover { background: var(--ink-2); }
 
-  /* ── MAIN ── */
-  .main { padding: 24px 28px; max-width: 920px; margin: 0 auto; }
-  .panel { display: none; }
-  .panel.active { display: block; }
+/* Logotype */
+.masthead-title-row {
+  padding: 20px 0 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--rule);
+}
+.logotype {
+  font-family: var(--serif);
+  font-size: clamp(38px, 6vw, 64px);
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+.logotype em {
+  font-style: italic;
+  color: var(--red);
+}
+.tagline {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-4);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 7px;
+}
 
-  /* ── LABELS ── */
-  .section-label {
-    font-size: 11px; font-weight: 700;
-    letter-spacing: 1.2px; text-transform: uppercase;
-    color: #aaa; margin-bottom: 14px; margin-top: 28px;
-  }
-  .section-label:first-child { margin-top: 0; }
+/* Nav tabs */
+.nav {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  gap: 0;
+}
+.nav::-webkit-scrollbar { display: none; }
+.nav-tab {
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 600;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  color: var(--ink-4);
+  padding: 12px 18px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: color 0.12s, border-color 0.12s;
+  user-select: none;
+}
+.nav-tab:hover { color: var(--ink); }
+.nav-tab.active { color: var(--ink); border-bottom-color: var(--ink); }
+.nav-tab.active-red { color: var(--red); border-bottom-color: var(--red); }
 
-  /* ── CARDS ── */
-  .card {
-    background: var(--white);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 20px;
-    margin-bottom: 12px;
-    position: relative; overflow: hidden;
-    transition: box-shadow 0.15s, border-color 0.15s;
-  }
-  .card.clickable { cursor: pointer; }
-  .card.clickable:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: var(--purple-mid); }
-  .card-accent {
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px; border-radius: 3px 0 0 3px;
-  }
-  .card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
-  .card-icon {
-    width: 34px; height: 34px; border-radius: 9px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px; flex-shrink: 0; margin-top: 1px;
-  }
-  .card-meta { flex: 1; min-width: 0; }
-  .card-source {
-    font-size: 11px; font-weight: 600; color: #999;
-    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px;
-  }
-  .card-title { font-size: 15px; font-weight: 650; line-height: 1.35; color: #111; }
-  .card-body { font-size: 13.5px; line-height: 1.65; color: var(--muted); margin-top: 8px; }
-  .card-footer {
-    display: flex; align-items: center; gap: 8px;
-    margin-top: 12px; flex-wrap: wrap;
-  }
-  .tag {
-    font-size: 11px; font-weight: 500;
-    padding: 3px 9px; border-radius: 20px;
-    background: var(--purple-light); color: #7c5cbf;
-  }
-  .tag.green { background: var(--green-light); color: #2d7a46; }
-  .tag.orange { background: var(--orange-light); color: #b8620f; }
-  .tag.blue { background: var(--blue-light); color: var(--blue); }
-  .tag.red { background: var(--red-light); color: var(--red); }
-  .tag.gray { background: #f3f3f3; color: #666; }
-  .read-link {
-    margin-left: auto;
-    font-size: 12px; font-weight: 600; color: var(--purple);
-    text-decoration: none;
-    display: flex; align-items: center; gap: 4px;
-    white-space: nowrap; flex-shrink: 0;
-  }
-  .read-link:hover { text-decoration: underline; }
+/* ══ BODY ══ */
+.body-wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 32px 40px 60px;
+}
+.panel { display: none; }
+.panel.active { display: block; }
 
-  /* featured */
-  .card.featured {
-    background: linear-gradient(135deg, #fefeff 0%, #f5f3ff 100%);
-    border-color: var(--purple-mid);
-  }
-  .featured-badge {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
-    background: var(--purple); color: #fff;
-    padding: 2px 8px; border-radius: 20px; margin-bottom: 8px;
-  }
+/* ══ SUBSCRIBE STRIP ══ */
+.sub-strip {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 14px 24px;
+  display: flex; align-items: center;
+  gap: 20px; flex-wrap: wrap;
+  margin-bottom: 32px;
+  border-radius: 2px;
+}
+.sub-strip-text {
+  flex: 1; min-width: 180px;
+  font-family: var(--sans);
+  font-size: 13px; font-weight: 500;
+  line-height: 1.4;
+}
+.sub-strip-text strong { font-weight: 700; }
+.sub-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.sub-input {
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 8px 13px;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  border-radius: 3px;
+  background: rgba(255,255,255,0.1);
+  color: var(--paper);
+  width: 200px;
+  outline: none;
+  transition: border-color 0.12s;
+}
+.sub-input::placeholder { color: rgba(255,255,255,0.45); }
+.sub-input:focus { border-color: rgba(255,255,255,0.7); }
+.sub-btn {
+  font-family: var(--sans);
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 8px 18px;
+  background: var(--red); color: var(--paper);
+  border: none; border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.12s;
+  white-space: nowrap;
+}
+.sub-btn:hover { background: #a93226; }
+.sub-note {
+  font-family: var(--sans);
+  font-size: 10px; color: rgba(255,255,255,0.4);
+  margin-top: 5px; letter-spacing: 0.3px;
+}
 
-  /* ── STAT STRIP ── */
-  .stat-strip {
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 10px; margin-bottom: 22px;
-  }
-  .stat-box {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 10px; padding: 14px 16px; text-align: center;
-  }
-  .stat-number { font-size: 24px; font-weight: 800; color: var(--purple); }
-  .stat-label { font-size: 11px; color: #aaa; margin-top: 2px; }
+/* ══ OVERVIEW LAYOUT ══ */
+.issue-header {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 10px;
+  margin-bottom: 24px;
+  display: flex; align-items: baseline;
+  justify-content: space-between; flex-wrap: wrap; gap: 8px;
+}
+.issue-kicker {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--red);
+}
+.issue-dateline {
+  font-family: var(--sans);
+  font-size: 11px; color: var(--ink-4);
+  letter-spacing: 0.5px;
+}
+.issue-dateline a { color: var(--ink-4); text-decoration: underline; }
+.issue-dateline a:hover { color: var(--ink); }
 
-  /* ── DATE BANNER ── */
-  .date-banner {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 10px; padding: 12px 16px; margin-bottom: 20px;
-    display: flex; align-items: center; gap: 10px;
-    font-size: 13px; color: #666;
-  }
-  .date-banner strong { color: #111; }
+/* Featured lead story */
+.lead {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 28px;
+}
+@media(max-width:680px){ .lead { grid-template-columns:1fr; gap:20px; } }
+.lead-label {
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--red); margin-bottom: 10px;
+}
+.lead-headline {
+  font-family: var(--serif);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--ink);
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: color 0.12s;
+}
+.lead-headline:hover { color: var(--red); }
+.lead-byline {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 600;
+  color: var(--ink-4); letter-spacing: 0.5px;
+  text-transform: uppercase; margin-bottom: 12px;
+}
+.lead-body {
+  font-size: 15px; line-height: 1.72;
+  color: var(--ink-2);
+}
+.lead-body p + p { margin-top: 10px; }
+.lead-tags { margin-top: 14px; display: flex; gap: 6px; flex-wrap: wrap; }
+.lead-right {
+  border-left: 1px solid var(--rule);
+  padding-left: 40px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+@media(max-width:680px){
+  .lead-right { border-left: none; border-top: 1px solid var(--rule); padding-left: 0; padding-top: 20px; }
+}
 
-  /* ── PODCAST CARD ── */
-  .ep-card { display: flex; gap: 14px; align-items: flex-start; }
-  .ep-thumb {
-    width: 64px; height: 64px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px; flex-shrink: 0;
-  }
-  .ep-info { flex: 1; min-width: 0; }
-  .ep-title { font-size: 14.5px; font-weight: 650; color: #111; line-height: 1.3; }
-  .ep-desc { font-size: 13px; color: #666; margin-top: 5px; line-height: 1.5; }
-  .ep-meta { font-size: 11px; color: #aaa; margin-top: 6px; }
+/* Secondary stories (right column & grid) */
+.secondary {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+.secondary + .secondary { padding-top: 16px; }
+.secondary:last-child { border-bottom: none; }
+.sec-kicker {
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 6px;
+}
+.sec-headline {
+  font-family: var(--serif);
+  font-size: 16px; font-weight: 700;
+  line-height: 1.3; color: var(--ink);
+  cursor: pointer; margin-bottom: 6px;
+  transition: color 0.12s;
+}
+.sec-headline:hover { color: var(--red); }
+.sec-body {
+  font-size: 13.5px; line-height: 1.65; color: var(--ink-3);
+}
+.sec-footer {
+  margin-top: 8px; display: flex; align-items: center;
+  gap: 8px; flex-wrap: wrap;
+}
 
-  /* ── SOURCES GRID ── */
-  .sources-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-    gap: 9px; margin-bottom: 20px;
-  }
-  .source-pill {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 10px; padding: 11px 13px;
-    display: flex; align-items: center; gap: 10px;
-    cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
-    text-decoration: none;
-  }
-  .source-pill:hover { border-color: var(--purple-mid); box-shadow: 0 2px 8px rgba(108,71,255,0.08); }
-  .source-pill.hot { border-color: var(--purple-mid); background: var(--purple-light); }
-  .source-pill-icon { font-size: 20px; }
-  .source-pill-name { font-size: 13px; font-weight: 600; color: #111; }
-  .source-pill-type { font-size: 11px; color: #aaa; }
-  .new-badge {
-    margin-left: auto; font-size: 9px; font-weight: 700;
-    background: var(--purple); color: #fff;
-    padding: 2px 6px; border-radius: 10px; letter-spacing: 0.3px;
-    text-transform: uppercase;
-  }
+/* Quick hits grid */
+.section-rule {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink-4);
+  border-top: 2px solid var(--ink);
+  padding-top: 10px; margin: 28px 0 18px;
+}
+.hits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+}
+.hit {
+  padding: 18px 20px 18px 0;
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer;
+}
+.hits-grid .hit:nth-child(odd):not(:last-child) {
+  border-right: 1px solid var(--rule);
+  padding-right: 20px;
+}
+.hits-grid .hit:nth-child(even) { padding-left: 20px; padding-right: 0; }
+.hit-source {
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 5px;
+}
+.hit-headline {
+  font-family: var(--serif);
+  font-size: 15px; font-weight: 700;
+  line-height: 1.3; color: var(--ink);
+  margin-bottom: 6px;
+  transition: color 0.12s;
+}
+.hit:hover .hit-headline { color: var(--red); }
+.hit-body {
+  font-size: 13px; line-height: 1.6; color: var(--ink-3);
+}
+.hit-footer { margin-top: 8px; display: flex; gap: 6px; align-items: center; }
+.read-more {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.5px; color: var(--red);
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.read-more:hover { text-decoration: underline; }
 
-  /* ── FILTER ROW ── */
-  .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .filter-btn {
-    font-size: 12px; font-weight: 500;
-    padding: 5px 13px; border-radius: 20px;
-    border: 1px solid #ddd; background: var(--white); color: #666;
-    cursor: pointer; transition: all 0.15s; font-family: inherit;
-  }
-  .filter-btn:hover { border-color: #a78bfa; color: var(--purple); }
-  .filter-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+/* ══ TAGS ══ */
+.tag {
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.8px; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 2px;
+  background: var(--tint); color: var(--ink-3);
+  border: 1px solid var(--rule);
+}
+.tag.red { background: var(--red-light); color: var(--red); border-color: #f5c6c2; }
+.tag.green { background: #f0faf3; color: var(--s-green); border-color: #c3e6cb; }
+.tag.blue { background: #f0f4ff; color: var(--s-blue); border-color: #c3d3f5; }
+.tag.orange { background: #fdf6ef; color: var(--s-orange); border-color: #f5dcb8; }
 
-  /* ── SCHEDULE BANNER ── */
-  .schedule-banner {
-    background: linear-gradient(135deg, var(--purple), #9333ea);
-    border-radius: 12px; padding: 16px 20px; color: #fff;
-    margin-bottom: 20px; display: flex; align-items: center; gap: 14px;
-  }
-  /* ── SUBSCRIBE BANNER ── */
-  .subscribe-banner {
-    background: var(--white);
-    border: 1.5px solid var(--purple-mid);
-    border-radius: 14px;
-    padding: 22px 24px;
-    margin: 28px 0 0;
-    display: flex; align-items: center; gap: 20px;
-    flex-wrap: wrap;
-  }
-  .subscribe-left { flex: 1; min-width: 200px; }
-  .subscribe-title { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 4px; }
-  .subscribe-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .subscribe-form { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
-  .subscribe-input {
-    font-size: 13px; font-family: inherit;
-    padding: 9px 14px; border-radius: 8px;
-    border: 1px solid var(--border);
-    outline: none; width: 210px;
-    transition: border-color 0.15s;
-  }
-  .subscribe-input:focus { border-color: var(--purple); }
-  .subscribe-btn {
-    font-size: 13px; font-weight: 600; font-family: inherit;
-    padding: 9px 18px; border-radius: 8px;
-    background: var(--purple); color: #fff;
-    border: none; cursor: pointer;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .subscribe-btn:hover { background: #5a38e8; }
-  .subscribe-note { font-size: 11px; color: #aaa; margin-top: 7px; }
-  .schedule-icon { font-size: 28px; }
-  .schedule-title { font-size: 14px; font-weight: 700; }
-  .schedule-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+/* ══ SECTION PANELS (Builders / Pods / Research / Business) ══ */
+.section-intro {
+  border-bottom: 3px double var(--rule);
+  padding-bottom: 14px; margin-bottom: 24px;
+}
+.section-title {
+  font-family: var(--serif);
+  font-size: 28px; font-weight: 800; color: var(--ink);
+}
+.section-desc {
+  font-family: var(--sans);
+  font-size: 12px; color: var(--ink-4);
+  margin-top: 4px; letter-spacing: 0.3px;
+}
+.article-list { display: flex; flex-direction: column; gap: 0; }
+.article {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule);
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 24px; align-items: start;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.article:hover { background: var(--tint); padding-left: 8px; padding-right: 8px; margin: 0 -8px; }
+.article:last-child { border-bottom: none; }
+.article-left {}
+.article-kicker {
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 7px;
+}
+.article-headline {
+  font-family: var(--serif);
+  font-size: 20px; font-weight: 700;
+  line-height: 1.3; color: var(--ink);
+  margin-bottom: 10px;
+}
+.article:hover .article-headline { color: var(--red); }
+.article-body { font-size: 14px; line-height: 1.7; color: var(--ink-3); }
+.article-footer { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.article-right {
+  text-align: right;
+  padding-top: 4px;
+}
+.article-source-label {
+  font-family: var(--sans);
+  font-size: 10px; font-weight: 600;
+  color: var(--ink-4); letter-spacing: 0.5px;
+  text-transform: uppercase; display: block;
+  margin-bottom: 6px;
+}
+.article-read {
+  font-family: var(--sans);
+  font-size: 11px; font-weight: 700;
+  color: var(--red); text-decoration: none;
+  letter-spacing: 0.3px;
+  display: inline-flex; align-items: center; gap: 3px;
+}
+.article-read:hover { text-decoration: underline; }
+@media(max-width:580px){
+  .article { grid-template-columns: 1fr; }
+  .article-right { text-align: left; }
+}
 
-  /* ── AUTHOR SPOTLIGHT ── */
-  .author-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 12px; margin-bottom: 20px;
-  }
-  .author-card {
-    background: var(--white); border: 1px solid var(--border);
-    border-radius: 12px; padding: 16px;
-    transition: box-shadow 0.15s, border-color 0.15s;
-  }
-  .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: var(--purple-mid); }
-  .author-top { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-  .author-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-  }
-  .author-name { font-size: 14px; font-weight: 700; color: #111; }
-  .author-handle { font-size: 11px; color: #aaa; margin-top: 1px; }
-  .author-bio { font-size: 12.5px; color: #666; line-height: 1.5; }
-  .author-links { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
-  .author-link {
-    font-size: 11px; font-weight: 600; color: var(--purple);
-    text-decoration: none; background: var(--purple-light);
-    padding: 3px 9px; border-radius: 20px; transition: background 0.15s;
-  }
-  .author-link:hover { background: var(--purple-mid); color: #fff; }
-  .author-new { font-size: 9px; font-weight: 700; background: var(--purple); color: #fff; padding: 2px 6px; border-radius: 10px; margin-left: auto; text-transform: uppercase; }
+/* ══ PODCAST LAYOUT ══ */
+.pod-article {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--rule);
+  display: flex; gap: 18px; align-items: flex-start;
+  cursor: pointer;
+}
+.pod-article:last-child { border-bottom: none; }
+.pod-thumb {
+  width: 72px; height: 72px; border-radius: 4px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+}
+.pod-body { flex: 1; min-width: 0; }
+.pod-kicker {
+  font-family: var(--sans); font-size: 10px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 5px;
+}
+.pod-title {
+  font-family: var(--serif);
+  font-size: 18px; font-weight: 700;
+  line-height: 1.3; color: var(--ink); margin-bottom: 8px;
+}
+.pod-article:hover .pod-title { color: var(--red); }
+.pod-desc { font-size: 13.5px; line-height: 1.65; color: var(--ink-3); }
+.pod-meta { font-family: var(--sans); font-size: 11px; color: var(--ink-4); margin-top: 7px; }
+.pod-footer { margin-top: 10px; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 
-  @media (max-width: 600px) {
-    .stat-strip { grid-template-columns: repeat(2, 1fr); }
-    .main { padding: 16px; }
-    .header { padding: 12px 16px; }
-    .tabs-bar { padding: 0 16px; }
-    .author-grid { grid-template-columns: 1fr; }
-  }
+/* ══ AUTHORS ══ */
+.authors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 1px;
+  border: 1px solid var(--rule);
+  background: var(--rule);
+  margin-top: 4px;
+}
+.author-cell {
+  background: var(--paper);
+  padding: 20px 22px;
+}
+.author-cell:hover { background: var(--tint); }
+.author-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.author-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+  border: 1px solid var(--rule);
+}
+.author-name {
+  font-family: var(--serif);
+  font-size: 16px; font-weight: 700; color: var(--ink);
+  line-height: 1.2;
+}
+.author-handle {
+  font-family: var(--sans); font-size: 11px;
+  color: var(--ink-4); margin-top: 2px;
+}
+.author-bio {
+  font-size: 13px; line-height: 1.6; color: var(--ink-3);
+}
+.author-links { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.author-link {
+  font-family: var(--sans); font-size: 11px; font-weight: 600;
+  color: var(--ink-2); text-decoration: none;
+  border-bottom: 1px solid var(--rule-dark);
+  padding-bottom: 1px;
+  transition: color 0.12s, border-color 0.12s;
+}
+.author-link:hover { color: var(--red); border-color: var(--red); }
+.new-pill {
+  font-family: var(--sans); font-size: 9px; font-weight: 700;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  background: var(--red); color: var(--paper);
+  padding: 2px 6px; border-radius: 2px; margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ══ SOURCES ══ */
+.sources-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1px; background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.source-cell {
+  background: var(--paper); padding: 14px 16px;
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: inherit;
+  transition: background 0.1s;
+}
+.source-cell:hover { background: var(--tint); }
+.source-icon { font-size: 18px; flex-shrink: 0; }
+.source-name { font-family: var(--sans); font-size: 13px; font-weight: 600; color: var(--ink); }
+.source-type { font-family: var(--sans); font-size: 11px; color: var(--ink-4); }
+.source-new {
+  font-family: var(--sans); font-size: 9px; font-weight: 700;
+  background: var(--red); color: var(--paper);
+  padding: 2px 5px; border-radius: 2px; margin-left: auto;
+}
+
+/* ══ STATS ROW ══ */
+.stats-row {
+  display: flex; gap: 0;
+  border: 1px solid var(--rule); border-radius: 2px;
+  overflow: hidden; margin-bottom: 28px;
+}
+.stat-cell {
+  flex: 1; padding: 14px 16px; text-align: center;
+  border-right: 1px solid var(--rule); background: var(--paper);
+}
+.stat-cell:last-child { border-right: none; }
+.stat-num {
+  font-family: var(--serif);
+  font-size: 26px; font-weight: 800; color: var(--ink);
+  line-height: 1;
+}
+.stat-lbl {
+  font-family: var(--sans); font-size: 10px;
+  color: var(--ink-4); margin-top: 3px;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+/* ══ FILTER ROW ══ */
+.filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; }
+.filter-btn {
+  font-family: var(--sans); font-size: 11px; font-weight: 600;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 2px;
+  border: 1px solid var(--rule); background: var(--paper); color: var(--ink-4);
+  cursor: pointer; transition: all 0.12s;
+}
+.filter-btn:hover { border-color: var(--ink); color: var(--ink); }
+.filter-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ══ TOAST ══ */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--ink); color: var(--paper);
+  padding: 10px 22px; border-radius: 3px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 9999; pointer-events: none; white-space: nowrap;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ══ FOOTER ══ */
+.site-footer {
+  border-top: 2px solid var(--ink);
+  margin-top: 48px; padding-top: 18px;
+  display: flex; justify-content: space-between;
+  align-items: flex-start; flex-wrap: wrap; gap: 12px;
+}
+.footer-brand {
+  font-family: var(--serif); font-size: 18px; font-weight: 800;
+  color: var(--ink);
+}
+.footer-brand em { font-style: italic; color: var(--red); }
+.footer-copy {
+  font-family: var(--sans); font-size: 11px; color: var(--ink-4);
+  margin-top: 3px; letter-spacing: 0.3px;
+}
+.footer-links { display: flex; gap: 14px; }
+.footer-link {
+  font-family: var(--sans); font-size: 11px; font-weight: 600;
+  color: var(--ink-4); text-decoration: none;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  transition: color 0.12s;
+}
+.footer-link:hover { color: var(--red); }
+
+@media(max-width:600px){
+  .masthead { padding: 0 20px; }
+  .body-wrap { padding: 24px 20px 48px; }
+  .stats-row { flex-wrap: wrap; }
+  .stat-cell { min-width: 50%; }
+}
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <div class="header-left">
-    <div class="logo">🧠</div>
-    <div>
-      <div class="header-title">AI Radar</div>
-      <div class="header-sub">Lilit's curated digest · Tuesdays & Thursdays</div>
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">
+      Friday, May 15, 2026
+      <span>·</span>
+      Issue #1
+      <span>·</span>
+      Tuesdays &amp; Thursdays
+    </div>
+    <div class="masthead-actions">
+      <a class="btn-ghost" href="archive.html">Archive</a>
+      <button class="btn-ghost" onclick="shareDigest()">↗ Share</button>
     </div>
   </div>
-  <div class="header-right">
-    <div class="issue-badge">Issue #1 · May 14, 2026</div>
-    <a class="archive-btn" href="archive.html">📂 Archive</a>
-    <button class="share-btn" onclick="shareDigest()">
-      ↗ Share digest
-    </button>
+
+  <div class="masthead-title-row">
+    <div class="logotype">AI <em>Radar</em></div>
+    <div class="tagline">Curated intelligence · Real builders · Zero hype</div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-tab active" onclick="switchTab('overview')" data-tab="overview">Overview</div>
+    <div class="nav-tab" onclick="switchTab('builders')" data-tab="builders">Builders</div>
+    <div class="nav-tab" onclick="switchTab('pods')" data-tab="pods">Podcasts</div>
+    <div class="nav-tab" onclick="switchTab('research')" data-tab="research">Research</div>
+    <div class="nav-tab" onclick="switchTab('business')" data-tab="business">AI × Business</div>
+    <div class="nav-tab" onclick="switchTab('authors')" data-tab="authors">Authors</div>
+    <div class="nav-tab" onclick="switchTab('sources')" data-tab="sources">Sources</div>
   </div>
 </div>
 
-<!-- TABS -->
-<div class="tabs-bar">
-  <div class="tab active" onclick="switchTab('overview')" data-tab="overview">
-    <span class="tab-dot" style="background:#6c47ff"></span> Overview
-  </div>
-  <div class="tab" onclick="switchTab('builders')" data-tab="builders">
-    <span class="tab-dot" style="background:#16a34a"></span> Builders
-  </div>
-  <div class="tab" onclick="switchTab('pods')" data-tab="pods">
-    <span class="tab-dot" style="background:#ea580c"></span> Podcasts
-  </div>
-  <div class="tab" onclick="switchTab('research')" data-tab="research">
-    <span class="tab-dot" style="background:#2563eb"></span> Research
-  </div>
-  <div class="tab" onclick="switchTab('business')" data-tab="business">
-    <span class="tab-dot" style="background:#dc2626"></span> AI × Business
-  </div>
-  <div class="tab" onclick="switchTab('authors')" data-tab="authors">
-    <span class="tab-dot" style="background:#f59e0b"></span> Authors
-  </div>
-  <div class="tab" onclick="switchTab('sources')" data-tab="sources">
-    <span class="tab-dot" style="background:#888"></span> Sources
-  </div>
-</div>
+<!-- BODY -->
+<div class="body-wrap">
 
-<!-- MAIN -->
-<div class="main">
+  <!-- ══ SUBSCRIBE STRIP ══
+       Sign up free at substack.com, create a publication, then
+       replace YOUR-PUBLICATION below with your Substack subdomain.
+       e.g. if your Substack is airadar.substack.com use "airadar"
+  -->
+  <!-- Subscribe strip hidden until Substack is set up
+  <div class="sub-strip">
+    <div class="sub-strip-text">
+      <strong>Get AI Radar in your inbox.</strong>
+      Every Tuesday &amp; Thursday — curated, not aggregated.
+      <div class="sub-note">Free · No spam · Unsubscribe anytime · Powered by Substack</div>
+    </div>
+    <form class="sub-form" action="https://YOUR-PUBLICATION.substack.com/api/v1/free?nojs=true" method="post" target="_blank" onsubmit="trackSubscribe(event)">
+      <div>
+        <input class="sub-input" type="email" name="email" placeholder="your@email.com" required>
+      </div>
+      <button class="sub-btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+  -->
 
   <!-- ══ OVERVIEW ══ -->
   <div class="panel active" id="panel-overview">
-    <div class="date-banner">
-      📅 <strong>Tuesday, May 14 2026</strong> — Next issue Thursday. Curated from 17 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
-    </div>
-    <div class="stat-strip">
-      <div class="stat-box"><div class="stat-number">8</div><div class="stat-label">Stories this issue</div></div>
-      <div class="stat-box"><div class="stat-number">4</div><div class="stat-label">Podcast picks</div></div>
-      <div class="stat-box"><div class="stat-number">17</div><div class="stat-label">Sources tracked</div></div>
-      <div class="stat-box"><div class="stat-number">9</div><div class="stat-label">Authors on radar</div></div>
-    </div>
 
-    <!-- SUBSCRIBE BANNER
-         To activate: sign up free at beehiiv.com, create a publication,
-         go to Settings → Forms → Embed Form, and replace the action URL below
-         with your Beehiiv embed action URL. It will look like:
-         https://embeds.beehiiv.com/XXXXXXXX
-         Until then the form still collects emails visually (replace with your Beehiiv URL to make it live).
-    -->
-    <div class="subscribe-banner">
-      <div class="subscribe-left">
-        <div class="subscribe-title">📬 Get it in your inbox</div>
-        <div class="subscribe-sub">New issue every Tuesday & Thursday morning. No spam, no AI-generated filler — just the digest.</div>
-        <div class="subscribe-note">Free · Unsubscribe anytime · Powered by Beehiiv</div>
+    <div class="issue-header">
+      <div class="issue-kicker">Issue #1 — May 15, 2026</div>
+      <div class="issue-dateline">
+        Next issue Tuesday, May 20 &nbsp;·&nbsp;
+        <a href="archive.html">Browse all issues →</a>
       </div>
-      <form class="subscribe-form" action="https://embeds.beehiiv.com/REPLACE-WITH-YOUR-BEEHIIV-URL" method="post" target="_blank" onsubmit="trackSubscribe(event)">
-        <div>
-          <input class="subscribe-input" type="email" name="email" placeholder="your@email.com" required>
-        </div>
-        <button class="subscribe-btn" type="submit">Subscribe →</button>
-      </form>
     </div>
 
-    <div class="section-label" style="margin-top:28px">🔥 Editor's pick</div>
-    <div class="card featured clickable" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
-      <div class="featured-badge">✦ Must read</div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">🧠</div>
-        <div class="card-meta">
-          <div class="card-source">Andrej Karpathy · karpathy.bearblog.dev</div>
-          <div class="card-title">Software 3.0 — Karpathy's framework for where we actually are</div>
+    <div class="stats-row">
+      <div class="stat-cell"><div class="stat-num">8</div><div class="stat-lbl">Stories</div></div>
+      <div class="stat-cell"><div class="stat-num">4</div><div class="stat-lbl">Pod picks</div></div>
+      <div class="stat-cell"><div class="stat-num">17</div><div class="stat-lbl">Sources</div></div>
+      <div class="stat-cell"><div class="stat-num">9</div><div class="stat-lbl">Authors</div></div>
+    </div>
+
+    <!-- LEAD -->
+    <div class="lead">
+      <div class="lead-left">
+        <div class="lead-label">Editor's pick</div>
+        <div class="lead-headline" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
+          Software 3.0 — Karpathy's clearest framework for where we actually are
+        </div>
+        <div class="lead-byline">Andrej Karpathy · Sequoia Ascent 2026</div>
+        <div class="lead-body">
+          <p>At Sequoia Ascent 2026, Karpathy laid out what he calls Software 3.0: programs written through prompts, context, tools, memory, and agents — not code. The context window is the new runtime. Installers become instruction blocks that agents execute and debug live.</p>
+          <p>This is the clearest conceptual frame for the current moment — not hype, just a clean model that explains why everything feels different now.</p>
+        </div>
+        <div class="lead-tags">
+          <span class="tag">Software 3.0</span>
+          <span class="tag blue">Agents</span>
+          <a class="read-more" href="https://karpathy.bearblog.dev/sequoia-ascent-2026/" target="_blank">Read full piece →</a>
         </div>
       </div>
-      <div class="card-body">At Sequoia Ascent 2026, Karpathy laid out what he calls Software 3.0: programs written through prompts, context, tools, memory, and agents — not code. The context window is the new runtime. He gives concrete examples: installers become instruction blocks that agents execute and debug live. This is the clearest conceptual frame I've seen for the current moment — not hype, just a clean model.</div>
-      <div class="card-footer">
-        <span class="tag">Software 3.0</span><span class="tag blue">Karpathy</span>
-        <a class="read-link" href="https://karpathy.bearblog.dev/sequoia-ascent-2026/" target="_blank">Read →</a>
-      </div>
-    </div>
+      <div class="lead-right">
 
-    <div class="section-label">⚡ Quick hits</div>
-
-    <div class="card clickable" onclick="window.open('https://simonwillison.net/2026/May/11/zombie-internet/','_blank')">
-      <div class="card-accent" style="background:#6c47ff"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">📝</div>
-        <div class="card-meta">
-          <div class="card-source">Simon Willison · May 11</div>
-          <div class="card-title">Your AI Use Is Breaking My Brain — the zombie internet problem</div>
+        <div class="secondary">
+          <div class="sec-kicker">Simon Willison · May 11</div>
+          <div class="sec-headline" onclick="window.open('https://simonwillison.net/2026/May/11/zombie-internet/','_blank')">Your AI Use Is Breaking My Brain</div>
+          <div class="sec-body">An unusually angry post on how AI writing has become impossible to avoid — and is starting to distort even authentic human writing.</div>
+          <div class="sec-footer"><span class="tag orange">Hot take</span><a class="read-more" href="https://simonwillison.net/2026/May/11/zombie-internet/" target="_blank">Read →</a></div>
         </div>
-      </div>
-      <div class="card-body">An unusually angry post from Willison on how AI writing online has become impossible to avoid — and how it's starting to distort even authentic human writing. Worth reading because Willison has no incentive to be alarmist.</div>
-      <div class="card-footer">
-        <span class="tag orange">Hot take</span>
-        <a class="read-link" href="https://simonwillison.net/2026/May/11/zombie-internet/" target="_blank">Read →</a>
+
+        <div class="secondary">
+          <div class="sec-kicker">Ethan Mollick · One Useful Thing</div>
+          <div class="sec-headline" onclick="window.open('https://www.oneusefulthing.org/p/what-just-happened','_blank')">What Just Happened</div>
+          <div class="sec-body">A Wharton professor who actually uses AI daily maps the 2025–26 inflection point more clearly than any lab blog post.</div>
+          <div class="sec-footer"><span class="tag green">Research</span><a class="read-more" href="https://www.oneusefulthing.org/p/what-just-happened" target="_blank">Read →</a></div>
+        </div>
+
+        <div class="secondary">
+          <div class="sec-kicker">Matt Rickard · blog.matt-rickard.com</div>
+          <div class="sec-headline" onclick="window.open('https://blog.matt-rickard.com/p/the-spec-layer','_blank')">The Spec Layer</div>
+          <div class="sec-body">Agents fail differently from humans. When a decision isn't written down, the agent decides it again. Current tooling doesn't know this yet.</div>
+          <div class="sec-footer"><span class="tag blue">Agents</span><a class="read-more" href="https://blog.matt-rickard.com/p/the-spec-layer" target="_blank">Read →</a></div>
+        </div>
+
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://www.oneusefulthing.org/p/what-just-happened','_blank')">
-      <div class="card-accent" style="background:#16a34a"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🎓</div>
-        <div class="card-meta">
-          <div class="card-source">Ethan Mollick · One Useful Thing</div>
-          <div class="card-title">What just happened — a professor's honest read on where AI landed</div>
-        </div>
+    <!-- QUICK HITS -->
+    <div class="section-rule">Also this issue</div>
+    <div class="hits-grid">
+
+      <div class="hit" onclick="window.open('https://www.bentossell.com/blog/post.html?slug=how-i-code','_blank')">
+        <div class="hit-source">Ben Tossell · bentossell.com</div>
+        <div class="hit-headline">How I code — an honest builder's stack in 2026</div>
+        <div class="hit-body">GPT 5.4 XHigh for code, Opus 4.6 for planning, Codex for syncing agent memory. No hype — he says what broke too.</div>
+        <div class="hit-footer"><span class="tag orange">Workflow</span><a class="read-more" href="https://www.bentossell.com/blog/post.html?slug=how-i-code" target="_blank">Read →</a></div>
       </div>
-      <div class="card-body">Mollick (Wharton) is the rare academic voice that cuts through the noise — he actually uses AI daily, runs experiments, and writes before asking AI for feedback. His "what just happened" post maps the 2025-26 inflection point more clearly than any lab blog post.</div>
-      <div class="card-footer">
-        <span class="tag green">Research-backed</span>
-        <a class="read-link" href="https://www.oneusefulthing.org/p/what-just-happened" target="_blank">Read →</a>
+
+      <div class="hit" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
+        <div class="hit-source">Pieter Levels · levelsio.com</div>
+        <div class="hit-headline">$3.5M ARR, 0 employees</div>
+        <div class="hit-body">Photo AI, Interior AI, Nomad List — entirely solo, 90%+ margins. The most interesting live business experiment in AI right now.</div>
+        <div class="hit-footer"><span class="tag green">$$$</span><a class="read-more" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Read →</a></div>
       </div>
+
+      <div class="hit" onclick="window.open('https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/','_blank')">
+        <div class="hit-source">Simon Willison · May 6</div>
+        <div class="hit-headline">Vibe coding and agentic engineering are getting closer than I'd like</div>
+        <div class="hit-body">The line between "write a prompt and ship it" and serious engineering is blurring faster than most developers are comfortable with.</div>
+        <div class="hit-footer"><span class="tag blue">Engineering</span><a class="read-more" href="https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/" target="_blank">Read →</a></div>
+      </div>
+
+      <div class="hit" onclick="window.open('https://www.lennysnewsletter.com/p/an-ai-state-of-the-union','_blank')">
+        <div class="hit-source">Lenny's Newsletter · Simon Willison</div>
+        <div class="hit-headline">AI state of the union — dark factories are coming</div>
+        <div class="hit-body">Willison on Lenny's platform: honest read on automation timelines and what passing the inflection point actually means vs. the marketing narrative.</div>
+        <div class="hit-footer"><span class="tag red">Macro</span><a class="read-more" href="https://www.lennysnewsletter.com/p/an-ai-state-of-the-union" target="_blank">Read →</a></div>
+      </div>
+
     </div>
 
-    <div class="card clickable" onclick="window.open('https://blog.matt-rickard.com/p/the-spec-layer','_blank')">
-      <div class="card-accent" style="background:#2563eb"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">⚙️</div>
-        <div class="card-meta">
-          <div class="card-source">Matt Rickard · blog.matt-rickard.com</div>
-          <div class="card-title">The Spec Layer — agents fail differently, and our tooling doesn't know it yet</div>
-        </div>
-      </div>
-      <div class="card-body">Current tooling was designed for human failure modes. Agents fail differently: when a decision isn't written down, the agent decides it again. Context windows are finite. The real problem is too much freedom at execution time. Short, dense, worth re-reading.</div>
-      <div class="card-footer">
-        <span class="tag blue">Agents</span>
-        <a class="read-link" href="https://blog.matt-rickard.com/p/the-spec-layer" target="_blank">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://www.bentossell.com/blog/post.html?slug=how-i-code','_blank')">
-      <div class="card-accent" style="background:#ea580c"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#fff8ef">🛠️</div>
-        <div class="card-meta">
-          <div class="card-source">Ben Tossell · bentossell.com</div>
-          <div class="card-title">How I code — an honest builder's stack in 2026</div>
-        </div>
-      </div>
-      <div class="card-body">Ben (sold MakerPad to Zapier, built Ben's Bites to $1M+) lays out his real daily AI stack: GPT 5.4 XHigh for code, Opus 4.6 for planning, Codex for syncing agent memory. No hype — he says what broke too.</div>
-      <div class="card-footer">
-        <span class="tag orange">Workflow</span>
-        <a class="read-link" href="https://www.bentossell.com/blog/post.html?slug=how-i-code" target="_blank">Read →</a>
-      </div>
-    </div>
-  </div>
+  </div><!-- /overview -->
 
   <!-- ══ BUILDERS ══ -->
   <div class="panel" id="panel-builders">
+    <div class="section-intro">
+      <div class="section-title">Builders &amp; Makers</div>
+      <div class="section-desc">People actually shipping things with AI — workflows, products, and lessons from the build.</div>
+    </div>
     <div class="filter-row">
       <button class="filter-btn active" onclick="filterCards(this,'all','builders')">All</button>
       <button class="filter-btn" onclick="filterCards(this,'workflow','builders')">Workflows</button>
       <button class="filter-btn" onclick="filterCards(this,'solo','builders')">Solo founders</button>
-      <button class="filter-btn" onclick="filterCards(this,'tool','builders')">Tools</button>
+      <button class="filter-btn" onclick="filterCards(this,'tools','builders')">Tools</button>
     </div>
-
-    <div class="section-label">🔨 Builder stories</div>
-
-    <div class="card clickable" data-tag="workflow" onclick="window.open('https://www.bentossell.com/blog/post.html?slug=how-i-code','_blank')">
-      <div class="card-accent" style="background:#16a34a"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🛠️</div>
-        <div class="card-meta">
-          <div class="card-source">Ben Tossell · bentossell.com</div>
-          <div class="card-title">How I code — my honest 2026 AI stack</div>
+    <div class="article-list">
+      <div class="article" data-tag="workflow" onclick="window.open('https://www.bentossell.com/blog/post.html?slug=how-i-code','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Ben Tossell · bentossell.com</div>
+          <div class="article-headline">How I code — my honest 2026 AI stack</div>
+          <div class="article-body">Ben ran MakerPad (sold to Zapier), then built Ben's Bites into a 7-figure newsletter. His stack: GPT 5.4 XHigh for code-heavy tasks, Claude Opus 4.6 for planning, Codex for syncing memories across agent runs. He's the best "what actually works" voice for non-engineers building with AI. Only writes about things he's personally built with.</div>
+          <div class="article-footer"><span class="tag orange">Workflow</span><span class="tag">No-code</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">bentossell.com</span>
+          <a class="article-read" href="https://www.bentossell.com/blog/post.html?slug=how-i-code" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">Ben ran MakerPad (sold to Zapier), then built Ben's Bites into a 7-figure newsletter. His daily stack: GPT 5.4 XHigh for code-heavy tasks · Claude Opus 4.6 for planning · Codex for syncing memories across agent runs. He's the best "what actually works" voice for non-engineers building with AI.</div>
-      <div class="card-footer">
-        <span class="tag green">Workflow</span><span class="tag">No-code</span>
-        <a class="read-link" href="https://www.bentossell.com/blog/post.html?slug=how-i-code" target="_blank">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" data-tag="solo" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
-      <div class="card-accent" style="background:#16a34a"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🌍</div>
-        <div class="card-meta">
-          <div class="card-source">Pieter Levels · levelsio.com</div>
-          <div class="card-title">$3.5M ARR, 0 employees — the solo AI founder model</div>
+      <div class="article" data-tag="solo" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Pieter Levels · levelsio.com</div>
+          <div class="article-headline">$3.5M ARR, 0 employees — the solo AI empire model</div>
+          <div class="article-body">Photo AI, Interior AI, Nomad List, RemoteOK — all profitable, all solo, all automated. 90%+ margins. AI handles 95% of coding and customer support. The interesting lesson isn't the tools — it's the philosophy: ship fast, automate ruthlessly, stay small on purpose. Worth studying as a model even if you plan to hire.</div>
+          <div class="article-footer"><span class="tag green">$3.5M ARR</span><span class="tag">Solo</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">buildloop.ai</span>
+          <a class="article-read" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">Photo AI, Interior AI, Nomad List, RemoteOK — $3.5M annual revenue, 90%+ margins, no team. Pieter uses AI for 95% of coding and customer support. The interesting lesson isn't the tools he uses — it's the philosophy: ship fast, automate ruthlessly, stay small on purpose.</div>
-      <div class="card-footer">
-        <span class="tag green">$3.5M ARR</span><span class="tag">Solo</span>
-        <a class="read-link" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" data-tag="workflow" onclick="window.open('https://karpathy.ai/microgpt.html','_blank')">
-      <div class="card-accent" style="background:#16a34a"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🔬</div>
-        <div class="card-meta">
-          <div class="card-source">Andrej Karpathy · karpathy.ai</div>
-          <div class="card-title">microgpt — 200 lines of pure Python that trains and runs a GPT</div>
+      <div class="article" data-tag="tools" onclick="window.open('https://karpathy.ai/microgpt.html','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Andrej Karpathy · karpathy.ai</div>
+          <div class="article-headline">microgpt — 200 lines of pure Python that trains and runs a GPT</div>
+          <div class="article-body">A single file, no dependencies, full GPT pipeline: dataset, tokenizer, autograd engine, neural net, Adam optimizer, training loop, inference. Useful as a learning artifact and as a benchmark for how minimal a real implementation can be. The kind of thing only Karpathy would bother making elegant.</div>
+          <div class="article-footer"><span class="tag green">Open source</span><span class="tag blue">Learning</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">karpathy.ai</span>
+          <a class="article-read" href="https://karpathy.ai/microgpt.html" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">Karpathy released microgpt: a single file, no dependencies, full GPT pipeline — dataset, tokenizer, autograd, neural net, Adam optimizer, training loop, inference. Useful both as a learning artifact and as a benchmark for how small a real implementation can be.</div>
-      <div class="card-footer">
-        <span class="tag green">Open source</span><span class="tag blue">Learning</span>
-        <a class="read-link" href="https://karpathy.ai/microgpt.html" target="_blank">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" data-tag="tool" onclick="window.open('https://news.ycombinator.com/item?id=48085993','_blank')">
-      <div class="card-accent" style="background:#16a34a"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🧡</div>
-        <div class="card-meta">
-          <div class="card-source">Hacker News · Ask HN</div>
-          <div class="card-title">What are you working on? (May 2026) — raw builder pulse</div>
+      <div class="article" data-tag="workflow" onclick="window.open('https://news.ycombinator.com/item?id=48085993','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Hacker News · Ask HN</div>
+          <div class="article-headline">What are you working on? (May 2026)</div>
+          <div class="article-body">The HN "What are you working on?" thread is consistently the best raw signal for what builders are actually shipping. Hundreds of replies, no pitch decks, no press releases. Look past the top comments — the interesting projects are buried in the thread.</div>
+          <div class="article-footer"><span class="tag">Community</span></div>
         </div>
-      </div>
-      <div class="card-body">The HN "What are you working on?" thread is consistently the best raw signal for what builders are actually shipping. No pitch decks, no press releases — hundreds of replies from people mid-build. Look past the top comments.</div>
-      <div class="card-footer">
-        <span class="tag green">Community</span>
-        <a class="read-link" href="https://news.ycombinator.com/item?id=48085993" target="_blank">Browse →</a>
+        <div class="article-right">
+          <span class="article-source-label">Hacker News</span>
+          <a class="article-read" href="https://news.ycombinator.com/item?id=48085993" target="_blank">Browse →</a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ══ PODCASTS ══ -->
   <div class="panel" id="panel-pods">
-    <div class="section-label">🎙️ Shows worth your time</div>
-
-    <div class="card clickable" onclick="window.open('https://www.lennysnewsletter.com/p/introducing-how-i-ai','_blank')">
-      <div class="card-accent" style="background:#ea580c"></div>
-      <div class="ep-card">
-        <div class="ep-thumb" style="background:linear-gradient(135deg,#6c47ff,#a855f7)">🎧</div>
-        <div class="ep-info">
-          <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">How I AI · Lenny's spinoff</div>
-          <div class="ep-title">Real AI workflows, live screen shares — the format every podcast should steal</div>
-          <div class="ep-desc">30-minute episodes with practitioners showing their actual AI setup on screen. Hosted by Claire Vo. No scripted takes — just what people actually do day to day.</div>
-          <div class="ep-meta">⏱ ~30 min · Product + builder audience</div>
-        </div>
-      </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="tag orange">Show rec</span><span class="tag">Workflows</span>
-        <a class="read-link" href="https://www.lennysnewsletter.com/p/introducing-how-i-ai" target="_blank">Subscribe →</a>
-      </div>
+    <div class="section-intro">
+      <div class="section-title">Podcasts &amp; Long Reads</div>
+      <div class="section-desc">Episodes and essays worth your time — no filler, no "AI will change everything" non-answers.</div>
     </div>
-
-    <div class="card clickable" onclick="window.open('https://www.latent.space/p/2026','_blank')">
-      <div class="card-accent" style="background:#ea580c"></div>
-      <div class="ep-card">
-        <div class="ep-thumb" style="background:linear-gradient(135deg,#0f172a,#1e3a5f)">🚀</div>
-        <div class="ep-info">
-          <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Latent Space · swyx & Alessio Fanelli</div>
-          <div class="ep-title">Scaling without Slop — the AI Engineer podcast raises the bar for 2026</div>
-          <div class="ep-desc">swyx (Shawn Wang) and Alessio Fanelli run the most technically credible AI engineering podcast. The 2026 plan: more shows, more hosts, AI for Science as the next frontier. Their "three paths AI could take" episode is required listening.</div>
-          <div class="ep-meta">⏱ ~60 min · AI engineers + builders · 175+ episodes</div>
+    <div class="article-list">
+      <div class="pod-article" onclick="window.open('https://www.lennysnewsletter.com/p/introducing-how-i-ai','_blank')">
+        <div class="pod-thumb" style="background:#f0edff">🎧</div>
+        <div class="pod-body">
+          <div class="pod-kicker">How I AI · Lenny's spinoff · Hosted by Claire Vo</div>
+          <div class="pod-title">Real AI workflows, live screen shares — the format every podcast should steal</div>
+          <div class="pod-desc">30-minute episodes with practitioners showing their actual AI setup on screen. No scripted "AI will transform X" takes — just what people actually do. This is the show to subscribe to if you want to see real usage, not demos.</div>
+          <div class="pod-meta">⏱ ~30 min · Product leaders &amp; builders</div>
+          <div class="pod-footer"><span class="tag orange">Show rec</span><span class="tag">Workflows</span><a class="read-more" href="https://www.lennysnewsletter.com/p/introducing-how-i-ai" target="_blank">Subscribe →</a></div>
         </div>
       </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="tag orange">Show rec</span><span class="tag blue">Engineering</span>
-        <a class="read-link" href="https://www.latent.space/" target="_blank">Subscribe →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688','_blank')">
-      <div class="card-accent" style="background:#ea580c"></div>
-      <div class="ep-card">
-        <div class="ep-thumb" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">🧠</div>
-        <div class="ep-info">
-          <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">No Priors · Elad Gil & Sarah Guo</div>
-          <div class="ep-title">The most technically honest AI investor podcast</div>
-          <div class="ep-desc">Elad Gil and Sarah Guo don't softball. Episodes with Nat Friedman and Daniel Gross are highlights — they speak plainly about what AI can and can't do. No "AI is going to change everything" non-answers.</div>
-          <div class="ep-meta">⏱ ~45 min · Founders + researchers</div>
+      <div class="pod-article" onclick="window.open('https://www.latent.space/','_blank')">
+        <div class="pod-thumb" style="background:#0f172a; color:#fff">🚀</div>
+        <div class="pod-body">
+          <div class="pod-kicker">Latent Space · swyx &amp; Alessio Fanelli</div>
+          <div class="pod-title">The AI Engineer podcast — technical, rigorous, no softballing</div>
+          <div class="pod-desc">swyx (Shawn Wang) and Alessio Fanelli run 175+ episodes of genuinely technical AI engineering content. The 2026 plan: expanding into AI for Science. Their episode on "three paths AI could take" is required listening for anyone thinking about where this goes.</div>
+          <div class="pod-meta">⏱ ~60 min · AI engineers &amp; founders</div>
+          <div class="pod-footer"><span class="tag orange">Show rec</span><span class="tag blue">Engineering</span><a class="read-more" href="https://www.latent.space/" target="_blank">Subscribe →</a></div>
         </div>
       </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="tag orange">Show rec</span><span class="tag blue">Research</span>
-        <a class="read-link" href="https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688" target="_blank">Listen →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://www.lennysnewsletter.com/p/an-ai-state-of-the-union','_blank')">
-      <div class="card-accent" style="background:#ea580c"></div>
-      <div class="ep-card">
-        <div class="ep-thumb" style="background:linear-gradient(135deg,#0f2027,#2c5364)">🌐</div>
-        <div class="ep-info">
-          <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Simon Willison on Lenny's Newsletter</div>
-          <div class="ep-title">AI state of the union — we've passed the inflection point, dark factories are coming</div>
-          <div class="ep-desc">Simon Willison on Lenny's platform: honest read on automation timelines, dark factories, and what passing the inflection point actually means in practice vs. in marketing materials.</div>
-          <div class="ep-meta">⏱ Long read · Willison × Lenny</div>
+      <div class="pod-article" onclick="window.open('https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688','_blank')">
+        <div class="pod-thumb" style="background:#1a1a2e; color:#fff">🎙</div>
+        <div class="pod-body">
+          <div class="pod-kicker">No Priors · Elad Gil &amp; Sarah Guo</div>
+          <div class="pod-title">The most honest AI investor podcast — they don't softball guests</div>
+          <div class="pod-desc">Elad Gil and Sarah Guo interview researchers, founders, and investors without the usual deference. Episodes with Nat Friedman and Daniel Gross are highlights — they speak plainly about what AI can and can't do.</div>
+          <div class="pod-meta">⏱ ~45 min · Founders &amp; researchers</div>
+          <div class="pod-footer"><span class="tag orange">Show rec</span><span class="tag blue">Research</span><a class="read-more" href="https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688" target="_blank">Listen →</a></div>
         </div>
       </div>
-      <div class="card-footer" style="margin-top:14px">
-        <span class="tag orange">Long read</span><span class="tag red">Macro</span>
-        <a class="read-link" href="https://www.lennysnewsletter.com/p/an-ai-state-of-the-union" target="_blank">Read →</a>
+      <div class="pod-article" onclick="window.open('https://www.lennysnewsletter.com/p/an-ai-state-of-the-union','_blank')">
+        <div class="pod-thumb" style="background:#f0faf3">🌐</div>
+        <div class="pod-body">
+          <div class="pod-kicker">Simon Willison on Lenny's Newsletter</div>
+          <div class="pod-title">AI state of the union — we've passed the inflection point</div>
+          <div class="pod-desc">Willison on dark factories, automation timelines, and what the inflection point actually means vs. the marketing narrative. Required reading for anyone tracking the real trajectory.</div>
+          <div class="pod-meta">⏱ Long read</div>
+          <div class="pod-footer"><span class="tag red">Macro</span><a class="read-more" href="https://www.lennysnewsletter.com/p/an-ai-state-of-the-union" target="_blank">Read →</a></div>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ══ RESEARCH ══ -->
   <div class="panel" id="panel-research">
-    <div class="section-label">🔬 Models, papers & sharp ideas</div>
-
-    <div class="card featured clickable" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
-      <div class="featured-badge">✦ Framework of the week</div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">🧠</div>
-        <div class="card-meta">
-          <div class="card-source">Andrej Karpathy · Sequoia Ascent 2026</div>
-          <div class="card-title">Software 3.0 — the context window as the new runtime</div>
-        </div>
-      </div>
-      <div class="card-body">
-        Software 1.0 = explicit code. Software 2.0 = neural network weights. Software 3.0 = LLMs programmed through prompts, context, tools, memory, agents. In Software 3.0, the context window is the main lever — the LLM is an interpreter over context performing computation on digital information.
-        <br><br>
-        Concrete implication: installers become blocks of instructions pasted into an agent that reads the environment, debugs errors, adapts to the machine. The abstraction layer has shifted.
-      </div>
-      <div class="card-footer">
-        <span class="tag blue">Framework</span><span class="tag">Karpathy</span>
-        <a class="read-link" href="https://karpathy.bearblog.dev/sequoia-ascent-2026/" target="_blank">Read →</a>
-      </div>
+    <div class="section-intro">
+      <div class="section-title">Research &amp; Models</div>
+      <div class="section-desc">Papers, frameworks, and technical ideas worth knowing — filtered for signal over noise.</div>
     </div>
-
-    <div class="card clickable" onclick="window.open('https://blog.matt-rickard.com/p/the-spec-layer','_blank')">
-      <div class="card-accent" style="background:#2563eb"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">⚙️</div>
-        <div class="card-meta">
-          <div class="card-source">Matt Rickard · blog.matt-rickard.com</div>
-          <div class="card-title">The Spec Layer — agents fail differently from humans</div>
+    <div class="article-list">
+      <div class="article" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Andrej Karpathy · Sequoia Ascent 2026</div>
+          <div class="article-headline">Software 3.0 — the context window as the new runtime</div>
+          <div class="article-body">Software 1.0 = explicit code. Software 2.0 = neural network weights. Software 3.0 = LLMs programmed through prompts, context, tools, memory, agents. In Software 3.0, the context window is the main lever — the LLM is an interpreter over context, performing computation on digital information. Concrete implication: installers become blocks of instructions pasted into an agent.</div>
+          <div class="article-footer"><span class="tag blue">Framework</span><span class="tag">Karpathy</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">karpathy.bearblog.dev</span>
+          <a class="article-read" href="https://karpathy.bearblog.dev/sequoia-ascent-2026/" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">Most software tooling is optimized for human failure modes. Agents fail differently: undocumented decisions get re-decided; context windows are finite; too much freedom at execution time causes drift. Rickard's framing for why current tooling is mismatched to agentic systems.</div>
-      <div class="card-footer">
-        <span class="tag blue">Agents</span><span class="tag">Tooling</span>
-        <a class="read-link" href="https://blog.matt-rickard.com/p/the-spec-layer" target="_blank">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/','_blank')">
-      <div class="card-accent" style="background:#2563eb"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">🔗</div>
-        <div class="card-meta">
-          <div class="card-source">Simon Willison · May 6</div>
-          <div class="card-title">Vibe coding and agentic engineering are getting closer than I'd like</div>
+      <div class="article" onclick="window.open('https://blog.matt-rickard.com/p/the-spec-layer','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Matt Rickard · blog.matt-rickard.com</div>
+          <div class="article-headline">The Spec Layer — agents fail differently from humans</div>
+          <div class="article-body">Most software tooling is optimized for human failure modes. Agents fail differently: undocumented decisions get re-decided; context windows are finite; too much freedom at execution time causes drift. Rickard's framing for why current tooling is fundamentally mismatched to agentic systems.</div>
+          <div class="article-footer"><span class="tag blue">Agents</span><span class="tag">Tooling</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">matt-rickard.com</span>
+          <a class="article-read" href="https://blog.matt-rickard.com/p/the-spec-layer" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">The line between "write a prompt and ship it" and serious engineering is blurring faster than most developers are comfortable with. Willison's reflection on what this means for craft, quality, and accountability — after a podcast on the topic.</div>
-      <div class="card-footer">
-        <span class="tag blue">Agentic AI</span><span class="tag">Craft</span>
-        <a class="read-link" href="https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/" target="_blank">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://simonw.substack.com/p/i-think-agent-may-finally-have-a','_blank')">
-      <div class="card-accent" style="background:#2563eb"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">📖</div>
-        <div class="card-meta">
-          <div class="card-source">Simon Willison · Substack</div>
-          <div class="card-title">"Agent" may finally have a definition coherent enough to use</div>
+      <div class="article" onclick="window.open('https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Simon Willison · May 6</div>
+          <div class="article-headline">Vibe coding and agentic engineering are getting closer than I'd like</div>
+          <div class="article-body">The line between "write a prompt and ship it" and serious engineering is blurring faster than most developers are comfortable with. A sharp reflection on what this means for craft, quality, and accountability — from someone who maintains production tools and actually reads the papers.</div>
+          <div class="article-footer"><span class="tag blue">Agentic AI</span><span class="tag">Craft</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">simonwillison.net</span>
+          <a class="article-read" href="https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">Willison argues "agent" as jargon has reached the point where it's actually useful for reasoning — not just marketing. This matters for how we design systems, write specs, and explain capabilities to non-technical people.</div>
-      <div class="card-footer">
-        <span class="tag blue">Terminology</span>
-        <a class="read-link" href="https://simonw.substack.com/p/i-think-agent-may-finally-have-a" target="_blank">Read →</a>
+      <div class="article" onclick="window.open('https://simonw.substack.com/p/i-think-agent-may-finally-have-a','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Simon Willison · Substack</div>
+          <div class="article-headline">"Agent" may finally have a definition coherent enough to use</div>
+          <div class="article-body">Willison argues "agent" as jargon has reached the point where it's actually useful for reasoning — not just marketing. This matters for system design, spec writing, and explaining capabilities to non-technical stakeholders. Sounds boring. Isn't.</div>
+          <div class="article-footer"><span class="tag blue">Terminology</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">simonw.substack.com</span>
+          <a class="article-read" href="https://simonw.substack.com/p/i-think-agent-may-finally-have-a" target="_blank">Read →</a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ══ BUSINESS ══ -->
   <div class="panel" id="panel-business">
-    <div class="section-label">💼 AI reshaping work & companies</div>
-
-    <div class="card featured clickable" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
-      <div class="featured-badge">✦ Most interesting model to watch</div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">🌍</div>
-        <div class="card-meta">
-          <div class="card-source">Pieter Levels · Various profiles</div>
-          <div class="card-title">The solo AI empire: $3.5M ARR, 90% margins, 0 employees</div>
-        </div>
-      </div>
-      <div class="card-body">Pieter Levels is running the most interesting live business experiment of this AI moment. Photo AI, Interior AI, Nomad List, RemoteOK — all profitable, all solo, all automated. The model challenges every assumption about team size, specialization, and growth.<br><br>What's really worth studying: not the tools, but the philosophy — ship fast, automate ruthlessly, stay small on purpose.</div>
-      <div class="card-footer">
-        <span class="tag">Solo</span><span class="tag green">$3.5M ARR</span><span class="tag red">0 employees</span>
-        <a class="read-link" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Deep dive →</a>
-      </div>
+    <div class="section-intro">
+      <div class="section-title">AI × Business</div>
+      <div class="section-desc">How AI is reshaping companies, products, and work — strategy and real-world signals.</div>
     </div>
-
-    <div class="card clickable" onclick="window.open('https://news.ycombinator.com/front','_blank')">
-      <div class="card-accent" style="background:#dc2626"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#fff1f1">💸</div>
-        <div class="card-meta">
-          <div class="card-source">Hacker News · May 2026</div>
-          <div class="card-title">Uber burns 2026 AI budget in four months</div>
+    <div class="article-list">
+      <div class="article" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Pieter Levels · Multiple profiles</div>
+          <div class="article-headline">The solo AI empire: $3.5M ARR, 90% margins, 0 employees</div>
+          <div class="article-body">Pieter Levels is running what might be the most interesting live business experiment of this AI moment. The model challenges every assumption about team size and growth. What's worth studying: not the products, but the philosophy — ship fast, automate ruthlessly, stay small on purpose.</div>
+          <div class="article-footer"><span class="tag green">$3.5M ARR</span><span class="tag red">0 employees</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">buildloop.ai</span>
+          <a class="article-read" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Read →</a>
         </div>
       </div>
-      <div class="card-body">Uber burned through their entire 2026 Claude Code budget by May — 4 months into the year. This tells you something real about enterprise AI adoption velocity. Ops and finance teams everywhere are scrambling because actual usage is orders of magnitude higher than any projection made in 2025.</div>
-      <div class="card-footer">
-        <span class="tag red">Enterprise</span><span class="tag">Spend</span>
-        <a class="read-link" href="https://news.ycombinator.com/front" target="_blank">HN thread →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://news.ycombinator.com/front','_blank')">
-      <div class="card-accent" style="background:#dc2626"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#fff1f1">🍎</div>
-        <div class="card-meta">
-          <div class="card-source">Hacker News · May 2026</div>
-          <div class="card-title">Apple accidentally ships Claude.md files inside a consumer app</div>
+      <div class="article" onclick="window.open('https://news.ycombinator.com/front','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Hacker News · May 2026</div>
+          <div class="article-headline">Uber burns 2026 AI budget in four months</div>
+          <div class="article-body">Uber burned through their entire 2026 Claude Code budget by May. Actual enterprise AI usage is running orders of magnitude higher than any projection made in 2025. Ops and finance teams everywhere are scrambling — the models they used to forecast spend are broken.</div>
+          <div class="article-footer"><span class="tag red">Enterprise</span><span class="tag">Spend</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">Hacker News</span>
+          <a class="article-read" href="https://news.ycombinator.com/front" target="_blank">HN thread →</a>
         </div>
       </div>
-      <div class="card-body">Apple's support app shipped with internal Claude.md configuration files from their AI dev process. Less a gotcha moment, more an accidental window into how even Apple's teams are actually using Claude — and what their internal prompting patterns look like.</div>
-      <div class="card-footer">
-        <span class="tag red">Leak</span><span class="tag blue">Adoption signal</span>
-        <a class="read-link" href="https://news.ycombinator.com/front" target="_blank">HN →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="window.open('https://blog.matt-rickard.com/p/the-model-is-not-the-product','_blank')">
-      <div class="card-accent" style="background:#dc2626"></div>
-      <div class="card-header">
-        <div class="card-icon" style="background:#fff1f1">📦</div>
-        <div class="card-meta">
-          <div class="card-source">Matt Rickard · blog.matt-rickard.com</div>
-          <div class="card-title">The Model is Not The Product — and that changes everything about moats</div>
+      <div class="article" onclick="window.open('https://news.ycombinator.com/front','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Hacker News · May 2026</div>
+          <div class="article-headline">Apple accidentally ships Claude.md files inside a consumer app</div>
+          <div class="article-body">Apple's support app shipped with internal Claude.md configuration files from their AI dev process. Less a gotcha moment, more an accidental window into how even Apple's teams are actually using Claude — and what their internal prompting patterns look like.</div>
+          <div class="article-footer"><span class="tag red">Leak</span><span class="tag blue">Adoption signal</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">Hacker News</span>
+          <a class="article-read" href="https://news.ycombinator.com/front" target="_blank">HN →</a>
         </div>
       </div>
-      <div class="card-body">The current wave has been about directly exposing models to users. Rickard argues this is temporary: the model is not the product, data no longer serves as a moat the way people expected, and the real competitive landscape is shifting underneath everyone building on top of models.</div>
-      <div class="card-footer">
-        <span class="tag red">Strategy</span><span class="tag">Moats</span>
-        <a class="read-link" href="https://blog.matt-rickard.com/p/the-model-is-not-the-product" target="_blank">Read →</a>
+      <div class="article" onclick="window.open('https://blog.matt-rickard.com/p/the-model-is-not-the-product','_blank')">
+        <div class="article-left">
+          <div class="article-kicker">Matt Rickard · blog.matt-rickard.com</div>
+          <div class="article-headline">The Model is Not The Product — and that changes everything about moats</div>
+          <div class="article-body">The current wave has been about directly exposing models to users. Rickard argues this is temporary. Data no longer serves as a moat the way people expected, and the real competitive landscape is shifting underneath everyone building on top of models right now.</div>
+          <div class="article-footer"><span class="tag red">Strategy</span><span class="tag">Moats</span></div>
+        </div>
+        <div class="article-right">
+          <span class="article-source-label">matt-rickard.com</span>
+          <a class="article-read" href="https://blog.matt-rickard.com/p/the-model-is-not-the-product" target="_blank">Read →</a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ══ AUTHORS ══ -->
   <div class="panel" id="panel-authors">
-    <div class="schedule-banner">
-      <div class="schedule-icon">✍️</div>
-      <div>
-        <div class="schedule-title">9 authors on the radar — growing each issue</div>
-        <div class="schedule-sub">Only people who build things, have skin in the game, or do original research. No aggregators.</div>
-      </div>
+    <div class="section-intro">
+      <div class="section-title">Authors on the Radar</div>
+      <div class="section-desc">Only people who build things, have skin in the game, or do original research. Grows each issue — with active search for diverse voices worldwide.</div>
     </div>
+    <div class="authors-grid">
 
-    <div class="section-label">👥 Who we track</div>
-    <div class="author-grid">
-
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#f0edff">🧠</div>
           <div>
             <div class="author-name">Andrej Karpathy</div>
             <div class="author-handle">karpathy.ai · @karpathy</div>
           </div>
-          <span class="author-new">New</span>
+          <span class="new-pill">New</span>
         </div>
-        <div class="author-bio">Former Tesla AI Director, OpenAI co-founder, now independent. Built microgpt (200-line pure Python GPT), coined Software 3.0, the LLM wiki pattern. Rare combination: deep theory + practical builder instincts.</div>
+        <div class="author-bio">Former Tesla AI Director, OpenAI co-founder, now independent. Built microgpt (200-line pure Python GPT), coined Software 3.0, the LLM wiki pattern. Rare combination of deep theory and practical builder instincts.</div>
         <div class="author-links">
           <a class="author-link" href="https://karpathy.bearblog.dev/blog/" target="_blank">Blog</a>
           <a class="author-link" href="https://karpathy.ai" target="_blank">Site</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#f0faf3">🚀</div>
           <div>
             <div class="author-name">swyx (Shawn Wang)</div>
-            <div class="author-handle">swyx.io · @swyx</div>
+            <div class="author-handle">swyx.io · @swyx · Singapore</div>
           </div>
-          <span class="author-new">New</span>
+          <span class="new-pill">New</span>
         </div>
-        <div class="author-bio">Founder of Latent Space podcast + smol.ai. Coined "AI Engineer" as a role. The Latent Space podcast (~175 eps) is the most technically rigorous AI engineering podcast running. His 2026 focus: AI for Science.</div>
+        <div class="author-bio">Singaporean developer and founder of Latent Space podcast + smol.ai. Coined "AI Engineer" as a distinct role. Latent Space (~175 episodes) is the most technically rigorous AI engineering podcast running. 2026 focus: AI for Science.</div>
         <div class="author-links">
           <a class="author-link" href="https://www.latent.space/" target="_blank">Podcast</a>
           <a class="author-link" href="https://www.swyx.io" target="_blank">Blog</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#f0faf3">🎓</div>
           <div>
             <div class="author-name">Ethan Mollick</div>
             <div class="author-handle">oneusefulthing.org · @emollick</div>
           </div>
-          <span class="author-new">New</span>
+          <span class="new-pill">New</span>
         </div>
-        <div class="author-bio">Wharton professor studying entrepreneurship and AI. Writes One Useful Thing — research-backed, personal-use tested. He writes every post himself, only asks AI for feedback after finishing a full draft. Best academic voice that isn't just theoretical.</div>
+        <div class="author-bio">Wharton professor studying entrepreneurship and AI. Writes One Useful Thing — research-backed, personally tested. Writes every post himself before asking AI for feedback. Best academic voice that isn't purely theoretical.</div>
         <div class="author-links">
           <a class="author-link" href="https://www.oneusefulthing.org" target="_blank">Newsletter</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#eff6ff">⚙️</div>
           <div>
             <div class="author-name">Matt Rickard</div>
             <div class="author-handle">blog.matt-rickard.com</div>
           </div>
-          <span class="author-new">New</span>
+          <span class="new-pill">New</span>
         </div>
-        <div class="author-bio">Ships a post almost daily. Dense, short, no padding. Covers AI engineering, product strategy, and infrastructure. Highlights: The Spec Layer, The Model is Not The Product, The New AI Moats. No bio fluff — just ideas.</div>
+        <div class="author-bio">Posts almost daily. Dense, short, no padding. Covers AI engineering, product strategy, and infrastructure. Key pieces: The Spec Layer, The Model is Not The Product, The New AI Moats. No bio fluff — just ideas.</div>
         <div class="author-links">
           <a class="author-link" href="https://blog.matt-rickard.com" target="_blank">Blog</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
-          <div class="author-avatar" style="background:#f0edff">📝</div>
+          <div class="author-avatar" style="background:#fdf6ef">📝</div>
           <div>
             <div class="author-name">Simon Willison</div>
-            <div class="author-handle">simonwillison.net · @simonw</div>
+            <div class="author-handle">simonwillison.net · @simonw · UK</div>
           </div>
         </div>
-        <div class="author-bio">Co-creator of Django. Maintains datasette and LLM CLI tools. Most technically credible independent voice on practical AI — he actually reads papers, maintains production tools, and writes about things that break. No incentive to hype.</div>
+        <div class="author-bio">Co-creator of Django (UK). Maintains datasette and LLM CLI tools. Most technically credible independent voice on practical AI — reads papers, maintains production tools, writes about things that break. No incentive to hype.</div>
         <div class="author-links">
           <a class="author-link" href="https://simonwillison.net" target="_blank">Blog</a>
           <a class="author-link" href="https://simonw.substack.com" target="_blank">Substack</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#fff8ef">🛠️</div>
           <div>
             <div class="author-name">Ben Tossell</div>
-            <div class="author-handle">bentossell.com · @bentossell</div>
+            <div class="author-handle">bentossell.com · @bentossell · UK</div>
           </div>
         </div>
         <div class="author-bio">Built MakerPad (sold to Zapier), then Ben's Bites ($1M+ newsletter). Best voice for "what actually works" AI builder takes for non-engineers. Only writes about things he's personally built with.</div>
@@ -929,22 +1102,22 @@
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#f0faf3">🌍</div>
           <div>
             <div class="author-name">Pieter Levels</div>
-            <div class="author-handle">levelsio.com · @levelsio</div>
+            <div class="author-handle">levelsio.com · @levelsio · Netherlands</div>
           </div>
         </div>
-        <div class="author-bio">Solo founder running $3.5M ARR portfolio (Photo AI, Interior AI, Nomad List, RemoteOK). The canonical example of AI-powered solo business at scale. Builds in public, shares real numbers.</div>
+        <div class="author-bio">Dutch solo founder running $3.5M ARR portfolio (Photo AI, Interior AI, Nomad List, RemoteOK). The canonical example of AI-powered solo business at scale. Builds in public, shares real numbers.</div>
         <div class="author-links">
           <a class="author-link" href="https://aitools.fyi/creator/pieter-levels" target="_blank">AI tools</a>
           <a class="author-link" href="https://x.com/levelsio" target="_blank">X</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#fff8ef">📦</div>
           <div>
@@ -952,14 +1125,14 @@
             <div class="author-handle">lennysnewsletter.com</div>
           </div>
         </div>
-        <div class="author-bio">Former Airbnb PM. Runs the top product newsletter + podcast. The "How I AI" spinoff (hosted by Claire Vo) is now the best source for real AI workflow walkthroughs in product. Weekly Willison collaboration is excellent.</div>
+        <div class="author-bio">Former Airbnb PM. Runs the top product newsletter + podcast. The "How I AI" spinoff (hosted by Claire Vo) is now the best source for real AI workflow walkthroughs. Weekly Willison collaboration is excellent.</div>
         <div class="author-links">
           <a class="author-link" href="https://www.lennysnewsletter.com" target="_blank">Newsletter</a>
           <a class="author-link" href="https://www.lennysnewsletter.com/podcast" target="_blank">Podcast</a>
         </div>
       </div>
 
-      <div class="author-card">
+      <div class="author-cell">
         <div class="author-top">
           <div class="author-avatar" style="background:#f3f3f3">✍️</div>
           <div>
@@ -967,182 +1140,118 @@
             <div class="author-handle">paulgraham.com · @paulg</div>
           </div>
         </div>
-        <div class="author-bio">YC co-founder. Infrequent but sharp essays — his "Writes and Write-Nots" on AI and writing is one of the best pieces on the cognitive consequences of outsourcing writing. Worth tracking because when he writes, it matters.</div>
+        <div class="author-bio">YC co-founder. Infrequent but sharp essays. "Writes and Write-Nots" on AI and writing is one of the best pieces on the cognitive consequences of outsourcing writing. Tracked because when he writes, it tends to matter.</div>
         <div class="author-links">
           <a class="author-link" href="https://paulgraham.com/articles.html" target="_blank">Essays</a>
         </div>
       </div>
 
     </div>
-
-    <div class="section-label">💡 Who should be added next?</div>
-    <div class="card" style="cursor:default">
-      <div class="card-body">
-        Each issue, Claude scouts for new voices to add — filtering for: real skin in the game, original thinking (not aggregation), and content you couldn't get from reading a summary. Current watchlist includes <strong>Michael Lynch</strong> (TinyPilot founder, $450K+ ARR, brutally honest monthly reports), <strong>Xe Iaso</strong> (DevOps/infrastructure honesty), and voices from the AI for Science space that swyx is covering on Latent Space.
-      </div>
-    </div>
   </div>
 
   <!-- ══ SOURCES ══ -->
   <div class="panel" id="panel-sources">
-    <div class="schedule-banner">
-      <div class="schedule-icon">📬</div>
-      <div>
-        <div class="schedule-title">Refreshes every Tuesday & Thursday at 9am</div>
-        <div class="schedule-sub">17 sources tracked. Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
-      </div>
+    <div class="section-intro">
+      <div class="section-title">Sources</div>
+      <div class="section-desc">17 sources tracked. Refreshes every Tuesday &amp; Thursday. Zero AI-generated summaries of AI news.</div>
     </div>
-
-    <div class="section-label">📡 Active sources</div>
     <div class="sources-grid">
-      <a class="source-pill hot" href="https://simonwillison.net" target="_blank">
-        <div class="source-pill-icon">📝</div>
-        <div><div class="source-pill-name">Simon Willison</div><div class="source-pill-type">Blog · Technical AI</div></div>
-      </a>
-      <a class="source-pill hot" href="https://karpathy.bearblog.dev" target="_blank">
-        <div class="source-pill-icon">🧠</div>
-        <div><div class="source-pill-name">Andrej Karpathy</div><div class="source-pill-type">Blog · Research</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill hot" href="https://www.latent.space" target="_blank">
-        <div class="source-pill-icon">🚀</div>
-        <div><div class="source-pill-name">Latent Space</div><div class="source-pill-type">swyx · Podcast</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill hot" href="https://www.oneusefulthing.org" target="_blank">
-        <div class="source-pill-icon">🎓</div>
-        <div><div class="source-pill-name">One Useful Thing</div><div class="source-pill-type">Ethan Mollick · Research</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill hot" href="https://blog.matt-rickard.com" target="_blank">
-        <div class="source-pill-icon">⚙️</div>
-        <div><div class="source-pill-name">Matt Rickard</div><div class="source-pill-type">Daily AI/eng takes</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill hot" href="https://www.bentossell.com" target="_blank">
-        <div class="source-pill-icon">🛠️</div>
-        <div><div class="source-pill-name">Ben Tossell</div><div class="source-pill-type">Blog + Newsletter</div></div>
-      </a>
-      <a class="source-pill hot" href="https://www.lennysnewsletter.com" target="_blank">
-        <div class="source-pill-icon">📦</div>
-        <div><div class="source-pill-name">Lenny's Newsletter</div><div class="source-pill-type">Newsletter + Podcast</div></div>
-      </a>
-      <a class="source-pill hot" href="https://aitools.fyi/creator/pieter-levels" target="_blank">
-        <div class="source-pill-icon">🌍</div>
-        <div><div class="source-pill-name">Pieter Levels</div><div class="source-pill-type">Builder · X</div></div>
-      </a>
-      <a class="source-pill hot" href="https://news.ycombinator.com" target="_blank">
-        <div class="source-pill-icon">🧡</div>
-        <div><div class="source-pill-name">Hacker News</div><div class="source-pill-type">Show HN · Ask HN</div></div>
-      </a>
-      <a class="source-pill" href="https://paulgraham.com/articles.html" target="_blank">
-        <div class="source-pill-icon">✍️</div>
-        <div><div class="source-pill-name">Paul Graham</div><div class="source-pill-type">Essays · paulgraham.com</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill" href="https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688" target="_blank">
-        <div class="source-pill-icon">🎙️</div>
-        <div><div class="source-pill-name">No Priors</div><div class="source-pill-type">Podcast · Elad Gil</div></div>
-      </a>
-      <a class="source-pill" href="https://www.bensbites.com" target="_blank">
-        <div class="source-pill-icon">🍔</div>
-        <div><div class="source-pill-name">Ben's Bites</div><div class="source-pill-type">Daily AI newsletter</div></div>
-      </a>
-      <a class="source-pill" href="https://stratechery.com" target="_blank">
-        <div class="source-pill-icon">📊</div>
-        <div><div class="source-pill-name">Stratechery</div><div class="source-pill-type">Ben Thompson · Analysis</div></div>
-      </a>
-      <a class="source-pill" href="https://buildloop.ai" target="_blank">
-        <div class="source-pill-icon">🔁</div>
-        <div><div class="source-pill-name">Buildloop AI</div><div class="source-pill-type">Founder journeys</div></div>
-      </a>
-      <a class="source-pill" href="https://simonw.substack.com" target="_blank">
-        <div class="source-pill-icon">✍️</div>
-        <div><div class="source-pill-name">Willison Substack</div><div class="source-pill-type">Newsletter</div></div>
-      </a>
-      <a class="source-pill" href="https://www.swyx.io" target="_blank">
-        <div class="source-pill-icon">💡</div>
-        <div><div class="source-pill-name">swyx.io</div><div class="source-pill-type">Blog · Essays</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill" href="https://x.com/bentossell" target="_blank">
-        <div class="source-pill-icon">𝕏</div>
-        <div><div class="source-pill-name">Ben Tossell · X</div><div class="source-pill-type">Live builder takes</div></div>
-      </a>
+      <a class="source-cell" href="https://simonwillison.net" target="_blank"><div class="source-icon">📝</div><div><div class="source-name">Simon Willison</div><div class="source-type">Blog · UK</div></div></a>
+      <a class="source-cell" href="https://karpathy.bearblog.dev" target="_blank"><div class="source-icon">🧠</div><div><div class="source-name">Andrej Karpathy</div><div class="source-type">Blog · Research</div></div><span class="source-new">New</span></a>
+      <a class="source-cell" href="https://www.latent.space" target="_blank"><div class="source-icon">🚀</div><div><div class="source-name">Latent Space</div><div class="source-type">swyx · Singapore</div></div><span class="source-new">New</span></a>
+      <a class="source-cell" href="https://www.oneusefulthing.org" target="_blank"><div class="source-icon">🎓</div><div><div class="source-name">One Useful Thing</div><div class="source-type">Ethan Mollick</div></div><span class="source-new">New</span></a>
+      <a class="source-cell" href="https://blog.matt-rickard.com" target="_blank"><div class="source-icon">⚙️</div><div><div class="source-name">Matt Rickard</div><div class="source-type">Daily AI/eng</div></div><span class="source-new">New</span></a>
+      <a class="source-cell" href="https://www.bentossell.com" target="_blank"><div class="source-icon">🛠️</div><div><div class="source-name">Ben Tossell</div><div class="source-type">Blog · UK</div></div></a>
+      <a class="source-cell" href="https://www.lennysnewsletter.com" target="_blank"><div class="source-icon">📦</div><div><div class="source-name">Lenny's Newsletter</div><div class="source-type">Newsletter + Podcast</div></div></a>
+      <a class="source-cell" href="https://aitools.fyi/creator/pieter-levels" target="_blank"><div class="source-icon">🌍</div><div><div class="source-name">Pieter Levels</div><div class="source-type">Builder · Netherlands</div></div></a>
+      <a class="source-cell" href="https://news.ycombinator.com" target="_blank"><div class="source-icon">🧡</div><div><div class="source-name">Hacker News</div><div class="source-type">Show HN · Ask HN</div></div></a>
+      <a class="source-cell" href="https://paulgraham.com/articles.html" target="_blank"><div class="source-icon">✍️</div><div><div class="source-name">Paul Graham</div><div class="source-type">Essays</div></div><span class="source-new">New</span></a>
+      <a class="source-cell" href="https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688" target="_blank"><div class="source-icon">🎙️</div><div><div class="source-name">No Priors</div><div class="source-type">Podcast · Elad Gil</div></div></a>
+      <a class="source-cell" href="https://www.bensbites.com" target="_blank"><div class="source-icon">🍔</div><div><div class="source-name">Ben's Bites</div><div class="source-type">Daily newsletter</div></div></a>
+      <a class="source-cell" href="https://stratechery.com" target="_blank"><div class="source-icon">📊</div><div><div class="source-name">Stratechery</div><div class="source-type">Ben Thompson</div></div></a>
+      <a class="source-cell" href="https://buildloop.ai" target="_blank"><div class="source-icon">🔁</div><div><div class="source-name">Buildloop AI</div><div class="source-type">Founder journeys</div></div></a>
+      <a class="source-cell" href="https://simonw.substack.com" target="_blank"><div class="source-icon">✍️</div><div><div class="source-name">Willison Substack</div><div class="source-type">Newsletter</div></div></a>
+      <a class="source-cell" href="https://www.swyx.io" target="_blank"><div class="source-icon">💡</div><div><div class="source-name">swyx.io</div><div class="source-type">Blog · Essays</div></div><span class="source-new">New</span></a>
+      <a class="source-cell" href="https://x.com/levelsio" target="_blank"><div class="source-icon">𝕏</div><div><div class="source-name">Pieter Levels · X</div><div class="source-type">Live builder takes</div></div></a>
     </div>
 
-    <div class="section-label">🚫 What's excluded and why</div>
-    <div class="card" style="cursor:default">
-      <div class="card-body" style="color:#555">
-        <strong>Out:</strong> LinkedIn posts recycling TechCrunch · "AI will replace X" thought pieces with no data · Newsletter aggregators summarizing other newsletters · "I asked ChatGPT to write this" posts · Press releases dressed as blog posts · "Top 10 AI tools" listicles where the author hasn't used them.<br><br>
-        <strong>The filter:</strong> Does this person build things or have real domain expertise? Do they have skin in the game? Is there something here you couldn't get from a headline? No to any = out.
-      </div>
+    <div class="section-rule" style="margin-top:28px">What's excluded and why</div>
+    <p style="font-size:14px;line-height:1.7;color:var(--ink-3);margin-top:12px">
+      <strong style="color:var(--ink)">Out:</strong> LinkedIn posts recycling TechCrunch · "AI will replace X" thought pieces with no data · Newsletter aggregators summarizing other newsletters · "I asked ChatGPT to write this" posts · Press releases dressed as blog posts · "Top 10 AI tools" listicles where the author hasn't used them.
+      <br><br>
+      <strong style="color:var(--ink)">The filter:</strong> Does this person build things or have real domain expertise? Do they have skin in the game? Is there something here you couldn't get from a headline? No to any = out.
+    </p>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="site-footer">
+    <div>
+      <div class="footer-brand">AI <em>Radar</em></div>
+      <div class="footer-copy">© 2026 · Tuesdays &amp; Thursdays · Curated, not aggregated</div>
+    </div>
+    <div class="footer-links">
+      <a class="footer-link" href="archive.html">Archive</a>
+      <a class="footer-link" href="#" onclick="shareDigest(); return false;">Share</a>
     </div>
   </div>
 
-</div><!-- /main -->
+</div><!-- /body-wrap -->
 
 <!-- TOAST -->
-<div class="toast" id="toast">✓ Link copied to clipboard</div>
+<div class="toast" id="toast">✓ Link copied</div>
 
 <script>
-  // ── Subscribe tracking
-  function trackSubscribe(e) {
-    umami.track('Subscribe Click');
-    // form submits normally to Beehiiv after tracking
-  }
+  window.umami = window.umami || { track: function() {} };
 
-  // ── Tab switching + Plausible event
   function switchTab(name) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      t.classList.remove('active','active-red');
+    });
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+    const tab = document.querySelector(`[data-tab="${name}"]`);
+    tab.classList.add('active');
     document.getElementById(`panel-${name}`).classList.add('active');
-    // Track which section readers explore
     umami.track('Tab View', { tab: name });
   }
 
-  // ── Card filter
   function filterCards(btn, tag, panelId) {
     document.querySelectorAll(`#panel-${panelId} .filter-btn`).forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll(`#panel-${panelId} .card[data-tag]`).forEach(card => {
-      card.style.display = (tag === 'all' || card.dataset.tag === tag) ? '' : 'none';
+    document.querySelectorAll(`#panel-${panelId} .article[data-tag]`).forEach(a => {
+      a.style.display = (tag === 'all' || a.dataset.tag === tag) ? '' : 'none';
     });
   }
 
-  // ── Share button + Plausible event
   function shareDigest() {
     const url = window.location.href;
     umami.track('Share Click');
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => showToast('✓ Link copied to clipboard'));
+      navigator.clipboard.writeText(url).then(() => showToast('✓ Link copied'));
     } else {
       const ta = document.createElement('textarea');
-      ta.value = url;
-      ta.style.position = 'fixed';
-      ta.style.opacity = '0';
-      document.body.appendChild(ta);
-      ta.focus(); ta.select();
-      try { document.execCommand('copy'); showToast('✓ Link copied to clipboard'); }
-      catch(e) { showToast('⚠ Copy the URL from your address bar'); }
+      ta.value = url; ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); showToast('✓ Link copied'); }
+      catch(e) { showToast('Copy the URL from your address bar'); }
       document.body.removeChild(ta);
     }
   }
 
+  function trackSubscribe(e) { umami.track('Subscribe Click'); }
+
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2500);
   }
 
-  // ── Track all outbound "Read →" link clicks
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('a.read-link[target="_blank"], a.source-pill[target="_blank"], a.author-link[target="_blank"]').forEach(link => {
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
       link.addEventListener('click', () => {
-        const label = link.closest('.card')?.querySelector('.card-title, .ep-title, .source-pill-name, .author-name')?.textContent?.trim() || link.href;
-        umami.track('Outbound Click', { url: link.href, label: label.slice(0, 60) });
+        const label = link.closest('[class*="article"],[class*="hit"],[class*="pod"],[class*="source"]')
+          ?.querySelector('[class*="headline"],[class*="title"],[class*="name"]')
+          ?.textContent?.trim() || link.href;
+        umami.track('Outbound Click', { url: link.href, label: label.slice(0,60) });
       });
     });
   });
