@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Radar — Issue #1 · May 15, 2026</title>
-<meta name="description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
-<meta property="og:title" content="AI Radar — Issue #1 · May 15, 2026">
-<meta property="og:description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
+<title>The Frequency — Issue #1 · May 15, 2026</title>
+<meta name="description" content="Twice-weekly digest of original AI thinking. Real builders, honest takes, zero hype — curated by Lilit Rutyunyan.">
+<meta property="og:title" content="The Frequency — Issue #1 · May 15, 2026">
+<meta property="og:description" content="Twice-weekly digest of original AI thinking. Real builders, honest takes, zero hype — curated by Lilit Rutyunyan.">
 <meta property="og:type" content="website">
 <script defer src="https://cloud.umami.is/script.js" data-website-id="06dbf26f-457b-473a-a135-27e85ed3ea7c"></script>
 <script>window.umami = window.umami || { track: function() {} };</script>
@@ -20,37 +20,47 @@ body {
 }
 
 /* ── HEADER ── */
-.header {
+.masthead {
+  background: #fff;
+  border-bottom: 1px solid #e8e5df;
+  padding: 20px 28px 0;
   position: sticky; top: 0; z-index: 100;
-  background: #fff; border-bottom: 1px solid #e8e5df;
-  padding: 10px 20px;
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px;
 }
-.header-left { display: flex; align-items: center; gap: 10px; }
+.masthead-top {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  gap: 12px; flex-wrap: wrap;
+}
+.masthead-meta {
+  display: flex; align-items: center; gap: 10px;
+}
 .logo {
-  width: 38px; height: 38px;
+  width: 36px; height: 36px;
   background: linear-gradient(135deg, #6c47ff, #a855f7);
   border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: #fff; flex-shrink: 0;
+  font-size: 18px; flex-shrink: 0;
 }
-.title { font-size: 17px; font-weight: 700; color: #1a1a1a; }
-.subtitle { font-size: 12px; color: #888; }
-.header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.header-title { font-size: 17px; font-weight: 700; color: #111; }
+.header-sub { font-size: 12px; color: #888; margin-top: 1px; }
 .issue-badge {
-  font-size: 11px; background: #ede9ff; color: #6c47ff;
-  padding: 3px 9px; border-radius: 20px; font-weight: 600;
+  background: #f0edff; color: #6c47ff;
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 20px;
+  letter-spacing: 0.3px;
 }
-.share-btn {
+.masthead-actions { display: flex; gap: 8px; align-items: center; }
+.btn-ghost {
   font-size: 12px; font-weight: 600;
-  padding: 7px 14px; background: #6c47ff; color: #fff;
-  border: none; border-radius: 8px; cursor: pointer;
-  display: flex; align-items: center; gap: 5px;
-  text-decoration: none; font-family: inherit;
+  padding: 6px 13px;
+  border: 1px solid #d4cff7; border-radius: 20px;
+  background: #fff; color: #6c47ff;
+  cursor: pointer; text-decoration: none;
+  transition: background 0.15s;
+  font-family: inherit;
 }
-.share-btn:hover { background: #5538e6; }
-.share-btn.ghost { background: #f0edff; color: #6c47ff; }
+.btn-ghost:hover { background: #f0edff; }
 
 /* Nav tabs */
 .nav {
@@ -75,29 +85,36 @@ body {
 .panel { display: none; }
 .panel.active { display: block; }
 
-/* ── SUBSCRIBE FORM ── */
-.sub-bar {
-  display: flex; flex-direction: column; gap: 8px;
-  margin-bottom: 20px;
+/* ── SUBSCRIBE STRIP ── */
+.sub-strip {
+  background: linear-gradient(135deg, #6c47ff, #9333ea);
+  color: #fff;
+  padding: 14px 20px;
+  border-radius: 12px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+  margin-bottom: 24px;
 }
-.sub-bar-label { font-size: 12px; color: #888; }
-.sub-bar-inputs { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.sub-bar-input {
-  font-size: 13px; padding: 6px 12px;
-  border: 1.5px solid #e8e5df; border-radius: 8px;
-  background: #fff; color: #1a1a1a; outline: none;
-  width: 210px; font-family: inherit;
-  transition: border-color 0.12s;
+.sub-strip-text { flex: 1; min-width: 180px; font-size: 13px; font-weight: 500; line-height: 1.4; }
+.sub-strip-text strong { font-weight: 700; }
+.sub-note { font-size: 10px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+.sub-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.sub-input {
+  font-size: 13px; padding: 8px 13px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 8px; background: rgba(255,255,255,0.15);
+  color: #fff; width: 200px; outline: none;
+  transition: border-color 0.12s; font-family: inherit;
 }
-.sub-bar-input:focus { border-color: #6c47ff; }
-.sub-bar-btn {
-  font-size: 12px; font-weight: 600;
-  padding: 6px 14px; background: #6c47ff; color: #fff;
+.sub-input::placeholder { color: rgba(255,255,255,0.5); }
+.sub-input:focus { border-color: rgba(255,255,255,0.7); }
+.sub-btn {
+  font-size: 12px; font-weight: 700;
+  padding: 8px 18px; background: #fff; color: #6c47ff;
   border: none; border-radius: 8px; cursor: pointer;
-  font-family: inherit; white-space: nowrap;
+  transition: background 0.12s; white-space: nowrap;
+  font-family: inherit;
 }
-.sub-bar-btn:hover { background: #5538e6; }
-.sub-bar-msg { font-size: 12px; }
+.sub-btn:hover { background: #f0edff; }
 
 /* ── OVERVIEW ── */
 .issue-header {
@@ -339,7 +356,7 @@ body {
 .footer-link:hover { text-decoration: underline; }
 
 @media(max-width:600px){
-  .header { padding: 10px 16px; }
+  .masthead { padding: 14px 16px 0; }
   .body-wrap { padding: 20px 16px 48px; }
   .stats-row { grid-template-columns: repeat(2,1fr); }
   .lead { grid-template-columns: 1fr; }
@@ -349,41 +366,52 @@ body {
 <body>
 
 <!-- HEADER -->
-<header class="header">
-  <div class="header-left">
-    <div class="logo">🧠</div>
-    <div>
-      <div class="title">AI Radar</div>
-      <div class="subtitle">Lilit's curated digest · Twice a week</div>
+<div class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta">
+      <div class="logo">🧠</div>
+      <div>
+        <div class="header-title">The Frequency</div>
+        <div class="header-sub">Original AI thinking, twice a week · Real builders · Zero hype</div>
+      </div>
+      <span class="issue-badge">Issue #1 · May 15, 2026</span>
+    </div>
+    <div class="masthead-actions">
+      <a class="btn-ghost" href="archive.html">Archive</a>
+      <button class="btn-ghost" onclick="shareDigest()">↗ Share</button>
     </div>
   </div>
-  <div class="header-right">
-    <span class="issue-badge">Issue #1 · May 15, 2026</span>
-    <a class="share-btn ghost" href="archive.html">Archive</a>
-    <button class="share-btn" onclick="shareDigest()">↗ Share</button>
+  <div class="nav">
+    <div class="nav-tab active" onclick="switchTab('overview')" data-tab="overview">Overview</div>
+    <div class="nav-tab" onclick="switchTab('builders')" data-tab="builders">Builders</div>
+    <div class="nav-tab" onclick="switchTab('pods')" data-tab="pods">Podcasts</div>
+    <div class="nav-tab" onclick="switchTab('research')" data-tab="research">Research</div>
+    <div class="nav-tab" onclick="switchTab('business')" data-tab="business">AI × Business</div>
+    <div class="nav-tab" onclick="switchTab('authors')" data-tab="authors">Authors</div>
+    <div class="nav-tab" onclick="switchTab('sources')" data-tab="sources">Sources</div>
   </div>
-</header>
-<div class="nav">
-  <div class="nav-tab active" onclick="switchTab('overview')" data-tab="overview">Overview</div>
-  <div class="nav-tab" onclick="switchTab('builders')" data-tab="builders">Builders</div>
-  <div class="nav-tab" onclick="switchTab('pods')" data-tab="pods">Podcasts</div>
-  <div class="nav-tab" onclick="switchTab('research')" data-tab="research">Research</div>
-  <div class="nav-tab" onclick="switchTab('business')" data-tab="business">AI × Business</div>
-  <div class="nav-tab" onclick="switchTab('authors')" data-tab="authors">Authors</div>
-  <div class="nav-tab" onclick="switchTab('sources')" data-tab="sources">Sources</div>
 </div>
 
 <!-- BODY -->
 <div class="body-wrap">
 
-  <div class="sub-bar">
-    <span class="sub-bar-label">Get AI Radar in your inbox — free, twice a week.</span>
-    <div class="sub-bar-inputs">
-      <input class="sub-bar-input" type="text" id="sub-name" placeholder="First name" style="width:130px">
-      <input class="sub-bar-input" type="email" id="sub-email" placeholder="your@email.com">
-      <button class="sub-bar-btn" onclick="handleSubscribe()">Subscribe</button>
-      <span class="sub-bar-msg" id="sub-msg"></span>
+  <!-- ══ SUBSCRIBE STRIP ══
+       Sign up free at substack.com, create a publication, then
+       replace YOUR-PUBLICATION below with your Substack subdomain.
+       e.g. if your Substack is airadar.substack.com use "airadar"
+  -->
+  <div class="sub-strip">
+    <div class="sub-strip-text">
+      <strong>Get The Frequency in your inbox.</strong>
+      Every Tuesday &amp; Thursday — original thinking, zero fluff.
+      <div class="sub-note">Free · No spam · Unsubscribe anytime · Powered by Substack</div>
     </div>
+    <form class="sub-form" action="https://lilitaidigest.substack.com/api/v1/free?nojs=true" method="post" target="_blank" onsubmit="trackSubscribe(event)">
+      <div>
+        <input class="sub-input" type="email" name="email" placeholder="your@email.com" required>
+      </div>
+      <button class="sub-btn" type="submit">Subscribe</button>
+    </form>
   </div>
 
   <!-- ══ OVERVIEW ══ -->
@@ -898,7 +926,7 @@ body {
   <!-- FOOTER -->
   <div class="site-footer">
     <div>
-      <div class="footer-brand">AI Radar</div>
+      <div class="footer-brand">The Frequency</div>
       <div>© 2026 · Tuesdays &amp; Thursdays · Curated, not aggregated</div>
     </div>
     <div class="footer-links">
@@ -949,44 +977,7 @@ body {
     }
   }
 
-  const SUPABASE_URL = 'https://mhociwppaqolnlnsynfu.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ob2Npd3BwYXFvbG5sbnN5bmZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDQ1NjcsImV4cCI6MjA5NDQyMDU2N30.Qgtu4BiJfvmOsnlbzwG4CD8WsMHC1qOOzwqFWHUgqIk';
-  // Requires a `subscribers` table: email (text, unique), name (text, nullable)
-  // RLS: enable it, add INSERT policy for anon role only — no SELECT/DELETE
-
-  async function handleSubscribe() {
-    const input = document.getElementById('sub-email');
-    const nameInput = document.getElementById('sub-name');
-    const msg = document.getElementById('sub-msg');
-    const email = input.value.trim();
-    const name = nameInput.value.trim();
-    if (!email) return;
-    msg.style.color = '#888';
-    msg.textContent = 'Saving…';
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/subscribers`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
-        },
-        body: JSON.stringify({ email, name: name || null })
-      });
-      if (res.ok || res.status === 409) {
-        msg.style.color = '#16a34a';
-        msg.textContent = res.status === 409 ? 'Already subscribed!' : '✓ You\'re on the list.';
-        input.value = ''; nameInput.value = '';
-        umami.track('Subscribe');
-      } else {
-        throw new Error(res.status);
-      }
-    } catch(e) {
-      msg.style.color = '#dc2626';
-      msg.textContent = 'Something went wrong — try again.';
-    }
-  }
+  function trackSubscribe(e) { umami.track('Subscribe Click'); }
 
   function showToast(msg) {
     const t = document.getElementById('toast');
