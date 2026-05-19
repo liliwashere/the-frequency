@@ -1,5 +1,25 @@
 const TAVILY_API = 'https://api.tavily.com/search';
 
+// Known practitioners whose new posts are always worth checking
+const AUTHOR_DOMAINS = [
+  'simonwillison.net',       // Simon Willison
+  'eugeneyan.com',           // Eugene Yan
+  'lenny.pm',                // Lenny Rachitsky
+  'levels.io',               // Pieter Levels
+  'hamel.dev',               // Hamel Husain
+  'interconnects.ai',        // Nathan Lambert
+  'jxnl.co',                 // Jason Liu
+  'sebastianraschka.com',    // Sebastian Raschka
+  'vickiboykis.com',         // Vicki Boykis
+  'huyenchip.com',           // Chip Huyen
+  'blog.pragmaticengineer.com', // Gergely Orosz
+  'paulgraham.com',          // Paul Graham
+  'stratechery.com',         // Ben Thompson
+  'karpathy.github.io',      // Andrej Karpathy
+  'lilianweng.github.io',    // Lilian Weng
+  'rachel.fast.ai',          // Rachel Thomas
+];
+
 // Each query targets a specific content type with domains known for bylined, practitioner writing
 const QUERIES = [
   {
@@ -49,6 +69,12 @@ const QUERIES = [
       'techcabal.com', 'techinasia.com', 'analyticsindiamag.com',
       'latinxinai.org', 'deeplearning.ai', 'partnershiponai.org',
     ],
+    topic: 'general',
+  },
+  // New posts from known practitioners this week
+  {
+    query: 'AI machine learning engineering 2026',
+    include_domains: AUTHOR_DOMAINS,
     topic: 'general',
   },
 ];
