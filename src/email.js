@@ -1,39 +1,21 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, '..', 'public');
 
-async function getAccessToken() {
-  const res = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      client_id: process.env.GMAIL_CLIENT_ID,
-      client_secret: process.env.GMAIL_CLIENT_SECRET,
-      refresh_token: process.env.GMAIL_REFRESH_TOKEN,
-      grant_type: 'refresh_token',
-    }),
-  });
-
-  const body = await res.json();
-  if (body.error) {
-    throw new Error(`[email] OAuth2 token refresh failed: ${body.error} — ${body.error_description}`);
-  }
-  return body.access_token;
-}
+const FROM = 'The Frequency <newsletter@lilitarutyunyan.com>';
 
 function extractSubject(html) {
   const match = html.match(/<!--\s*subject:\s*(.+?)\s*-->/);
-  if (!match) throw new Error('[email] Could not extract subject from email-latest.html comment');
+  if (!match) throw new Error('[email] Could not extract subject from email-latest.html');
   return match[1];
 }
 
 function personalize(html, subscriber) {
-  const name = subscriber.name?.trim() || 'there';
-  return html.replace(/\{\{name\}\}/g, name);
+  return html.replace(/\{\{name\}\}/g, subscriber.name?.trim() || 'there');
 }
 
 function sleep(ms) {
@@ -41,31 +23,17 @@ function sleep(ms) {
 }
 
 export async function sendToAll(subscribers, ctx) {
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const emailHtml = readFileSync(path.join(PUBLIC, 'email-latest.html'), 'utf8');
   const subject = extractSubject(emailHtml);
-
-  const accessToken = await getAccessToken();
-
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.GMAIL_FROM_ADDRESS,
-      clientId: process.env.GMAIL_CLIENT_ID,
-      clientSecret: process.env.GMAIL_CLIENT_SECRET,
-      refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-      accessToken,
-    },
-  });
-
   const result = { sent: 0, failed: 0, errors: [] };
 
   console.log(`[email] Sending Issue #${ctx.issue_number} to ${subscribers.length} subscriber(s)...`);
 
   for (const subscriber of subscribers) {
     try {
-      await transporter.sendMail({
-        from: `"The Frequency" <${process.env.GMAIL_FROM_ADDRESS}>`,
+      await resend.emails.send({
+        from: FROM,
         to: subscriber.email,
         subject,
         html: personalize(emailHtml, subscriber),

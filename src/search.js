@@ -1,11 +1,47 @@
 const TAVILY_API = 'https://api.tavily.com/search';
 
+// Each query targets a specific content type with domains known for bylined, practitioner writing
 const QUERIES = [
-  'AI developer tools open source builders 2026',
-  'machine learning research paper findings 2026',
-  'artificial intelligence business enterprise adoption 2026',
-  'AI product launch workflow automation tools 2026',
-  'AI policy ethics regulation global non-US 2026',
+  {
+    query: 'AI engineering LLM practical insights builders 2026',
+    include_domains: [
+      'substack.com', 'every.to', 'simonwillison.net', 'eugeneyan.com',
+      'interconnects.ai', 'hamel.dev', 'latent.space', 'jxnl.co',
+    ],
+    topic: 'general',
+  },
+  {
+    query: 'machine learning research paper practical findings 2026',
+    include_domains: [
+      'arxiv.org', 'huggingface.co', 'sebastianraschka.com',
+      'distill.pub', 'paperswithcode.com', 'bounded-regret.ghost.io',
+    ],
+    topic: 'general',
+  },
+  {
+    query: 'AI product startup founder lessons learned perspective 2026',
+    include_domains: [
+      'lenny.pm', 'andrewchen.com', 'every.to', 'substack.com',
+      'levels.io', 'paulgraham.com', 'cdixon.org',
+    ],
+    topic: 'general',
+  },
+  {
+    query: 'AI developer tools open source project release 2026',
+    include_domains: [
+      'github.com', 'thenewstack.io', 'dev.to',
+      'blog.langchain.dev', 'docs.anthropic.com', 'openai.com/research',
+    ],
+    topic: 'news',
+  },
+  {
+    query: 'artificial intelligence real-world impact analysis 2026',
+    include_domains: [
+      'rest-of-world.org', 'technologyreview.com', 'wired.com',
+      'arstechnica.com', 'theverge.com', 'stratechery.com',
+    ],
+    topic: 'news',
+  },
 ];
 
 function daysAgo(n) {
@@ -17,8 +53,7 @@ function daysAgo(n) {
 function isWithinWindow(dateStr, days = 4) {
   if (!dateStr) return false;
   try {
-    const articleDate = new Date(dateStr);
-    return articleDate >= daysAgo(days);
+    return new Date(dateStr) >= daysAgo(days);
   } catch {
     return false;
   }
@@ -30,12 +65,12 @@ function parseResult(result) {
   const description = result.content ?? '';
   const published_date = result.published_date ?? null;
   const source = new URL(url).hostname.replace(/^www\./, '');
-  const author = null; // Tavily doesn't return author metadata
+  const author = result.author ?? null;
 
   return { url, title, description, published_date, source, author };
 }
 
-async function queryTavily(query, days = 7) {
+async function queryTavily({ query, include_domains, topic }, days = 7) {
   const res = await fetch(TAVILY_API, {
     method: 'POST',
     headers: {
@@ -45,8 +80,10 @@ async function queryTavily(query, days = 7) {
     body: JSON.stringify({
       query,
       search_depth: 'basic',
-      max_results: 10,
+      max_results: 15,
       days,
+      topic: topic ?? 'general',
+      include_domains: include_domains ?? [],
       include_answer: false,
       include_raw_content: false,
     }),
@@ -91,15 +128,12 @@ export async function fetchArticles() {
 
   // Filter to last 4 days
   const filtered = deduped.filter(a => isWithinWindow(a.published_date, 4));
-
   console.log(`[search] Found ${allArticles.length} raw → ${deduped.length} deduped → ${filtered.length} within 4-day window`);
 
-  // Relax to 7 days if too few pass the strict filter
   if (filtered.length < 8) {
     console.warn('[search] Too few results with 4-day filter — relaxing to 7 days');
     const relaxed = deduped.filter(a => isWithinWindow(a.published_date, 7));
     if (relaxed.length >= 8) return relaxed;
-    // If still too few, return all deduped and let Claude decide
     console.warn('[search] Still too few — returning all deduped results, Claude will filter by relevance');
     return deduped;
   }

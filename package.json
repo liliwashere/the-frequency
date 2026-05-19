@@ -13,7 +13,8 @@
     "dotenv": "^16.4.5",
     "form-data": "^4.0.0",
     "node-html-parser": "^6.1.13",
-    "nodemailer": "^8.0.7"
+    "nodemailer": "^8.0.7",
+    "resend": "^6.12.3"
   },
   "devDependencies": {
     "wrangler": "^4.93.0"
