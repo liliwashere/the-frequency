@@ -22,9 +22,13 @@ What to exclude — hard filter, no exceptions:
 
 Filter test: Does this person build things or have real domain expertise? Do they have skin in the game? Is there something here you couldn't get from a headline? No to any = out.
 
+Diversity — hard requirement, not a checkbox:
+- Minimum 2 women authors per issue. Look for: Rachel Thomas, Timnit Gebru, Emily Bender, Joy Buolamwini, Abeba Birhane, Cassie Kozyrkov, Shreya Shankar, Chip Huyen, Vicki Boykis, Lilian Weng, Alyssa Simpson Rochwerger, Rumman Chowdhury — and any other woman writing substantively about AI.
+- Minimum 2 non-US/UK voices. Actively prioritize: African, South/Southeast Asian, Latin American, Eastern European, Middle Eastern perspectives. Rest of World, TechCabal, Tech In Asia, AnalyticsIndia are good signals.
+- If the candidate pool has no qualifying women authors, flag it clearly in diversity_notes but still select the best available articles — don't fail silently.
+- Author diversity is a core editorial value of this newsletter, not an afterthought.
+
 Other rules:
-- Prioritize: practical depth, diverse authorship, international perspectives
-- Diversity: at minimum 2 women authors and 2 non-US/UK voices per issue (infer from names, publications, context)
 - Assign exactly ONE story as editors_pick: true — the most substantive, surprising, or immediately useful piece
 - Zero hype: no "revolutionary", "game-changing", "unprecedented" in summaries
 

@@ -42,6 +42,15 @@ const QUERIES = [
     ],
     topic: 'news',
   },
+  {
+    query: 'AI research ethics bias women researchers Global South perspectives 2026',
+    include_domains: [
+      'dair-institute.org', 'ainowinstitute.org', 'fast.ai',
+      'techcabal.com', 'techinasia.com', 'analyticsindiamag.com',
+      'latinxinai.org', 'deeplearning.ai', 'partnershiponai.org',
+    ],
+    topic: 'general',
+  },
 ];
 
 function daysAgo(n) {
