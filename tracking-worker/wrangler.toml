@@ -1,0 +1,7 @@
+name = "the-frequency-tracker"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+# Set secrets via CLI (never commit values):
+#   wrangler secret put SUPABASE_URL
+#   wrangler secret put SUPABASE_SERVICE_ROLE_KEY

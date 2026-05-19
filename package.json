@@ -1,0 +1,21 @@
+{
+  "name": "the-frequency",
+  "version": "1.0.0",
+  "description": "Automated twice-weekly AI digest newsletter pipeline",
+  "type": "module",
+  "scripts": {
+    "publish": "node publish.js",
+    "publish:dry": "DRY_RUN=true node publish.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.26.0",
+    "@supabase/supabase-js": "^2.43.0",
+    "dotenv": "^16.4.5",
+    "form-data": "^4.0.0",
+    "node-html-parser": "^6.1.13",
+    "nodemailer": "^8.0.7"
+  },
+  "devDependencies": {
+    "wrangler": "^4.93.0"
+  }
+}
