@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
 const SYSTEM_PROMPT = `You are the editorial AI for "The Frequency," a twice-weekly AI digest with zero hype.
-Your job is to select 8–12 stories from a candidate pool and assign them to categories.
+Your job is to select 6–12 stories from a candidate pool and assign them to categories.
 
 CRITICAL: You must ONLY select URLs that appear verbatim in the candidates array you receive. Never invent, modify, or guess URLs. If a URL is not in the input, do not use it.
 
@@ -51,7 +51,7 @@ const SELECT_ARTICLES_TOOL = {
     properties: {
       selected: {
         type: 'array',
-        minItems: 8,
+        minItems: 6,
         maxItems: 12,
         items: {
           type: 'object',
@@ -63,7 +63,11 @@ const SELECT_ARTICLES_TOOL = {
             },
             summary: {
               type: 'string',
-              description: '2-sentence editorial summary, no hype, second person voice',
+              description: '2-sentence editorial summary, no hype — lead with the actual insight',
+            },
+            author: {
+              type: 'string',
+              description: 'Author name if identifiable from the article byline, URL, or publication context. Leave empty string if genuinely unknown — do not guess.',
             },
             editors_pick: {
               type: 'boolean',
@@ -74,7 +78,7 @@ const SELECT_ARTICLES_TOOL = {
               description: 'Internal note: why this was selected (not rendered to readers)',
             },
           },
-          required: ['url', 'category', 'summary', 'editors_pick'],
+          required: ['url', 'category', 'summary', 'author', 'editors_pick'],
         },
       },
       diversity_notes: {
@@ -90,8 +94,8 @@ export async function curate(rawArticles, seenUrls) {
   const seenSet = new Set(seenUrls);
   const candidates = rawArticles.filter(a => !seenSet.has(a.url));
 
-  if (candidates.length < 8) {
-    throw new Error(`[curate] Only ${candidates.length} unseen candidates — need at least 8`);
+  if (candidates.length < 6) {
+    throw new Error(`[curate] Only ${candidates.length} unseen candidates — need at least 6`);
   }
 
   console.log(`[curate] Sending ${candidates.length} candidates to Claude for curation`);
@@ -145,11 +149,12 @@ export async function curate(rawArticles, seenUrls) {
       console.warn(`[curate] Skipping hallucinated URL: ${sel.url}`);
       return acc;
     }
-    return [...acc, { ...raw, ...sel }];
+    const author = sel.author || raw.author || '';
+    return [...acc, { ...raw, ...sel, author }];
   }, []);
 
-  if (curated.length < 8) {
-    throw new Error(`[curate] Only ${curated.length} valid articles after filtering hallucinated URLs — need at least 8`);
+  if (curated.length < 6) {
+    throw new Error(`[curate] Only ${curated.length} valid articles after filtering hallucinated URLs — need at least 6`);
   }
 
   // Ensure exactly one editors_pick after filtering

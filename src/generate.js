@@ -425,7 +425,7 @@ function renderFullIssue(ctx) {
   <div class="subscribe-inner">
     <div class="subscribe-text">
       <strong>Get The Frequency in your inbox</strong>
-      <span>Every Tuesday &amp; Thursday</span>
+      <span>Every Thursday</span>
     </div>
     <form class="subscribe-form" onsubmit="handleSubscribe(event)">
       <input class="subscribe-input" type="email" placeholder="your@email.com" required id="sub-email" />
@@ -451,8 +451,8 @@ function renderFullIssue(ctx) {
         <div class="stat-label">Sources</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-num">${authors.length}</div>
-        <div class="stat-label">Authors</div>
+        <div class="stat-num">${authors.length > 0 ? authors.length : activeTabs.length}</div>
+        <div class="stat-label">${authors.length > 0 ? 'Authors' : 'Topics'}</div>
       </div>
     </div>
 
@@ -623,7 +623,7 @@ export function generateEmail(ctx) {
 <tr>
   <td style="padding:28px 32px 16px;">
     <p style="margin:0;font-size:15px;color:#1a1a1a;">Hi {{name}},</p>
-    <p style="margin:10px 0 0;font-size:15px;color:#444;line-height:1.6;">Here's what's worth your attention this week in AI.</p>
+    <p style="margin:10px 0 0;font-size:15px;color:#444;line-height:1.6;">Here's what's worth your attention in AI this week.</p>
   </td>
 </tr>
 
