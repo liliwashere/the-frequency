@@ -2,72 +2,98 @@ const TAVILY_API = 'https://api.tavily.com/search';
 
 // Known practitioners whose new posts are always worth checking
 const AUTHOR_DOMAINS = [
-  'simonwillison.net',       // Simon Willison
-  'eugeneyan.com',           // Eugene Yan
-  'lenny.pm',                // Lenny Rachitsky
-  'levels.io',               // Pieter Levels
-  'hamel.dev',               // Hamel Husain
-  'interconnects.ai',        // Nathan Lambert
-  'jxnl.co',                 // Jason Liu
-  'sebastianraschka.com',    // Sebastian Raschka
-  'vickiboykis.com',         // Vicki Boykis
-  'huyenchip.com',           // Chip Huyen
-  'blog.pragmaticengineer.com', // Gergely Orosz
-  'paulgraham.com',          // Paul Graham
-  'stratechery.com',         // Ben Thompson
-  'karpathy.github.io',      // Andrej Karpathy
-  'lilianweng.github.io',    // Lilian Weng
-  'rachel.fast.ai',          // Rachel Thomas
+  // Established voices (English)
+  'simonwillison.net',            // Simon Willison — UK
+  'eugeneyan.com',                // Eugene Yan — Singapore
+  'lenny.pm',                     // Lenny Rachitsky
+  'levels.io',                    // Pieter Levels — Netherlands
+  'hamel.dev',                    // Hamel Husain
+  'interconnects.ai',             // Nathan Lambert
+  'jxnl.co',                      // Jason Liu
+  'sebastianraschka.com',         // Sebastian Raschka
+  'vickiboykis.com',              // Vicki Boykis — Russia/US
+  'huyenchip.com',                // Chip Huyen — Vietnam/US
+  'blog.pragmaticengineer.com',   // Gergely Orosz — Hungary/UK
+  'paulgraham.com',               // Paul Graham
+  'stratechery.com',              // Ben Thompson
+  'karpathy.github.io',           // Andrej Karpathy
+  'karpathy.bearblog.dev',        // Andrej Karpathy (blog)
+  'lilianweng.github.io',         // Lilian Weng — China/US
+  'rachel.fast.ai',               // Rachel Thomas — Australia/US
+  'ruder.io',                     // Sebastian Ruder — Ireland (multilingual NLP)
+  'thegradient.pub',              // The Gradient — research
+  'shreya-shankar.com',           // Shreya Shankar
+  'bounded-regret.ghost.io',      // Bounded Regret
+  'blog.matt-rickard.com',        // Matt Rickard
+  'oneusefulthing.org',           // Ethan Mollick
+  'latent.space',                 // swyx & Alessio — Singapore
+  'swyx.io',                      // swyx
+
+  // Women researchers & writers
+  'timnit.co',                    // Timnit Gebru — Ethiopia/US (DAIR)
+  'abebab.github.io',             // Abeba Birhane — Ethiopia/Ireland
+  'cassiek.substack.com',         // Cassie Kozyrkov — South Africa/US
+  'rummanc.substack.com',         // Rumman Chowdhury — Bangladesh/US
+
+  // International / non-English platforms
+  'zenn.dev',                     // Japanese technical publishing platform
+  'habr.com',                     // Russian tech community
+  'techinasia.com',               // Tech in Asia — Southeast Asia
+  'techcabal.com',                // TechCabal — Africa
+  'restofworld.org',              // Rest of World — global tech journalism
+  'analyticsindiamag.com',        // Analytics India — India
+  'latinxinai.org',               // Latinx in AI
+  'dair-institute.org',           // DAIR Institute — Timnit Gebru
+  'ainowinstitute.org',           // AI Now Institute
 ];
 
-// Each query targets a specific content type with domains known for bylined, practitioner writing
+// Each query targets a specific content type
 const QUERIES = [
+  // English — practitioners & builders
   {
     query: 'AI engineering LLM practical insights builders 2026',
     include_domains: [
       'substack.com', 'every.to', 'simonwillison.net', 'eugeneyan.com',
       'interconnects.ai', 'hamel.dev', 'latent.space', 'jxnl.co',
+      'blog.matt-rickard.com', 'shreya-shankar.com',
     ],
     topic: 'general',
   },
+  // English — research & papers
   {
     query: 'machine learning research paper practical findings 2026',
     include_domains: [
       'arxiv.org', 'huggingface.co', 'sebastianraschka.com',
       'distill.pub', 'paperswithcode.com', 'bounded-regret.ghost.io',
+      'thegradient.pub', 'ruder.io',
     ],
     topic: 'general',
   },
+  // English — founders & product
   {
     query: 'AI product startup founder lessons learned perspective 2026',
     include_domains: [
       'lenny.pm', 'andrewchen.com', 'every.to', 'substack.com',
-      'levels.io', 'paulgraham.com', 'cdixon.org',
+      'levels.io', 'paulgraham.com', 'cdixon.org', 'oneusefulthing.org',
     ],
     topic: 'general',
   },
-  {
-    query: 'AI developer tools open source project release 2026',
-    include_domains: [
-      'github.com', 'thenewstack.io', 'dev.to',
-      'blog.langchain.dev', 'docs.anthropic.com', 'openai.com/research',
-    ],
-    topic: 'news',
-  },
+  // English — global impact & policy
   {
     query: 'artificial intelligence real-world impact analysis 2026',
     include_domains: [
-      'rest-of-world.org', 'technologyreview.com', 'wired.com',
-      'arstechnica.com', 'theverge.com', 'stratechery.com',
+      'restofworld.org', 'technologyreview.com', 'wired.com',
+      'arstechnica.com', 'stratechery.com', 'techcabal.com', 'techinasia.com',
     ],
     topic: 'news',
   },
+  // English — diverse voices & ethics
   {
-    query: 'AI research ethics bias women researchers Global South perspectives 2026',
+    query: 'AI research ethics bias equity diverse perspectives Global South 2026',
     include_domains: [
       'dair-institute.org', 'ainowinstitute.org', 'fast.ai',
       'techcabal.com', 'techinasia.com', 'analyticsindiamag.com',
-      'latinxinai.org', 'deeplearning.ai', 'partnershiponai.org',
+      'latinxinai.org', 'partnershiponai.org', 'timnit.co',
     ],
     topic: 'general',
   },
@@ -75,6 +101,58 @@ const QUERIES = [
   {
     query: 'AI machine learning engineering 2026',
     include_domains: AUTHOR_DOMAINS,
+    topic: 'general',
+  },
+  // French — AI analysis & practitioners
+  {
+    query: 'intelligence artificielle IA analyse pratique constructeurs 2026',
+    include_domains: [
+      'substack.com', 'medium.com', 'lemonde.fr', 'letemps.ch',
+      'nextinpact.com', 'numerama.com',
+    ],
+    topic: 'general',
+  },
+  // Spanish — AI builders & analysis
+  {
+    query: 'inteligencia artificial IA análisis constructores perspectiva 2026',
+    include_domains: [
+      'substack.com', 'medium.com', 'xataka.com', 'hipertextual.com',
+      'elconfidencial.com',
+    ],
+    topic: 'general',
+  },
+  // Portuguese (Brazil & Portugal) — AI builders & analysis
+  {
+    query: 'inteligência artificial IA análise construtores desenvolvedores 2026',
+    include_domains: [
+      'substack.com', 'medium.com', 'tableless.com.br',
+      'imasters.com.br', 'canaltech.com.br',
+    ],
+    topic: 'general',
+  },
+  // German — AI analysis & practitioners
+  {
+    query: 'künstliche Intelligenz KI Analyse Entwickler Perspektive 2026',
+    include_domains: [
+      'substack.com', 'medium.com', 'heise.de', 'golem.de',
+    ],
+    topic: 'general',
+  },
+  // Japanese — AI engineering & builders
+  {
+    query: '人工知能 機械学習 AI エンジニア 実践 2026',
+    include_domains: [
+      'zenn.dev', 'qiita.com', 'note.com',
+    ],
+    topic: 'general',
+  },
+  // Global South & Africa — AI practitioners
+  {
+    query: 'artificial intelligence builders Africa Asia Latin America perspectives 2026',
+    include_domains: [
+      'techcabal.com', 'techinasia.com', 'analyticsindiamag.com',
+      'restofworld.org', 'latinxinai.org',
+    ],
     topic: 'general',
   },
 ];

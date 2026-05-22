@@ -3,49 +3,67 @@ import Anthropic from '@anthropic-ai/sdk';
 const SYSTEM_PROMPT = `You are the editorial AI for "The Frequency," a twice-weekly AI digest with zero hype.
 Your job is to select 6–12 stories from a candidate pool and assign them to categories.
 
-CRITICAL: You must ONLY select URLs that appear verbatim in the candidates array you receive. Never invent, modify, or guess URLs. If a URL is not in the input, do not use it.
+CRITICAL: You must ONLY select URLs that appear verbatim in the candidates array you receive. Never invent, modify, or guess URLs.
+
+EDITORIAL IDENTITY — this is what sets The Frequency apart:
+The Frequency publishes writing by people who build things, have skin in the game, or do original research.
+Think: Andrej Karpathy explaining a framework he actually uses. Simon Willison writing about a tool he maintains.
+Ethan Mollick sharing research he ran himself. Pieter Levels sharing real revenue numbers.
+NOT: "10 best AI tools for 2026" from a SaaS vendor. NOT: "AI will transform X" from a thought leader with no code.
 
 What to include:
-- Original reporting, hands-on builder posts, peer-reviewed research
-- Posts by people who build things or have real domain expertise — skin in the game
-- Something the reader couldn't get from a headline
+- Original posts by practitioners: builders, researchers, engineers, founders who actually ship things
+- First-person accounts of what worked and what broke
+- Peer-reviewed research or serious technical writing with real findings
+- Analysis with a concrete position, not "on one hand… on the other hand"
+- Non-English writing from international practitioners — these are valuable, not second-class
 
 What to exclude — hard filter, no exceptions:
-- LinkedIn posts recycling TechCrunch or other outlets
-- "AI will replace X" thought pieces with no data or evidence
-- Newsletter aggregators summarizing other newsletters
-- Posts that read like "I asked ChatGPT to write this"
-- Press releases dressed as blog posts
-- "Top 10 AI tools" listicles where the author hasn't used them
-- Lab blog posts from major AI companies (OpenAI, Google, Anthropic, Meta AI blogs)
+- "Top N AI tools / statistics / trends" listicles (regardless of publisher)
+- "AI will replace X" thought pieces with no data or personal experience
+- Lab blog posts from major AI companies (OpenAI, Google, Anthropic, Meta AI blogs) — they are marketing
 - Vendor announcements and product marketing
+- Newsletter aggregators summarizing other newsletters
+- Press releases dressed as blog posts
+- LinkedIn-style recycled content with no original thinking
+- Generic "statistics for 2026" roundups from SEO content farms
 
-Filter test: Does this person build things or have real domain expertise? Do they have skin in the game? Is there something here you couldn't get from a headline? No to any = out.
+Author diversity — hard requirement, not an afterthought:
+- Minimum 2 women authors per issue. Priority voices: Chip Huyen, Vicki Boykis, Lilian Weng, Rachel Thomas,
+  Timnit Gebru, Abeba Birhane, Shreya Shankar, Cassie Kozyrkov, Rumman Chowdhury, Emily Bender, Joy Buolamwini.
+  Look beyond this list — find women actually writing about AI from any country.
+- Minimum 2 non-US/UK voices. Actively prioritize: African, South/Southeast Asian, Latin American,
+  Eastern European, Middle Eastern, East Asian perspectives.
+  Good signals: TechCabal, Tech in Asia, Habr, Zenn, Rest of World.
+- If the candidate pool has no qualifying women authors, flag it in diversity_notes.
+  Do not fail silently — always note the gap.
 
-Diversity — hard requirement, not a checkbox:
-- Minimum 2 women authors per issue. Look for: Rachel Thomas, Timnit Gebru, Emily Bender, Joy Buolamwini, Abeba Birhane, Cassie Kozyrkov, Shreya Shankar, Chip Huyen, Vicki Boykis, Lilian Weng, Alyssa Simpson Rochwerger, Rumman Chowdhury — and any other woman writing substantively about AI.
-- Minimum 2 non-US/UK voices. Actively prioritize: African, South/Southeast Asian, Latin American, Eastern European, Middle Eastern perspectives. Rest of World, TechCabal, Tech In Asia, AnalyticsIndia are good signals.
-- If the candidate pool has no qualifying women authors, flag it clearly in diversity_notes but still select the best available articles — don't fail silently.
-- Author diversity is a core editorial value of this newsletter, not an afterthought.
+Non-English content — handling rules:
+- Articles written in French, Spanish, Portuguese, German, Japanese, Arabic, Russian, or other languages
+  are eligible and encouraged. Language is not a barrier to inclusion.
+- For any non-English article: set language to the correct ISO 639-1 code (fr, es, pt, de, ja, zh, ko, ar, ru…)
+  and provide a translated_excerpt: 2–3 sentences in English that give the reader a genuine taste of the piece.
+  The excerpt should be a translation of the article's key insight, not a description of what the article covers.
+- For English articles: language = "en", translated_excerpt = "".
 
-Other rules:
-- Assign exactly ONE story as editors_pick: true — the most substantive, surprising, or immediately useful piece
-- Zero hype: no "revolutionary", "game-changing", "unprecedented" in summaries
-
-Summary writing rules (critical — read carefully):
+Summary writing rules (critical):
 - 2 sentences maximum
 - Write like a sharp editor giving a colleague a quick brief — specific, direct, no throat-clearing
-- Lead with the actual finding, insight, or what makes it worth reading — not a description of the piece
-- NEVER start with: "This", "This article", "This includes", "This covers", "This explores", "This features", "You'll", "A look at", "An overview"
-- Be concrete: name the actual tool, finding, number, decision, or person the piece is about
-- If it's a list post, summarize the actual best insight from it, not "it covers N things"
+- Lead with the actual finding, insight, or what makes it worth reading
+- NEVER start with: "This", "This article", "A look at", "An overview", "You'll"
+- Be concrete: name the actual tool, finding, number, decision, or person
 - No adjective padding — cut "really", "deeply", "comprehensive", "detailed"
 
 Categories:
-- Builders: engineers, developers, open source projects, hands-on tutorials
-- Research: papers, benchmarks, technical findings, evals
-- AI × Business: adoption, economics, enterprise use, strategy
-- Tools: new releases, comparisons, workflows worth adopting`;
+- Builders: engineers, developers, open source, hands-on tutorials, workflow walkthroughs
+- Research: papers, benchmarks, technical findings, evals, model analyses
+- AI × Business: adoption, economics, enterprise use, strategy, real revenue/cost signals
+- Tools: new releases, comparisons, workflows worth adopting
+
+Issue headline:
+Write a 10–20 word editorial headline summarising the 2–3 main themes of this issue.
+Format: "Theme A, theme B, and theme C" — not a sentence, no period.
+Examples: "Karpathy's Software 3.0 framework, solo founders rewriting the rules, and the zombie internet problem"`;
 
 const SELECT_ARTICLES_TOOL = {
   name: 'select_articles',
@@ -67,30 +85,50 @@ const SELECT_ARTICLES_TOOL = {
             },
             summary: {
               type: 'string',
-              description: '2-sentence editorial summary, no hype — lead with the actual insight',
+              description: '2-sentence editorial summary — lead with the actual insight, no hype',
             },
             author: {
               type: 'string',
-              description: 'Author name if identifiable from the article byline, URL, or publication context. Leave empty string if genuinely unknown — do not guess.',
+              description: 'Author name, optionally with affiliation (e.g. "Chip Huyen · huyenchip.com"). Empty string if genuinely unknown — do not guess.',
+            },
+            author_url: {
+              type: 'string',
+              description: "Author's personal website, blog, or canonical profile URL. Empty string if unknown.",
+            },
+            author_bio: {
+              type: 'string',
+              description: 'One sentence describing who this person is and why they are credible on this topic. Only what is verifiably known. Empty string if uncertain.',
             },
             editors_pick: {
               type: 'boolean',
-              description: 'Exactly one story per issue must be true',
+              description: 'Exactly one story per issue must be true — the most substantive, surprising, or immediately useful piece',
+            },
+            language: {
+              type: 'string',
+              description: 'ISO 639-1 code of the original article language. Use "en" for English, "fr" for French, "es" for Spanish, "pt" for Portuguese, "de" for German, "ja" for Japanese, "zh" for Chinese, "ko" for Korean, "ar" for Arabic, "ru" for Russian, etc.',
+            },
+            translated_excerpt: {
+              type: 'string',
+              description: 'For non-English articles only: 2–3 sentences in English translating the key insight or passage from the original. This is a translation, not a description. Empty string for English articles.',
             },
             inclusion_reason: {
               type: 'string',
-              description: 'Internal note: why this was selected (not rendered to readers)',
+              description: 'Internal note: why this was selected (not shown to readers)',
             },
           },
-          required: ['url', 'category', 'summary', 'author', 'editors_pick'],
+          required: ['url', 'category', 'summary', 'author', 'author_url', 'author_bio', 'editors_pick', 'language', 'translated_excerpt'],
         },
+      },
+      issue_headline: {
+        type: 'string',
+        description: '10–20 word editorial headline capturing the 2–3 main themes of this issue. Format: "Theme A, theme B, and theme C" with no trailing period.',
       },
       diversity_notes: {
         type: 'string',
-        description: 'Brief note confirming diversity requirements are met or flagging any shortfalls',
+        description: 'Confirm diversity requirements are met (women authors, non-US/UK voices) or flag any shortfalls clearly',
       },
     },
-    required: ['selected'],
+    required: ['selected', 'issue_headline', 'diversity_notes'],
   },
 };
 
@@ -108,7 +146,7 @@ export async function curate(rawArticles, seenUrls) {
 
   const response = await client.messages.create({
     model: 'claude-sonnet-4-6',
-    max_tokens: 4096,
+    max_tokens: 6000,
     system: SYSTEM_PROMPT,
     messages: [
       {
@@ -130,22 +168,19 @@ export async function curate(rawArticles, seenUrls) {
   });
 
   const toolUse = response.content.find(b => b.type === 'tool_use');
-  if (!toolUse) {
-    throw new Error('[curate] Claude did not return a tool_use block');
-  }
+  if (!toolUse) throw new Error('[curate] Claude did not return a tool_use block');
 
-  const { selected, diversity_notes } = toolUse.input;
+  const { selected, issue_headline, diversity_notes } = toolUse.input;
 
-  if (diversity_notes) {
-    console.log(`[curate] Diversity notes: ${diversity_notes}`);
-  }
+  if (diversity_notes) console.log(`[curate] Diversity notes: ${diversity_notes}`);
+  if (issue_headline) console.log(`[curate] Issue headline: ${issue_headline}`);
 
   const editorsPicks = selected.filter(s => s.editors_pick);
   if (editorsPicks.length !== 1) {
     throw new Error(`[curate] Expected exactly 1 editors_pick, got ${editorsPicks.length}`);
   }
 
-  // Merge Claude's selections back with the raw article data by URL
+  // Merge Claude's selections back with raw article data by URL
   const rawByUrl = Object.fromEntries(rawArticles.map(a => [a.url, a]));
   const curated = selected.reduce((acc, sel) => {
     const raw = rawByUrl[sel.url];
@@ -153,22 +188,28 @@ export async function curate(rawArticles, seenUrls) {
       console.warn(`[curate] Skipping hallucinated URL: ${sel.url}`);
       return acc;
     }
-    const author = sel.author || raw.author || '';
-    return [...acc, { ...raw, ...sel, author }];
+    return [...acc, {
+      ...raw,
+      ...sel,
+      author: sel.author || raw.author || '',
+      language: sel.language || 'en',
+      translated_excerpt: sel.translated_excerpt || '',
+      author_url: sel.author_url || '',
+      author_bio: sel.author_bio || '',
+    }];
   }, []);
 
   if (curated.length < 6) {
-    throw new Error(`[curate] Only ${curated.length} valid articles after filtering hallucinated URLs — need at least 6`);
+    throw new Error(`[curate] Only ${curated.length} valid articles after filtering — need at least 6`);
   }
 
   // Ensure exactly one editors_pick after filtering
   const validPicks = curated.filter(a => a.editors_pick);
   if (validPicks.length !== 1) {
-    // Fallback: assign editors_pick to the first article if the picked one was filtered out
     curated.forEach((a, i) => { a.editors_pick = i === 0; });
-    console.warn(`[curate] editors_pick reassigned to first article after URL filtering`);
+    console.warn('[curate] editors_pick reassigned to first article after URL filtering');
   }
 
   console.log(`[curate] Selected ${curated.length} articles (editors_pick: ${curated.find(a => a.editors_pick)?.url})`);
-  return curated;
+  return { articles: curated, issue_headline: issue_headline || '' };
 }

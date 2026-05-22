@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Frequency #2 — AI digest</title>
   <meta name="description" content="The Frequency: twice-weekly AI digest for builders and thinkers." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/logo-192.png" />
   <script defer src="https://cloud.umami.is/script.js" data-website-id="06dbf26f-457b-473a-a135-27e85ed3ea7c"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -230,6 +233,49 @@
     }
     .read-btn:hover { background: #6c47ff; color: #fff; text-decoration: none; }
 
+    /* ── Language badge & translation ── */
+    .lang-badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px;
+      background: #fff8ef; color: #b8620f;
+      border: 1px solid #fde68a; margin-left: 6px;
+      vertical-align: middle;
+    }
+    .translated-excerpt {
+      font-size: 13px; color: #555; line-height: 1.6;
+      background: #f8f7ff; border-left: 3px solid #c4b5fd;
+      padding: 8px 12px; margin-top: 10px; border-radius: 0 6px 6px 0;
+    }
+    .translated-label {
+      font-size: 10px; font-weight: 700; color: #6c47ff;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      display: block; margin-bottom: 3px;
+    }
+
+    /* ── Authors tab ── */
+    .authors-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;
+    }
+    .author-card {
+      background: #fff; border: 1px solid #e8e5df;
+      border-radius: 12px; padding: 20px;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #d4cff7; }
+    .author-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(135deg, #6c47ff, #a855f7);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff;
+    }
+    .author-name { font-size: 15px; font-weight: 700; color: #111; line-height: 1.2; }
+    .author-handle { font-size: 11px; color: #999; margin-top: 2px; }
+    .author-bio { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+    .author-articles { font-size: 12px; color: #888; }
+    .author-article-link { color: #6c47ff; font-weight: 600; text-decoration: none; display: block; margin-top: 4px; }
+    .author-article-link:hover { text-decoration: underline; }
+
     /* ── Footer ── */
     .footer {
       border-top: 1px solid #e8e5df; margin-top: 60px; padding-top: 32px;
@@ -280,9 +326,10 @@
 <nav class="nav-bar">
   <div class="nav-inner">
     <button class="tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+        <button class="tab" data-tab="Builders" onclick="switchTab('Builders')">Builders</button>
         <button class="tab" data-tab="Research" onclick="switchTab('Research')">Research</button>
         <button class="tab" data-tab="AI---Business" onclick="switchTab('AI---Business')">AI × Business</button>
-        <button class="tab" data-tab="Tools" onclick="switchTab('Tools')">Tools</button>
+        <button class="tab" data-tab="authors" onclick="switchTab('authors')">Authors</button>
   </div>
 </nav>
 
@@ -291,7 +338,7 @@
   <div class="subscribe-inner">
     <div class="subscribe-text">
       <strong>Get The Frequency in your inbox</strong>
-      <span>Every Tuesday &amp; Thursday</span>
+      <span>Every Thursday</span>
     </div>
     <form class="subscribe-form" onsubmit="handleSubscribe(event)">
       <input class="subscribe-input" type="email" placeholder="your@email.com" required id="sub-email" />
@@ -309,15 +356,15 @@
     <!-- Stats -->
     <div class="stats-row">
       <div class="stat-cell">
-        <div class="stat-num">8</div>
+        <div class="stat-num">6</div>
         <div class="stat-label">Stories</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-num">8</div>
+        <div class="stat-num">3</div>
         <div class="stat-label">Sources</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-num">0</div>
+        <div class="stat-num">2</div>
         <div class="stat-label">Authors</div>
       </div>
     </div>
@@ -326,35 +373,36 @@
     <div class="lead-grid">
       <div class="lead-left">
         <div class="lead-label">★ Editor's Pick</div>
-        <div class="lead-tag">Research</div>
-        <h2 class="lead-title"><a href="https://eu-opensci.org/index.php/ejai/article/view/1098" target="_blank" rel="noopener">New Trends in Machine Learning - European Open Science</a></h2>
-        <p class="lead-summary">This peer-reviewed paper surveys current ML trends across federated learning, explainable AI, graph neural networks, TinyML, and quantum ML, drawing on 36 selected works. You'll find a useful taxonomy distinguishing systems-focused research (20 papers) from algorithm-centric studies (16), along with a frank note that the observed imbalance lacks statistical conclusiveness.</p>
-        <p class="lead-byline">eu-opensci.org</p>
-        <a class="lead-read" href="https://eu-opensci.org/index.php/ejai/article/view/1098" target="_blank" rel="noopener">Read →</a>
+        <div class="lead-tag">AI × Business</div>
+        <h2 class="lead-title"><a href="https://www.wired.com/story/spacex-ipo-anthropic-compute-finances-risks/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its Data Centers - WIRED" data-umami-event-category="AI × Business">SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its Data Centers - WIRED</a></h2>
+        <p class="lead-summary">Anthropic is paying SpaceX $1.25 billion per month — $15 billion annually — for GPU access at the Colossus data centers in Tennessee and Mississippi, revealed in SpaceX's S-1 IPO filing. The number puts a hard dollar figure on compute as the defining bottleneck in frontier AI development.</p>
+        
+        <p class="lead-byline">wired.com</p>
+        <a class="lead-read" href="https://www.wired.com/story/spacex-ipo-anthropic-compute-finances-risks/" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its Data Centers - WIRED" data-umami-event-category="AI × Business">Read →</a>
       </div>
       <div class="lead-right">
         <div class="secondary">
+          <div class="secondary-tag"><span class="tag blue">Research</span></div>
+          <div class="secondary-title"><a href="https://arstechnica.com/google/2026/05/googles-synthid-ai-watermarking-tech-is-being-adopted-by-openai-nvidia-and-more/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Google’s SynthID AI watermarking tech is being adopted by OpenAI, Nvidia, and more - Ars Technica" data-umami-event-category="Research">Google’s SynthID AI watermarking tech is being adopted by OpenAI, Nvidia, and more - Ars Technica</a></div>
+          <div class="secondary-meta">
+            <span>arstechnica.com</span>
+            <a href="https://arstechnica.com/google/2026/05/googles-synthid-ai-watermarking-tech-is-being-adopted-by-openai-nvidia-and-more/" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Google’s SynthID AI watermarking tech is being adopted by OpenAI, Nvidia, and more - Ars Technica" data-umami-event-category="Research">Read →</a>
+          </div>
+        </div>
+        <div class="secondary">
           <div class="secondary-tag"><span class="tag orange">AI × Business</span></div>
-          <div class="secondary-title"><a href="https://sloanreview.mit.edu/article/five-trends-in-ai-and-data-science-for-2026/" target="_blank" rel="noopener">Five Trends in AI and Data Science for 2026</a></div>
+          <div class="secondary-title"><a href="https://www.wired.com/story/commonwealth-short-story-prize-ai-allegations/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Literary Prizewinners Are Facing AI Allegations. It Feels Like the New Normal - WIRED" data-umami-event-category="AI × Business">Literary Prizewinners Are Facing AI Allegations. It Feels Like the New Normal - WIRED</a></div>
           <div class="secondary-meta">
-            <span>sloanreview.mit.edu</span>
-            <a href="https://sloanreview.mit.edu/article/five-trends-in-ai-and-data-science-for-2026/" target="_blank" rel="noopener">Read →</a>
+            <span>wired.com</span>
+            <a href="https://www.wired.com/story/commonwealth-short-story-prize-ai-allegations/" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Literary Prizewinners Are Facing AI Allegations. It Feels Like the New Normal - WIRED" data-umami-event-category="AI × Business">Read →</a>
           </div>
         </div>
         <div class="secondary">
-          <div class="secondary-tag"><span class="tag blue">Research</span></div>
-          <div class="secondary-title"><a href="https://setr.stanford.edu/sites/default/files/2026-01/SETR2026_01-AI_web-260109.pdf" target="_blank" rel="noopener">[PDF] SETR 2026: Artificial Intelligence</a></div>
+          <div class="secondary-tag"><span class="tag orange">AI × Business</span></div>
+          <div class="secondary-title"><a href="https://www.techinasia.com/news/salesforce-india-workforce-tops-17000" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Salesforce India workforce tops 17,000 - Tech in Asia" data-umami-event-category="AI × Business">Salesforce India workforce tops 17,000 - Tech in Asia</a></div>
           <div class="secondary-meta">
-            <span>setr.stanford.edu</span>
-            <a href="https://setr.stanford.edu/sites/default/files/2026-01/SETR2026_01-AI_web-260109.pdf" target="_blank" rel="noopener">Read →</a>
-          </div>
-        </div>
-        <div class="secondary">
-          <div class="secondary-tag"><span class="tag blue">Research</span></div>
-          <div class="secondary-title"><a href="https://royalsocietypublishing.org/rsos/article/13/2/242234/480264/Artificial-intelligence-policy-worldwide-a" target="_blank" rel="noopener">Artificial intelligence policy worldwide: a comparative analysis</a></div>
-          <div class="secondary-meta">
-            <span>royalsocietypublishing.org</span>
-            <a href="https://royalsocietypublishing.org/rsos/article/13/2/242234/480264/Artificial-intelligence-policy-worldwide-a" target="_blank" rel="noopener">Read →</a>
+            <span>Arundhati Bhattacharya · Salesforce South Asia · techinasia.com</span>
+            <a href="https://www.techinasia.com/news/salesforce-india-workforce-tops-17000" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Salesforce India workforce tops 17,000 - Tech in Asia" data-umami-event-category="AI × Business">Read →</a>
           </div>
         </div>
       </div>
@@ -364,39 +412,23 @@
     <div class="section-head">Quick Hits</div>
     <div class="hits-grid">
       <div class="hit">
-        <div class="hit-tag"><span class="tag orange">AI × Business</span></div>
-        <div class="hit-title"><a href="https://arakiplaw.com/en/insight/2665/" target="_blank" rel="noopener">Global AI Regulatory and Policy Developments: 2025 Update and Implications for 2026 | 荒木法律事務所（Araki International IP&amp;Law）</a></div>
-        <div class="hit-summary">A Japan-based international IP law firm breaks down 2025–2026 AI regulatory developments across the EU, US, and Asia, including the EU Digital Omnibus amendments that could delay high-risk AI enforcement timelines. You'll find actionable compliance priorities: AI ethics policies, structured programs for extraterritorial regimes, and ongoing risk assessment cadences.</div>
+        <div class="hit-tag"><span class="tag">Builders</span></div>
+        <div class="hit-title"><a href="https://arstechnica.com/security/2026/05/google-publishes-exploit-code-threatening-millions-of-chromium-users/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Google publishes exploit code threatening millions of Chromium users - Ars Technica" data-umami-event-category="Builders">Google publishes exploit code threatening millions of Chromium users - Ars Technica</a></div>
+        <div class="hit-summary">Google published proof-of-concept exploit code for an unfixed vulnerability in the Browser Fetch API affecting Chrome, Edge, and all Chromium-based browsers — code that lets an attacker monitor browsing activity and use targeted browsers as proxies. The flaw was reported in late 2022 by independent researcher Lyra Rebane and rated S1 severity internally, yet remains unpatched.</div>
+        
         <div class="hit-meta">
-          <span>arakiplaw.com</span>
-          <a href="https://arakiplaw.com/en/insight/2665/" target="_blank" rel="noopener">Read →</a>
-        </div>
-      </div>
-      <div class="hit">
-        <div class="hit-tag"><span class="tag green">Tools</span></div>
-        <div class="hit-title"><a href="https://blog.n8n.io/best-ai-workflow-automation-tools/" target="_blank" rel="noopener">Top AI Workflow Automation Tools for 2026 - n8n Blog</a></div>
-        <div class="hit-summary">The n8n team benchmarks major AI workflow automation platforms with hands-on testing notes, including self-hosted versus managed deployment trade-offs and a walkthrough of n8n's own fair-code model. You'll find concrete comparisons of node flexibility, template availability, and integration depth across Zapier, Make, Agentforce, and others.</div>
-        <div class="hit-meta">
-          <span>blog.n8n.io</span>
-          <a href="https://blog.n8n.io/best-ai-workflow-automation-tools/" target="_blank" rel="noopener">Read →</a>
+          <span>Lyra Rebane · arstechnica.com</span>
+          <a href="https://arstechnica.com/security/2026/05/google-publishes-exploit-code-threatening-millions-of-chromium-users/" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Google publishes exploit code threatening millions of Chromium users - Ars Technica" data-umami-event-category="Builders">Read →</a>
         </div>
       </div>
       <div class="hit">
         <div class="hit-tag"><span class="tag orange">AI × Business</span></div>
-        <div class="hit-title"><a href="https://www.softwareimprovementgroup.com/blog/us-ai-legislation-overview/" target="_blank" rel="noopener">AI legislation in the US: A 2026 overview - SIG</a></div>
-        <div class="hit-summary">The Software Improvement Group (Netherlands) maps the fragmented US AI legislative landscape, tracking the failed federal preemption attempt in the Senate (99-1 vote) and the ongoing patchwork of state laws that remain enforceable. You'll get a jurisdiction-by-jurisdiction breakdown that's useful for compliance teams operating across state lines.</div>
+        <div class="hit-title"><a href="https://www.wired.com/story/meta-employees-scramble-benefits-layoffs-ai/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Meta Employees Are Scrambling to Use Up Benefits Ahead of Layoffs - WIRED" data-umami-event-category="AI × Business">Meta Employees Are Scrambling to Use Up Benefits Ahead of Layoffs - WIRED</a></div>
+        <div class="hit-summary">On the eve of 8,000 Meta layoffs — roughly 10% of its workforce — employees are draining perks budgets and abandoning work in offices where, per WIRED's dozen-plus interviews, 'everyone is unhappy.' The round draws heightened attention because it arrives amid broad public anxiety that AI is displacing the very jobs it was meant to augment.</div>
+        
         <div class="hit-meta">
-          <span>softwareimprovementgroup.com</span>
-          <a href="https://www.softwareimprovementgroup.com/blog/us-ai-legislation-overview/" target="_blank" rel="noopener">Read →</a>
-        </div>
-      </div>
-      <div class="hit">
-        <div class="hit-tag"><span class="tag blue">Research</span></div>
-        <div class="hit-title"><a href="https://medium.com/data-science-collective/6-research-papers-every-data-scientist-should-read-in-2026-eeb660fd2db1" target="_blank" rel="noopener">6 Research Papers Every Data Scientist Should Read In 2026</a></div>
-        <div class="hit-summary">Author Andres Vourakis curates six recent papers on autonomous AI agents applied to data science automation, ML research, and scientific discovery, with enough context on each to help you decide which to prioritize. This covers the trajectory of AI-driven experimentation loops and where current agent systems still fall short of replacing human judgment.</div>
-        <div class="hit-meta">
-          <span>medium.com</span>
-          <a href="https://medium.com/data-science-collective/6-research-papers-every-data-scientist-should-read-in-2026-eeb660fd2db1" target="_blank" rel="noopener">Read →</a>
+          <span>wired.com</span>
+          <a href="https://www.wired.com/story/meta-employees-scramble-benefits-layoffs-ai/" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Meta Employees Are Scrambling to Use Up Benefits Ahead of Layoffs - WIRED" data-umami-event-category="AI × Business">Read →</a>
         </div>
       </div>
     </div>
@@ -404,61 +436,44 @@
   </div><!-- /panel-overview -->
 
   <!-- Category panels -->
-  <div class="panel" id="panel-Research" style="display:none">
+  <div class="panel" id="panel-Builders" style="display:none">
+          <div class="panel-filters">
+            <button class="filter-btn active" onclick="filterCards('Builders', null)">All</button>
+            <button class="filter-btn" onclick="filterCards('Builders', 'arstechnica.com')">arstechnica.com</button>
+          </div>
+          <div class="article-list" id="list-Builders">
+            <div class="article" data-source="arstechnica.com">
+              <div class="article-content">
+                <div class="article-tags"><span class="tag">Builders</span></div>
+                <h3 class="article-title"><a href="https://arstechnica.com/security/2026/05/google-publishes-exploit-code-threatening-millions-of-chromium-users/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Google publishes exploit code threatening millions of Chromium users - Ars Technica" data-umami-event-category="Builders">Google publishes exploit code threatening millions of Chromium users - Ars Technica</a></h3>
+                <p class="article-summary">Google published proof-of-concept exploit code for an unfixed vulnerability in the Browser Fetch API affecting Chrome, Edge, and all Chromium-based browsers — code that lets an attacker monitor browsing activity and use targeted browsers as proxies. The flaw was reported in late 2022 by independent researcher Lyra Rebane and rated S1 severity internally, yet remains unpatched.</p>
+                
+                <p class="article-byline">Lyra Rebane</p>
+              </div>
+              <div class="article-source">
+                <span class="source-name">arstechnica.com</span>
+                <a href="https://arstechnica.com/security/2026/05/google-publishes-exploit-code-threatening-millions-of-chromium-users/" class="read-btn" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Google publishes exploit code threatening millions of Chromium users - Ars Technica" data-umami-event-category="Builders">Read →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="panel" id="panel-Research" style="display:none">
           <div class="panel-filters">
             <button class="filter-btn active" onclick="filterCards('Research', null)">All</button>
-            <button class="filter-btn" onclick="filterCards('Research', 'eu-opensci.org')">eu-opensci.org</button>
-            <button class="filter-btn" onclick="filterCards('Research', 'setr.stanford.edu')">setr.stanford.edu</button>
-            <button class="filter-btn" onclick="filterCards('Research', 'royalsocietypublishing.org')">royalsocietypublishing.org</button>
-            <button class="filter-btn" onclick="filterCards('Research', 'medium.com')">medium.com</button>
+            <button class="filter-btn" onclick="filterCards('Research', 'arstechnica.com')">arstechnica.com</button>
           </div>
           <div class="article-list" id="list-Research">
-            <div class="article" data-source="eu-opensci.org">
+            <div class="article" data-source="arstechnica.com">
               <div class="article-content">
                 <div class="article-tags"><span class="tag blue">Research</span></div>
-                <h3 class="article-title"><a href="https://eu-opensci.org/index.php/ejai/article/view/1098" target="_blank" rel="noopener">New Trends in Machine Learning - European Open Science</a></h3>
-                <p class="article-summary">This peer-reviewed paper surveys current ML trends across federated learning, explainable AI, graph neural networks, TinyML, and quantum ML, drawing on 36 selected works. You'll find a useful taxonomy distinguishing systems-focused research (20 papers) from algorithm-centric studies (16), along with a frank note that the observed imbalance lacks statistical conclusiveness.</p>
+                <h3 class="article-title"><a href="https://arstechnica.com/google/2026/05/googles-synthid-ai-watermarking-tech-is-being-adopted-by-openai-nvidia-and-more/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Google’s SynthID AI watermarking tech is being adopted by OpenAI, Nvidia, and more - Ars Technica" data-umami-event-category="Research">Google’s SynthID AI watermarking tech is being adopted by OpenAI, Nvidia, and more - Ars Technica</a></h3>
+                <p class="article-summary">Google's SynthID watermarking standard — embedded invisibly in pixels, video frames, and audio waveforms — is now being adopted by OpenAI and Nvidia, alongside the C2PA metadata standard. The piece also notes the core limitation: SynthID only marks content from models that implement it, leaving the majority of AI images on the internet uncovered.</p>
+                
                 
               </div>
               <div class="article-source">
-                <span class="source-name">eu-opensci.org</span>
-                <a href="https://eu-opensci.org/index.php/ejai/article/view/1098" class="read-btn" target="_blank" rel="noopener">Read →</a>
-              </div>
-            </div>
-            <div class="article" data-source="setr.stanford.edu">
-              <div class="article-content">
-                <div class="article-tags"><span class="tag blue">Research</span></div>
-                <h3 class="article-title"><a href="https://setr.stanford.edu/sites/default/files/2026-01/SETR2026_01-AI_web-260109.pdf" target="_blank" rel="noopener">[PDF] SETR 2026: Artificial Intelligence</a></h3>
-                <p class="article-summary">Stanford's Emerging Technology Review maps the global AI regulatory landscape, covering the EU AI Act, US state-level legislation, and the GPAI Code of Practice in technical and legal detail. You'll get a structured comparative view of how jurisdictions differ on high-risk system requirements, transparency obligations, and enforcement timelines.</p>
-                
-              </div>
-              <div class="article-source">
-                <span class="source-name">setr.stanford.edu</span>
-                <a href="https://setr.stanford.edu/sites/default/files/2026-01/SETR2026_01-AI_web-260109.pdf" class="read-btn" target="_blank" rel="noopener">Read →</a>
-              </div>
-            </div>
-            <div class="article" data-source="royalsocietypublishing.org">
-              <div class="article-content">
-                <div class="article-tags"><span class="tag blue">Research</span></div>
-                <h3 class="article-title"><a href="https://royalsocietypublishing.org/rsos/article/13/2/242234/480264/Artificial-intelligence-policy-worldwide-a" target="_blank" rel="noopener">Artificial intelligence policy worldwide: a comparative analysis</a></h3>
-                <p class="article-summary">Published in Royal Society Open Science, this comparative analysis examines AI policy frameworks across multiple countries, with particular attention to risk-based approaches and the obligations introduced by the EU AI Act as of August 2025. You'll come away with a structured understanding of how different regulatory philosophies diverge on high-risk categories and general-purpose model rules.</p>
-                
-              </div>
-              <div class="article-source">
-                <span class="source-name">royalsocietypublishing.org</span>
-                <a href="https://royalsocietypublishing.org/rsos/article/13/2/242234/480264/Artificial-intelligence-policy-worldwide-a" class="read-btn" target="_blank" rel="noopener">Read →</a>
-              </div>
-            </div>
-            <div class="article" data-source="medium.com">
-              <div class="article-content">
-                <div class="article-tags"><span class="tag blue">Research</span></div>
-                <h3 class="article-title"><a href="https://medium.com/data-science-collective/6-research-papers-every-data-scientist-should-read-in-2026-eeb660fd2db1" target="_blank" rel="noopener">6 Research Papers Every Data Scientist Should Read In 2026</a></h3>
-                <p class="article-summary">Author Andres Vourakis curates six recent papers on autonomous AI agents applied to data science automation, ML research, and scientific discovery, with enough context on each to help you decide which to prioritize. This covers the trajectory of AI-driven experimentation loops and where current agent systems still fall short of replacing human judgment.</p>
-                
-              </div>
-              <div class="article-source">
-                <span class="source-name">medium.com</span>
-                <a href="https://medium.com/data-science-collective/6-research-papers-every-data-scientist-should-read-in-2026-eeb660fd2db1" class="read-btn" target="_blank" rel="noopener">Read →</a>
+                <span class="source-name">arstechnica.com</span>
+                <a href="https://arstechnica.com/google/2026/05/googles-synthid-ai-watermarking-tech-is-being-adopted-by-openai-nvidia-and-more/" class="read-btn" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Google’s SynthID AI watermarking tech is being adopted by OpenAI, Nvidia, and more - Ars Technica" data-umami-event-category="Research">Read →</a>
               </div>
             </div>
           </div>
@@ -466,76 +481,108 @@
         <div class="panel" id="panel-AI---Business" style="display:none">
           <div class="panel-filters">
             <button class="filter-btn active" onclick="filterCards('AI---Business', null)">All</button>
-            <button class="filter-btn" onclick="filterCards('AI---Business', 'sloanreview.mit.edu')">sloanreview.mit.edu</button>
-            <button class="filter-btn" onclick="filterCards('AI---Business', 'arakiplaw.com')">arakiplaw.com</button>
-            <button class="filter-btn" onclick="filterCards('AI---Business', 'softwareimprovementgroup.com')">softwareimprovementgroup.com</button>
+            <button class="filter-btn" onclick="filterCards('AI---Business', 'wired.com')">wired.com</button>
+            <button class="filter-btn" onclick="filterCards('AI---Business', 'techinasia.com')">techinasia.com</button>
           </div>
           <div class="article-list" id="list-AI---Business">
-            <div class="article" data-source="sloanreview.mit.edu">
+            <div class="article" data-source="wired.com">
               <div class="article-content">
                 <div class="article-tags"><span class="tag orange">AI × Business</span></div>
-                <h3 class="article-title"><a href="https://sloanreview.mit.edu/article/five-trends-in-ai-and-data-science-for-2026/" target="_blank" rel="noopener">Five Trends in AI and Data Science for 2026</a></h3>
-                <p class="article-summary">MIT Sloan Management Review's Davenport and Bean outline five data-backed trends shaping enterprise AI and data science strategy in 2026. This covers shifts in how organizations are structuring AI teams, measuring ROI, and handling the gap between pilot projects and production deployment.</p>
+                <h3 class="article-title"><a href="https://www.wired.com/story/spacex-ipo-anthropic-compute-finances-risks/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its Data Centers - WIRED" data-umami-event-category="AI × Business">SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its Data Centers - WIRED</a></h3>
+                <p class="article-summary">Anthropic is paying SpaceX $1.25 billion per month — $15 billion annually — for GPU access at the Colossus data centers in Tennessee and Mississippi, revealed in SpaceX's S-1 IPO filing. The number puts a hard dollar figure on compute as the defining bottleneck in frontier AI development.</p>
+                
                 
               </div>
               <div class="article-source">
-                <span class="source-name">sloanreview.mit.edu</span>
-                <a href="https://sloanreview.mit.edu/article/five-trends-in-ai-and-data-science-for-2026/" class="read-btn" target="_blank" rel="noopener">Read →</a>
+                <span class="source-name">wired.com</span>
+                <a href="https://www.wired.com/story/spacex-ipo-anthropic-compute-finances-risks/" class="read-btn" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its Data Centers - WIRED" data-umami-event-category="AI × Business">Read →</a>
               </div>
             </div>
-            <div class="article" data-source="arakiplaw.com">
+            <div class="article" data-source="wired.com">
               <div class="article-content">
                 <div class="article-tags"><span class="tag orange">AI × Business</span></div>
-                <h3 class="article-title"><a href="https://arakiplaw.com/en/insight/2665/" target="_blank" rel="noopener">Global AI Regulatory and Policy Developments: 2025 Update and Implications for 2026 | 荒木法律事務所（Araki International IP&amp;Law）</a></h3>
-                <p class="article-summary">A Japan-based international IP law firm breaks down 2025–2026 AI regulatory developments across the EU, US, and Asia, including the EU Digital Omnibus amendments that could delay high-risk AI enforcement timelines. You'll find actionable compliance priorities: AI ethics policies, structured programs for extraterritorial regimes, and ongoing risk assessment cadences.</p>
+                <h3 class="article-title"><a href="https://www.wired.com/story/commonwealth-short-story-prize-ai-allegations/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Literary Prizewinners Are Facing AI Allegations. It Feels Like the New Normal - WIRED" data-umami-event-category="AI × Business">Literary Prizewinners Are Facing AI Allegations. It Feels Like the New Normal - WIRED</a></h3>
+                <p class="article-summary">Three of five regional winners of the 2026 Commonwealth Short Story Prize are suspected of using AI to write their entries, exposing how ill-equipped literary institutions are to adjudicate these claims fairly. Granta's editor flagged that AI-detection tools may themselves carry bias against the very writers — many from Africa, Asia, and the Pacific — most likely to be falsely accused.</p>
+                
                 
               </div>
               <div class="article-source">
-                <span class="source-name">arakiplaw.com</span>
-                <a href="https://arakiplaw.com/en/insight/2665/" class="read-btn" target="_blank" rel="noopener">Read →</a>
+                <span class="source-name">wired.com</span>
+                <a href="https://www.wired.com/story/commonwealth-short-story-prize-ai-allegations/" class="read-btn" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Literary Prizewinners Are Facing AI Allegations. It Feels Like the New Normal - WIRED" data-umami-event-category="AI × Business">Read →</a>
               </div>
             </div>
-            <div class="article" data-source="softwareimprovementgroup.com">
+            <div class="article" data-source="techinasia.com">
               <div class="article-content">
                 <div class="article-tags"><span class="tag orange">AI × Business</span></div>
-                <h3 class="article-title"><a href="https://www.softwareimprovementgroup.com/blog/us-ai-legislation-overview/" target="_blank" rel="noopener">AI legislation in the US: A 2026 overview - SIG</a></h3>
-                <p class="article-summary">The Software Improvement Group (Netherlands) maps the fragmented US AI legislative landscape, tracking the failed federal preemption attempt in the Senate (99-1 vote) and the ongoing patchwork of state laws that remain enforceable. You'll get a jurisdiction-by-jurisdiction breakdown that's useful for compliance teams operating across state lines.</p>
+                <h3 class="article-title"><a href="https://www.techinasia.com/news/salesforce-india-workforce-tops-17000" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Salesforce India workforce tops 17,000 - Tech in Asia" data-umami-event-category="AI × Business">Salesforce India workforce tops 17,000 - Tech in Asia</a></h3>
+                <p class="article-summary">Salesforce's India workforce crossed 17,000 in 2026, with regional revenue up 47% to $1.5 billion, driven by Indian enterprises moving from AI pilots to full deployments of its Agentforce agentic systems. The company is also building its first India Salesforce Tower in Bengaluru.</p>
+                
+                <p class="article-byline">Arundhati Bhattacharya · Salesforce South Asia</p>
+              </div>
+              <div class="article-source">
+                <span class="source-name">techinasia.com</span>
+                <a href="https://www.techinasia.com/news/salesforce-india-workforce-tops-17000" class="read-btn" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Salesforce India workforce tops 17,000 - Tech in Asia" data-umami-event-category="AI × Business">Read →</a>
+              </div>
+            </div>
+            <div class="article" data-source="wired.com">
+              <div class="article-content">
+                <div class="article-tags"><span class="tag orange">AI × Business</span></div>
+                <h3 class="article-title"><a href="https://www.wired.com/story/meta-employees-scramble-benefits-layoffs-ai/" target="_blank" rel="noopener" data-umami-event="article-click" data-umami-event-title="Meta Employees Are Scrambling to Use Up Benefits Ahead of Layoffs - WIRED" data-umami-event-category="AI × Business">Meta Employees Are Scrambling to Use Up Benefits Ahead of Layoffs - WIRED</a></h3>
+                <p class="article-summary">On the eve of 8,000 Meta layoffs — roughly 10% of its workforce — employees are draining perks budgets and abandoning work in offices where, per WIRED's dozen-plus interviews, 'everyone is unhappy.' The round draws heightened attention because it arrives amid broad public anxiety that AI is displacing the very jobs it was meant to augment.</p>
+                
                 
               </div>
               <div class="article-source">
-                <span class="source-name">softwareimprovementgroup.com</span>
-                <a href="https://www.softwareimprovementgroup.com/blog/us-ai-legislation-overview/" class="read-btn" target="_blank" rel="noopener">Read →</a>
+                <span class="source-name">wired.com</span>
+                <a href="https://www.wired.com/story/meta-employees-scramble-benefits-layoffs-ai/" class="read-btn" target="_blank" rel="noopener" data-umami-event="article-read" data-umami-event-title="Meta Employees Are Scrambling to Use Up Benefits Ahead of Layoffs - WIRED" data-umami-event-category="AI × Business">Read →</a>
               </div>
             </div>
           </div>
         </div>
-        <div class="panel" id="panel-Tools" style="display:none">
-          <div class="panel-filters">
-            <button class="filter-btn active" onclick="filterCards('Tools', null)">All</button>
-            <button class="filter-btn" onclick="filterCards('Tools', 'blog.n8n.io')">blog.n8n.io</button>
-          </div>
-          <div class="article-list" id="list-Tools">
-            <div class="article" data-source="blog.n8n.io">
-              <div class="article-content">
-                <div class="article-tags"><span class="tag green">Tools</span></div>
-                <h3 class="article-title"><a href="https://blog.n8n.io/best-ai-workflow-automation-tools/" target="_blank" rel="noopener">Top AI Workflow Automation Tools for 2026 - n8n Blog</a></h3>
-                <p class="article-summary">The n8n team benchmarks major AI workflow automation platforms with hands-on testing notes, including self-hosted versus managed deployment trade-offs and a walkthrough of n8n's own fair-code model. You'll find concrete comparisons of node flexibility, template availability, and integration depth across Zapier, Make, Agentforce, and others.</p>
+
+  <!-- Authors panel -->
+  <div class="panel" id="panel-authors" style="display:none">
+        <div class="panel-filters" style="margin-bottom:20px">
+          <p style="font-size:14px;color:#555;line-height:1.6;">
+            People who wrote something in this issue — real practitioners, not aggregators.
+          </p>
+        </div>
+        <div class="authors-grid">
+          <div class="author-card">
+            <div class="author-top">
+              <div class="author-avatar">AB</div>
+              <div>
+                <div class="author-name">Arundhati Bhattacharya · Salesforce South Asia</div>
                 
               </div>
-              <div class="article-source">
-                <span class="source-name">blog.n8n.io</span>
-                <a href="https://blog.n8n.io/best-ai-workflow-automation-tools/" class="read-btn" target="_blank" rel="noopener">Read →</a>
+            </div>
+            
+            <div class="author-articles">
+              <a class="author-article-link" href="https://www.techinasia.com/news/salesforce-india-workforce-tops-17000" target="_blank" rel="noopener">Salesforce India workforce tops 17,000 - Tech in Asia</a>
+            </div>
+          </div>
+          <div class="author-card">
+            <div class="author-top">
+              <div class="author-avatar">LR</div>
+              <div>
+                <div class="author-name">Lyra Rebane</div>
+                
               </div>
+            </div>
+            <div class="author-bio">Independent security researcher who discovered and privately disclosed the Browser Fetch vulnerability to Google in 2022.</div>
+            <div class="author-articles">
+              <a class="author-article-link" href="https://arstechnica.com/security/2026/05/google-publishes-exploit-code-threatening-millions-of-chromium-users/" target="_blank" rel="noopener">Google publishes exploit code threatening millions of Chromium users -…</a>
             </div>
           </div>
         </div>
+      </div>
 
 </div><!-- /page -->
 
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-brand">The Frequency</div>
-  <p>Next issue: Thursday, May 21, 2026</p>
+  <p>Next issue: Tuesday, May 26, 2026</p>
   <p style="margin-top:8px;">
     <a href="https://thefrequency.lilitarutyunyan.com/archive.html">Archive</a> &nbsp;·&nbsp;
     <a href="https://thefrequency.lilitarutyunyan.com">Latest issue</a>

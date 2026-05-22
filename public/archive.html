@@ -1,60 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" >
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-  <title>The Frequency — Archive</title>
-  <script defer src="https://cloud.umami.is/script.js" data-website-id="06dbf26f-457b-473a-a135-27e85ed3ea7c"></script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #f7f6f3; font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1a1a1a; line-height: 1.6; }
-    a { color: #6c47ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .container { max-width: 720px; margin: 0 auto; padding: 0 20px 60px; }
-    .header { background: linear-gradient(135deg, #6c47ff, #a855f7); padding: 40px 32px; border-radius: 0 0 12px 12px; margin-bottom: 40px; }
-    .header-logo { font-size: 22px; font-weight: 800; color: rgba(255,255,255,0.7); letter-spacing: 0.12em; text-transform: uppercase; }
-    .header-title { font-size: 36px; font-weight: 900; color: #fff; margin: 4px 0 8px; }
-    .header-meta { font-size: 14px; color: rgba(255,255,255,0.75); }
-    .archive-card { background: #fff; border: 1px solid #e8e5df; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
-    .archive-card .issue-meta { font-size: 12px; color: #999; margin-bottom: 8px; }
-    .archive-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
-    .archive-card p { font-size: 14px; color: #555; margin-bottom: 4px; }
-    .archive-card .ep-label { font-size: 13px; color: #6c47ff; }
-    .back-link { display: inline-block; margin-bottom: 24px; font-size: 14px; color: #6c47ff; font-weight: 600; }
-    .empty { color: #999; font-size: 15px; padding: 40px 0; text-align: center; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Frequency — Archive</title>
+<meta name="description" content="All past issues of The Frequency — Lilit's twice-weekly curated AI digest.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" >
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" >
+<link rel="apple-touch-icon" sizes="192x192" href="/logo-192.png" >
+<script defer src="https://cloud.umami.is/script.js" data-website-id="06dbf26f-457b-473a-a135-27e85ed3ea7c"></script>
+<style>
+  :root {
+    color-scheme: light;
+    --purple: #6c47ff;
+    --purple-light: #f0edff;
+    --purple-mid: #c4b5fd;
+    --border: #e8e5df;
+    --bg: #f7f6f3;
+    --white: #fff;
+    --text: #1a1a1a;
+    --muted: #555;
+    --gray: #888;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 28px;
+    display: flex; align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    gap: 12px; flex-wrap: wrap;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, #6c47ff, #a855f7);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px; flex-shrink: 0;
+    text-decoration: none;
+  }
+  .header-title { font-size: 17px; font-weight: 700; color: #111; }
+  .header-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+  .back-btn {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--white); color: var(--purple);
+    border: 1px solid var(--purple-mid);
+    font-size: 12px; font-weight: 600;
+    padding: 6px 13px; border-radius: 20px;
+    text-decoration: none; transition: background 0.15s;
+    font-family: inherit;
+  }
+  .back-btn:hover { background: var(--purple-light); }
+
+  /* ── MAIN ── */
+  .main { padding: 32px 28px; max-width: 780px; margin: 0 auto; }
+
+  .page-title {
+    font-size: 26px; font-weight: 800; color: #111;
+    margin-bottom: 6px;
+  }
+  .page-sub {
+    font-size: 14px; color: var(--gray);
+    margin-bottom: 32px;
+  }
+
+  /* ── YEAR GROUP ── */
+  .year-label {
+    font-size: 11px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase;
+    color: #aaa; margin-bottom: 14px; margin-top: 28px;
+  }
+  .year-label:first-child { margin-top: 0; }
+
+  /* ── ISSUE CARD ── */
+  .issue-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 12px;
+    display: flex; align-items: flex-start; gap: 18px;
+    transition: box-shadow 0.15s, border-color 0.15s;
+    text-decoration: none; color: inherit;
+  }
+  .issue-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    border-color: var(--purple-mid);
+  }
+  .issue-num {
+    width: 48px; height: 48px;
+    background: var(--purple-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800; color: var(--purple);
+    flex-shrink: 0;
+  }
+  .issue-info { flex: 1; min-width: 0; }
+  .issue-date {
+    font-size: 12px; font-weight: 600; color: var(--gray);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+  .issue-headline {
+    font-size: 15px; font-weight: 650; color: #111;
+    line-height: 1.35; margin-bottom: 6px;
+  }
+  .issue-summary {
+    font-size: 13px; color: var(--muted);
+    line-height: 1.55;
+  }
+  .issue-tags {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .tag {
+    font-size: 11px; font-weight: 500;
+    padding: 3px 9px; border-radius: 20px;
+    background: var(--purple-light); color: #7c5cbf;
+  }
+  .tag.green { background: #f0faf3; color: #2d7a46; }
+  .tag.orange { background: #fff8ef; color: #b8620f; }
+  .tag.blue { background: #eff6ff; color: #2563eb; }
+  .issue-arrow {
+    font-size: 18px; color: var(--purple-mid);
+    flex-shrink: 0; margin-top: 4px;
+    transition: transform 0.15s, color 0.15s;
+  }
+  .issue-card:hover .issue-arrow {
+    transform: translateX(3px);
+    color: var(--purple);
+  }
+
+  /* ── CURRENT BADGE ── */
+  .current-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.4px;
+    text-transform: uppercase;
+    background: var(--purple); color: #fff;
+    padding: 2px 8px; border-radius: 20px;
+    margin-left: 8px; vertical-align: middle;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-future {
+    background: var(--white); border: 1px dashed var(--border);
+    border-radius: 12px; padding: 24px;
+    text-align: center; color: var(--gray);
+    font-size: 13px; line-height: 1.6;
+    margin-top: 8px;
+  }
+  .empty-future strong { color: #111; display: block; margin-bottom: 4px; font-size: 14px; }
+
+  /* ── STATS ── */
+  .stats-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .stat-pill {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: var(--gray);
+  }
+  .stat-pill strong { color: var(--purple); font-weight: 700; }
+
+  @media (max-width: 600px) {
+    .main { padding: 20px 16px; }
+    .header { padding: 12px 16px; }
+    .issue-card { flex-direction: column; gap: 12px; }
+    .issue-arrow { display: none; }
+  }
+</style>
 </head>
 <body>
+
+
 <div class="header">
-  <div class="container" style="padding-top:0;padding-bottom:0;">
-    <div class="header-logo">The Frequency</div>
-    <div class="header-title">Archive</div>
-    <div class="header-meta">Every issue, in one place.</div>
+  <div class="header-left">
+    <a class="logo" href="index.html">🧠</a>
+    <div>
+      <div class="header-title">The Frequency — Archive</div>
+      <div class="header-sub">Every issue, every story</div>
+    </div>
   </div>
+  <a class="back-btn" href="index.html">← Latest issue</a>
 </div>
-<div class="container">
-  <a class="back-link" href="https://thefrequency.lilitarutyunyan.com">← Latest issue</a>
-  <div id="issues-list"><article class="archive-card" data-issue="3">
-    <div class="issue-meta">Issue #3 &nbsp;·&nbsp; Tuesday, May 19, 2026</div>
-    <h3><a href="https://thefrequency.lilitarutyunyan.com/issue-3.html">The Frequency #3</a></h3>
-    <p>6 stories across Research, AI × Business</p>
-    <p class="ep-label">★ Editor's Pick: <a href="https://www.nature.com/subjects/machine-learning">Machine learning - Latest research and news</a></p>
-  </article>
-  <article class="archive-card" data-issue="2">
-    <div class="issue-meta">Issue #2 &nbsp;·&nbsp; Tuesday, May 19, 2026</div>
-    <h3><a href="https://thefrequency.lilitarutyunyan.com/issue-2.html">The Frequency #2</a></h3>
-    <p>8 stories across Research, AI × Business, Tools</p>
-    <p class="ep-label">★ Editor's Pick: <a href="https://eu-opensci.org/index.php/ejai/article/view/1098">New Trends in Machine Learning - European Open Science</a></p>
-  </article>
-  <article class="archive-card" data-issue="2">
-    <div class="issue-meta">Issue #2 &nbsp;·&nbsp; Tuesday, May 19, 2026</div>
-    <h3><a href="https://thefrequency.lilitarutyunyan.com/issue-2.html">The Frequency #2</a></h3>
-    <p>10 stories across Research, AI × Business, Tools</p>
-    <p class="ep-label">★ Editor's Pick: <a href="https://sloanreview.mit.edu/article/five-trends-in-ai-and-data-science-for-2026/">Five Trends in AI and Data Science for 2026</a></p>
-  </article>
+
+
+<div class="main">
+
+  <div class="page-title">All Issues</div>
+  <div class="page-sub">Published every Tuesday &amp; Thursday — real builders, honest takes, zero hype.</div>
+
+  <div class="stats-row" id="archive-stats">
+    <div class="stat-pill"><strong>2</strong> issue published</div>
+    <div class="stat-pill"><strong>9</strong> authors tracked</div>
+    <div class="stat-pill"><strong>17</strong> sources monitored</div>
+    <div class="stat-pill">Since <strong>May 2026</strong></div>
+  </div>
+
+  <div class="year-label">2026</div>
+
+  <div id="issues-list"><a class="issue-card" href="https://thefrequency.lilitarutyunyan.com/issue-2.html">
+    <div class="issue-num">#2</div>
+    <div class="issue-info">
+      <div class="issue-date">Thursday, May 21, 2026 <span class="current-badge">● Latest</span></div>
+      <div class="issue-headline">Anthropic's $15B compute bet, agentic AI going mainstream, and the AI detection credibility crisis</div>
+      <div class="issue-summary">6 stories · Editor's Pick: SpaceX IPO Filing Reveals Anthropic Is Paying $15 Billion a Year to Access Its D</div>
+      <div class="issue-tags"><span class="tag">Builders</span><span class="tag blue">Research</span><span class="tag orange">AI × Business</span></div>
+    </div>
+    <div class="issue-arrow">→</div>
+  </a>
   
-  <p class="empty">Issues will appear here after each publish.</p>
+    
+    <a class="issue-card" href="index.html">
+      <div class="issue-num">#1</div>
+      <div class="issue-info">
+        <div class="issue-date">May 15, 2026 · Thursday </div>
+        <div class="issue-headline">Software 3.0, the zombie internet problem, and how solo founders are rewriting the rules</div>
+        <div class="issue-summary">
+          Karpathy's Software 3.0 framework from Sequoia Ascent · Simon Willison on AI-generated writing breaking the internet · Ben Tossell's honest 2026 coding stack · Pieter Levels running $3.5M ARR solo · Ethan Mollick's research-backed inflection point read · Matt Rickard on why agents fail differently.
+        </div>
+        <div class="issue-tags">
+          <span class="tag">Karpathy</span>
+          <span class="tag blue">Software 3.0</span>
+          <span class="tag green">Solo founders</span>
+          <span class="tag orange">Agents</span>
+        </div>
+      </div>
+      <div class="issue-arrow">→</div>
+    </a>
   </div>
+
+  
+  
+
 </div>
+
 </body>
 </html>

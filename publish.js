@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-dotenv.config({ override: true });
+dotenv.config(); // do NOT use override:true — shell env vars (e.g. DRY_RUN=true) must take precedence over .env
 import { getIssueNumber, saveIssueNumber, getSeenUrls, appendSeenUrls } from './src/state.js';
 import { fetchArticles } from './src/search.js';
 import { curate } from './src/curate.js';
@@ -57,14 +57,15 @@ async function main() {
 
   // ── 3. Curate ────────────────────────────────────────────────────
   console.log('\n[3/8] Curating with Claude...');
-  let curatedArticles;
+  let curateResult;
   try {
-    curatedArticles = await curate(rawArticles, seenUrls);
+    curateResult = await curate(rawArticles, seenUrls);
   } catch (err) {
     console.error(`\n[FATAL] Curation failed: ${err.message}`);
     process.exit(1);
   }
 
+  const { articles: curatedArticles, issue_headline } = curateResult;
   const editorsPick = curatedArticles.find(a => a.editors_pick);
   const issueDate = formatDate(now);
   const nextDate = nextIssueDate(now);
@@ -75,6 +76,7 @@ async function main() {
     next_date: nextDate,
     articles: curatedArticles,
     editors_pick: editorsPick,
+    issue_headline: issue_headline || '',
   };
 
   // ── 4. Generate HTML ─────────────────────────────────────────────
@@ -95,6 +97,7 @@ async function main() {
     console.log(`  public/issue-${issueNumber}.html`);
     console.log('  public/email-latest.html');
     console.log('  public/archive.html');
+    if (issue_headline) console.log(`\n[DRY RUN] Issue headline: ${issue_headline}`);
     console.log('\n[DRY RUN] Articles selected:');
     for (const a of curatedArticles) {
       console.log(`  [${a.category}]${a.editors_pick ? ' ★' : ''} ${a.title}`);

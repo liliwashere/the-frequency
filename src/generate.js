@@ -20,6 +20,18 @@ const DS = {
 
 const CATEGORIES = ['Builders', 'Research', 'AI × Business', 'Tools'];
 
+const LANG_FLAGS = {
+  fr: '🇫🇷', es: '🇪🇸', pt: '🇧🇷', de: '🇩🇪', ja: '🇯🇵',
+  zh: '🇨🇳', ko: '🇰🇷', ar: '🇸🇦', ru: '🇷🇺', it: '🇮🇹',
+  nl: '🇳🇱', pl: '🇵🇱', tr: '🇹🇷', hi: '🇮🇳', sw: '🇰🇪',
+};
+const LANG_NAMES = {
+  fr: 'French', es: 'Spanish', pt: 'Portuguese', de: 'German',
+  ja: 'Japanese', zh: 'Chinese', ko: 'Korean', ar: 'Arabic',
+  ru: 'Russian', it: 'Italian', nl: 'Dutch', pl: 'Polish',
+  tr: 'Turkish', hi: 'Hindi', sw: 'Swahili',
+};
+
 const CATEGORY_TAG_CLASS = {
   'Builders': 'tag',
   'Research': 'tag blue',
@@ -27,7 +39,7 @@ const CATEGORY_TAG_CLASS = {
   'Tools': 'tag green',
 };
 
-const SUBSCRIBE_HOOK = 'https://hook.eu1.make.com/3g1ugqw30uuo1bwmht9l9hjk1yla4w69';
+const SUBSCRIBE_HOOK = 'https://the-frequency-subscribe.lilitalent.workers.dev';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -69,6 +81,20 @@ function umamiAttrs(eventName, article) {
   return `data-umami-event="${eventName}" data-umami-event-title="${e(article.title)}" data-umami-event-category="${e(article.category)}"`;
 }
 
+function langBadge(article) {
+  const lang = article.language;
+  if (!lang || lang === 'en') return '';
+  const flag = LANG_FLAGS[lang] ?? '';
+  const name = LANG_NAMES[lang] ?? lang.toUpperCase();
+  return `<span class="lang-badge">${flag} ${name}</span>`;
+}
+
+function translatedBlock(article) {
+  if (!article.translated_excerpt) return '';
+  const name = LANG_NAMES[article.language] ?? article.language;
+  return `<div class="translated-excerpt"><span class="translated-label">Originally in ${e(name)}</span>${e(article.translated_excerpt)}</div>`;
+}
+
 // ── Full-page issue generator (Workers-site design) ───────────────────────────
 
 function tagClass(category) {
@@ -102,9 +128,10 @@ function renderFullIssue(ctx) {
 
     const articleRows = arts.map(a => `<div class="article" data-source="${e(a.source ?? '')}">
               <div class="article-content">
-                <div class="article-tags"><span class="${tagClass(a.category)}">${e(a.category)}</span></div>
+                <div class="article-tags"><span class="${tagClass(a.category)}">${e(a.category)}</span>${langBadge(a)}</div>
                 <h3 class="article-title"><a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', a)}>${e(a.title)}</a></h3>
                 <p class="article-summary">${e(a.summary)}</p>
+                ${translatedBlock(a)}
                 ${a.author ? `<p class="article-byline">${e(a.author)}</p>` : ''}
               </div>
               <div class="article-source">
@@ -125,12 +152,52 @@ function renderFullIssue(ctx) {
         </div>`;
   }
 
+  // ── Authors tab ──────────────────────────────────────────────────
+  const authorMap = {};
+  for (const a of ctx.articles) {
+    if (!a.author) continue;
+    const key = a.author;
+    if (!authorMap[key]) {
+      authorMap[key] = { author: a.author, author_url: a.author_url || '', author_bio: a.author_bio || '', articles: [] };
+    }
+    authorMap[key].articles.push(a);
+  }
+  const authorList = Object.values(authorMap);
+
+  function initials(name) {
+    return name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  }
+
+  const authorsPanel = authorList.length ? `<div class="panel" id="panel-authors" style="display:none">
+        <div class="panel-filters" style="margin-bottom:20px">
+          <p style="font-size:14px;color:#555;line-height:1.6;">
+            People who wrote something in this issue — real practitioners, not aggregators.
+          </p>
+        </div>
+        <div class="authors-grid">
+          ${authorList.map(a => `<div class="author-card">
+            <div class="author-top">
+              <div class="author-avatar">${initials(a.author)}</div>
+              <div>
+                <div class="author-name">${e(a.author)}</div>
+                ${a.author_url ? `<div class="author-handle"><a href="${e(a.author_url)}" target="_blank" rel="noopener" style="color:#999;font-size:11px;">${e(new URL(a.author_url).hostname.replace(/^www\./, ''))}</a></div>` : ''}
+              </div>
+            </div>
+            ${a.author_bio ? `<div class="author-bio">${e(a.author_bio)}</div>` : ''}
+            <div class="author-articles">
+              ${a.articles.map(art => `<a class="author-article-link" href="${e(art.url)}" target="_blank" rel="noopener">${e(art.title.slice(0, 70))}${art.title.length > 70 ? '…' : ''}</a>`).join('')}
+            </div>
+          </div>`).join('\n          ')}
+        </div>
+      </div>` : '';
+
   const tabButtons = [
     `<button class="tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>`,
     ...activeTabs.map(cat => {
       const id = cat.replace(/[^a-zA-Z0-9]/g, '-');
       return `<button class="tab" data-tab="${id}" onclick="switchTab('${id}')">${e(cat)}</button>`;
     }),
+    ...(authorList.length ? [`<button class="tab" data-tab="authors" onclick="switchTab('authors')">Authors</button>`] : []),
   ].join('\n        ');
 
   const categoryPanels = activeTabs.map(renderCategoryPanel).join('\n        ');
@@ -142,6 +209,9 @@ function renderFullIssue(ctx) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Frequency #${ctx.issue_number} — AI digest</title>
   <meta name="description" content="The Frequency: twice-weekly AI digest for builders and thinkers." />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/logo-192.png" />
   <script defer src="https://cloud.umami.is/script.js" data-website-id="${DS.umamiId}"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -367,6 +437,49 @@ function renderFullIssue(ctx) {
     }
     .read-btn:hover { background: ${DS.primary}; color: #fff; text-decoration: none; }
 
+    /* ── Language badge & translation ── */
+    .lang-badge {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 20px;
+      background: #fff8ef; color: #b8620f;
+      border: 1px solid #fde68a; margin-left: 6px;
+      vertical-align: middle;
+    }
+    .translated-excerpt {
+      font-size: 13px; color: #555; line-height: 1.6;
+      background: #f8f7ff; border-left: 3px solid #c4b5fd;
+      padding: 8px 12px; margin-top: 10px; border-radius: 0 6px 6px 0;
+    }
+    .translated-label {
+      font-size: 10px; font-weight: 700; color: ${DS.primary};
+      text-transform: uppercase; letter-spacing: 0.05em;
+      display: block; margin-bottom: 3px;
+    }
+
+    /* ── Authors tab ── */
+    .authors-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;
+    }
+    .author-card {
+      background: #fff; border: 1px solid ${DS.border};
+      border-radius: ${DS.radius}; padding: 20px;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #d4cff7; }
+    .author-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+    .author-avatar {
+      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+      background: ${DS.gradient};
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; font-weight: 800; color: #fff;
+    }
+    .author-name { font-size: 15px; font-weight: 700; color: #111; line-height: 1.2; }
+    .author-handle { font-size: 11px; color: #999; margin-top: 2px; }
+    .author-bio { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 10px; }
+    .author-articles { font-size: 12px; color: #888; }
+    .author-article-link { color: ${DS.primary}; font-weight: 600; text-decoration: none; display: block; margin-top: 4px; }
+    .author-article-link:hover { text-decoration: underline; }
+
     /* ── Footer ── */
     .footer {
       border-top: 1px solid ${DS.border}; margin-top: 60px; padding-top: 32px;
@@ -460,9 +573,10 @@ function renderFullIssue(ctx) {
     <div class="lead-grid">
       <div class="lead-left">
         <div class="lead-label">★ Editor's Pick</div>
-        <div class="lead-tag">${e(ep.category)}</div>
+        <div class="lead-tag">${e(ep.category)}${langBadge(ep)}</div>
         <h2 class="lead-title"><a href="${e(ep.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', ep)}>${e(ep.title)}</a></h2>
         <p class="lead-summary">${e(ep.summary)}</p>
+        ${translatedBlock(ep)}
         <p class="lead-byline">${ep.author ? e(ep.author) + ' · ' : ''}${e(ep.source)}</p>
         <a class="lead-read" href="${e(ep.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', ep)}>Read →</a>
       </div>
@@ -482,9 +596,10 @@ function renderFullIssue(ctx) {
     <div class="section-head">Quick Hits</div>
     <div class="hits-grid">
       ${hitsArticles.map(a => `<div class="hit">
-        <div class="hit-tag"><span class="${tagClass(a.category)}">${e(a.category)}</span></div>
+        <div class="hit-tag"><span class="${tagClass(a.category)}">${e(a.category)}</span>${langBadge(a)}</div>
         <div class="hit-title"><a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', a)}>${e(a.title)}</a></div>
         <div class="hit-summary">${e(a.summary)}</div>
+        ${translatedBlock(a)}
         <div class="hit-meta">
           <span>${a.author ? e(a.author) + ' · ' : ''}${e(a.source)}</span>
           <a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', a)}>Read →</a>
@@ -496,6 +611,9 @@ function renderFullIssue(ctx) {
 
   <!-- Category panels -->
   ${categoryPanels}
+
+  <!-- Authors panel -->
+  ${authorsPanel}
 
 </div><!-- /page -->
 
@@ -613,7 +731,16 @@ export function generateEmail(ctx) {
 <!-- Header -->
 <tr>
   <td style="background:#6c47ff;padding:32px 32px 28px;background-image:linear-gradient(135deg,#6c47ff,#a855f7);">
-    <p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">The Frequency</p>
+    <table cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
+      <tr>
+        <td style="padding-right:12px;vertical-align:middle;">
+          <img src="${DS.siteUrl}/logo-192.png" alt="The Frequency" width="40" height="40" style="display:block;border-radius:8px;" />
+        </td>
+        <td style="vertical-align:middle;">
+          <p style="margin:0;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">The Frequency</p>
+        </td>
+      </tr>
+    </table>
     <p style="margin:0 0 6px;font-size:28px;font-weight:900;color:#ffffff;">Issue #${ctx.issue_number}</p>
     <p style="margin:0;font-size:13px;color:rgba(255,255,255,0.75);">${e(ctx.date)}</p>
   </td>
@@ -686,18 +813,35 @@ ${pixelHtml}
 
 export function updateArchive(ctx) {
   const archivePath = path.join(PUBLIC, 'archive.html');
-  const categoryList = CATEGORIES
-    .filter(cat => ctx.articles.some(a => a.category === cat))
-    .join(', ');
 
-  const newCard = `<article class="archive-card" data-issue="${ctx.issue_number}">
-    <div class="issue-meta">Issue #${ctx.issue_number} &nbsp;·&nbsp; ${e(ctx.date)}</div>
-    <h3><a href="${DS.siteUrl}/issue-${ctx.issue_number}.html">The Frequency #${ctx.issue_number}</a></h3>
-    <p>${ctx.articles.length} stories across ${e(categoryList)}</p>
-    <p class="ep-label">★ Editor's Pick: <a href="${e(ctx.editors_pick.url)}">${e(ctx.editors_pick.title)}</a></p>
-  </article>`;
+  // Build tag pills from categories present in this issue
+  const issueTags = CATEGORIES
+    .filter(cat => ctx.articles.some(a => a.category === cat))
+    .map(cat => {
+      const cls = { 'Research': 'blue', 'AI × Business': 'orange', 'Tools': 'green' }[cat] ?? '';
+      return `<span class="tag${cls ? ' ' + cls : ''}">${e(cat)}</span>`;
+    }).join('');
+
+  // Authors with non-English content get a flag note in the summary
+  const intlNote = ctx.articles.some(a => a.language && a.language !== 'en')
+    ? ' · includes international voices' : '';
+
+  const headline = ctx.issue_headline
+    || `${ctx.editors_pick.title.slice(0, 60)}${ctx.editors_pick.title.length > 60 ? '…' : ''}`;
+
+  const newCard = `<a class="issue-card" href="${DS.siteUrl}/issue-${ctx.issue_number}.html">
+    <div class="issue-num">#${ctx.issue_number}</div>
+    <div class="issue-info">
+      <div class="issue-date">${e(ctx.date)} <span class="current-badge">● Latest</span></div>
+      <div class="issue-headline">${e(headline)}</div>
+      <div class="issue-summary">${ctx.articles.length} stories · Editor's Pick: ${e(ctx.editors_pick.title.slice(0, 80))}${intlNote}</div>
+      <div class="issue-tags">${issueTags}</div>
+    </div>
+    <div class="issue-arrow">→</div>
+  </a>`;
 
   if (!existsSync(archivePath)) {
+    // Should not normally happen — archive.html is committed. Fall through to prepend path.
     // Create archive from scratch
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -705,6 +849,9 @@ export function updateArchive(ctx) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Frequency — Archive</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/logo-192.png" />
   <script defer src="https://cloud.umami.is/script.js" data-website-id="${DS.umamiId}"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -742,12 +889,30 @@ export function updateArchive(ctx) {
 </html>`;
     writeFileSync(archivePath, html, 'utf8');
   } else {
-    // Prepend new card to existing archive
     const existing = readFileSync(archivePath, 'utf8');
     const root = parse(existing);
+
     const list = root.querySelector('#issues-list');
     if (!list) throw new Error('[generate] archive.html is missing #issues-list div');
+
+    // Strip "current" badge from previously-latest card
+    const prevBadge = list.querySelector('.current-badge');
+    if (prevBadge) prevBadge.remove();
+
+    // Prepend new card
     list.set_content(newCard + '\n  ' + list.innerHTML);
+
+    // Update issue count in stats pill
+    const statsEl = root.querySelector('#archive-stats');
+    if (statsEl) {
+      const html = statsEl.innerHTML.replace(/<strong>\d+<\/strong> issue/, `<strong>${ctx.issue_number}</strong> issue`);
+      statsEl.set_content(html);
+    }
+
+    // Remove the "coming next" placeholder once we have more than 1 issue
+    const comingNext = root.querySelector('#coming-next');
+    if (comingNext) comingNext.remove();
+
     writeFileSync(archivePath, root.toString(), 'utf8');
   }
 
