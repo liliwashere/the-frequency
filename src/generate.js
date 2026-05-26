@@ -202,13 +202,62 @@ function renderFullIssue(ctx) {
 
   const categoryPanels = activeTabs.map(renderCategoryPanel).join('\n        ');
 
+  const issueUrl = ctx.issue_number === 1
+    ? `${DS.siteUrl}/`
+    : `${DS.siteUrl}/issue-${ctx.issue_number}`;
+  const ogDesc = ep
+    ? `${e(ep.title.slice(0, 120))} — plus ${ctx.articles.length - 1} more. Curated AI thinking, twice a week.`
+    : 'Curated AI thinking twice a week. Real builders, honest takes, zero hype.';
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Frequency #${ctx.issue_number} — AI digest</title>
-  <meta name="description" content="The Frequency: twice-weekly AI digest for builders and thinkers." />
+  <title>The Frequency — Curated AI Newsletter · Issue #${ctx.issue_number}</title>
+  <meta name="description" content="${ogDesc}" />
+  <link rel="canonical" href="${issueUrl}" />
+
+  <!-- Open Graph -->
+  <meta property="og:site_name" content="The Frequency" />
+  <meta property="og:title" content="The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}" />
+  <meta property="og:description" content="${ogDesc}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="${issueUrl}" />
+  <meta property="og:image" content="${DS.siteUrl}/logo-512.png" />
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}" />
+  <meta name="twitter:description" content="${ogDesc}" />
+  <meta name="twitter:image" content="${DS.siteUrl}/logo-512.png" />
+
+  <!-- JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "NewsletterIssue",
+    "name": "The Frequency — Issue #${ctx.issue_number}",
+    "headline": "${e(ctx.issue_headline || ep?.title || '')}",
+    "datePublished": "${new Date().toISOString().split('T')[0]}",
+    "url": "${issueUrl}",
+    "description": "${ogDesc}",
+    "publisher": {
+      "@type": "Person",
+      "name": "Lilit Arutyunyan",
+      "url": "https://lilitarutyunyan.com"
+    },
+    "isPartOf": {
+      "@type": "Periodical",
+      "name": "The Frequency",
+      "url": "${DS.siteUrl}"
+    }
+  }
+  </script>
+
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="/logo-192.png" />
@@ -538,7 +587,7 @@ function renderFullIssue(ctx) {
   <div class="subscribe-inner">
     <div class="subscribe-text">
       <strong>Get The Frequency in your inbox</strong>
-      <span>Every Thursday</span>
+      <span>Every Tuesday</span>
     </div>
     <form class="subscribe-form" onsubmit="handleSubscribe(event)">
       <input class="subscribe-input" type="email" placeholder="your@email.com" required id="sub-email" />
@@ -699,6 +748,29 @@ export function generateIssue(ctx) {
   writeFileSync(path.join(PUBLIC, 'index.html'), html, 'utf8');
   writeFileSync(path.join(PUBLIC, `issue-${ctx.issue_number}.html`), html, 'utf8');
   console.log(`[generate] Wrote index.html and issue-${ctx.issue_number}.html`);
+  updateSitemap(ctx);
+}
+
+function updateSitemap(ctx) {
+  const sitemapPath = path.join(PUBLIC, 'sitemap.xml');
+  const today = new Date().toISOString().split('T')[0];
+  const issueUrl = `${DS.siteUrl}/issue-${ctx.issue_number}`;
+
+  let xml = existsSync(sitemapPath) ? readFileSync(sitemapPath, 'utf8') : '';
+
+  // Update homepage lastmod
+  xml = xml.replace(
+    /(<loc>https:\/\/thefrequency\.lilitarutyunyan\.com\/<\/loc>\s*<lastmod>)[^<]*/,
+    `$1${today}`
+  );
+
+  // Add this issue's URL if not already present
+  if (!xml.includes(issueUrl)) {
+    const newEntry = `  <url>\n    <loc>${issueUrl}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>never</changefreq>\n    <priority>0.8</priority>\n  </url>`;
+    xml = xml.replace('</urlset>', `${newEntry}\n</urlset>`);
+    writeFileSync(sitemapPath, xml, 'utf8');
+    console.log(`[generate] Updated sitemap.xml with ${issueUrl}`);
+  }
 }
 
 export function generateEmail(ctx) {
@@ -707,8 +779,9 @@ export function generateEmail(ctx) {
   const subject = `The Frequency #${ctx.issue_number} — ${ep.title.slice(0, 60)}${ep.title.length > 60 ? '…' : ''}`;
   const issuePageUrl = `${DS.siteUrl}?utm_source=email&utm_medium=newsletter&utm_campaign=issue-${ctx.issue_number}`;
   const openTrackerUrl = process.env.OPEN_TRACKER_URL;
+  // {{subscriber_id}} is replaced per-subscriber in email.js at send time
   const pixelHtml = openTrackerUrl
-    ? `\n<img src="${openTrackerUrl}?i=${ctx.issue_number}" width="1" height="1" alt="" style="display:block;height:1px;width:1px;border:0;" />`
+    ? `\n<img src="${openTrackerUrl}?i=${ctx.issue_number}&s={{subscriber_id}}" width="1" height="1" alt="" style="display:block;height:1px;width:1px;border:0;" />`
     : '';
 
   const html = `<!-- subject: ${subject} -->

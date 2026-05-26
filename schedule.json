@@ -1,0 +1,21 @@
+{
+  "timezone": "Europe/Lisbon",
+  "mode": "weekly",
+
+  "weekly": {
+    "day": "tuesday",
+    "time": "09:00"
+  },
+
+  "campaign": {
+    "active": false,
+    "start": "2026-06-01",
+    "end": "2026-06-07",
+    "times": ["09:00", "13:00", "19:00"]
+  },
+
+  "once": {
+    "active": false,
+    "datetime": "2026-06-15T09:00"
+  }
+}

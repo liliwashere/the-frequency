@@ -14,8 +14,10 @@ function extractSubject(html) {
   return match[1];
 }
 
-function personalize(html, subscriber) {
-  return html.replace(/\{\{name\}\}/g, subscriber.name?.trim() || 'there');
+function personalize(html, subscriberId = '') {
+  return html
+    .replace(/\{\{name\}\}/g, 'there')
+    .replace(/\{\{subscriber_id\}\}/g, encodeURIComponent(subscriberId));
 }
 
 function sleep(ms) {
@@ -36,7 +38,12 @@ export async function sendToAll(subscribers, ctx) {
         from: FROM,
         to: subscriber.email,
         subject,
-        html: personalize(emailHtml, subscriber),
+        html: personalize(emailHtml, subscriber.id ?? ''),
+        // Tags are echoed back in Resend webhook events for correlation
+        tags: [
+          { name: 'subscriber_id', value: String(subscriber.id ?? '') },
+          { name: 'issue_number',  value: String(ctx.issue_number) },
+        ],
       });
       result.sent++;
       if (result.sent % 10 === 0) {

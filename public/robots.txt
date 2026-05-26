@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thefrequency.lilitarutyunyan.com/sitemap.xml

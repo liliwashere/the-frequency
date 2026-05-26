@@ -2,8 +2,14 @@ name: Publish Issue
 
 on:
   schedule:
-    # 08:00 UTC = 09:00 Lisbon (WEST/UTC+1) on Tuesdays and Thursdays
-    - cron: '0 8 * * 2,4'
+    # Three daily slots (UTC) → 09:00, 13:00, 19:00 Lisbon (WEST/UTC+1)
+    # scheduler.js decides whether to actually publish based on schedule.json
+    # weekly mode: only fires on the configured day at 09:00
+    # campaign mode: fires all three slots within the burst window
+    # once mode: fires only on the exact configured datetime
+    - cron: '0 8 * * *'   # 09:00 Lisbon
+    - cron: '0 12 * * *'  # 13:00 Lisbon
+    - cron: '0 18 * * *'  # 19:00 Lisbon
   workflow_dispatch:   # allow manual trigger from GitHub UI
 
 permissions:
@@ -33,6 +39,7 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_PROJECT_NAME: the-frequency
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}

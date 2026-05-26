@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "publish": "node publish.js",
-    "publish:dry": "DRY_RUN=true node publish.js"
+    "publish:dry": "DRY_RUN=true node publish.js",
+    "test": "node tests/e2e.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.26.0",
