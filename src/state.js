@@ -28,6 +28,25 @@ export async function saveIssueNumber(n) {
   if (error) throw new Error(`[state] Failed to save issue_number: ${error.message}`);
 }
 
+/**
+ * Returns true if an issue was already published today (UTC).
+ * Used to make the pipeline idempotent when cron fires twice (e.g. primary + retry).
+ */
+export async function alreadyPublishedToday() {
+  const supabase = getSupabase();
+  const { data, error } = await supabase
+    .from('newsletter_state')
+    .select('value, updated_at')
+    .eq('key', 'issue_number')
+    .single();
+
+  if (error || !data?.updated_at) return false;
+
+  const updatedDate = new Date(data.updated_at).toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0];
+  return updatedDate === today;
+}
+
 export async function getSeenUrls() {
   const supabase = getSupabase();
   const { data, error } = await supabase

@@ -1,7 +1,10 @@
 name: Publish Issue
 
 on:
-  workflow_dispatch:   # triggered by Cloudflare Worker every Tuesday 08:00 UTC (+ 10:00 retry)
+  schedule:
+    - cron: '0 8 * * 2'    # Tuesday 08:00 UTC = 09:00 Lisbon (primary)
+    - cron: '0 10 * * 2'   # Tuesday 10:00 UTC = 11:00 Lisbon (retry)
+  workflow_dispatch:         # manual override
 
 permissions:
   contents: write   # allows pushing the updated archive back to main

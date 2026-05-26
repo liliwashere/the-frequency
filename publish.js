@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config(); // do NOT use override:true — shell env vars (e.g. DRY_RUN=true) must take precedence over .env
-import { getIssueNumber, saveIssueNumber, getSeenUrls, appendSeenUrls } from './src/state.js';
+import { getIssueNumber, saveIssueNumber, getSeenUrls, appendSeenUrls, alreadyPublishedToday } from './src/state.js';
 import { fetchArticles } from './src/search.js';
 import { curate } from './src/curate.js';
 import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
@@ -31,6 +31,15 @@ async function main() {
   if (!DRY_RUN && !PREVIEW_MODE && !shouldPublishNow()) {
     console.log('\n[scheduler] Not a scheduled publish time — exiting.\n');
     process.exit(0);
+  }
+
+  // ── Idempotency guard — skip if already published today ──────────
+  if (!DRY_RUN && !PREVIEW_MODE) {
+    const alreadyDone = await alreadyPublishedToday();
+    if (alreadyDone) {
+      console.log('\n[idempotency] Issue already published today — skipping duplicate run.\n');
+      process.exit(0);
+    }
   }
 
   const startTime = Date.now();
