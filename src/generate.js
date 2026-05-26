@@ -51,12 +51,8 @@ function formatDate(date) {
 
 function nextIssueDate(date) {
   const d = new Date(date);
-  const day = d.getDay(); // 0=Sun,2=Tue,4=Thu
-  let daysUntil;
-  if (day < 2) daysUntil = 2 - day;
-  else if (day === 2) daysUntil = 2; // Thu
-  else if (day < 4) daysUntil = 4 - day;
-  else daysUntil = 7 - day + 2; // next Tue
+  const day = d.getDay();
+  const daysUntil = day === 2 ? 7 : (2 - day + 7) % 7;
   d.setDate(d.getDate() + daysUntil);
   return formatDate(d);
 }
@@ -206,8 +202,8 @@ function renderFullIssue(ctx) {
     ? `${DS.siteUrl}/`
     : `${DS.siteUrl}/issue-${ctx.issue_number}`;
   const ogDesc = ep
-    ? `${e(ep.title.slice(0, 120))} — plus ${ctx.articles.length - 1} more. Curated AI thinking, twice a week.`
-    : 'Curated AI thinking twice a week. Real builders, honest takes, zero hype.';
+    ? `${e(ep.title.slice(0, 120))} — plus ${ctx.articles.length - 1} more. Curated AI thinking, every Tuesday.`
+    : 'Curated AI thinking every Tuesday. Real builders, honest takes, zero hype.';
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -565,7 +561,7 @@ function renderFullIssue(ctx) {
     <div class="logo-mark">🧠</div>
     <div class="masthead-text">
       <div class="masthead-name">The Frequency</div>
-      <div class="masthead-tagline">Original AI thinking, twice a week · Real builders · Zero hype</div>
+      <div class="masthead-tagline">Original AI thinking, every Tuesday · Real builders · Zero hype</div>
     </div>
     <span class="issue-badge">Issue #${ctx.issue_number}</span>
     <div class="masthead-actions">
@@ -674,7 +670,7 @@ function renderFullIssue(ctx) {
     <a href="${DS.siteUrl}/archive.html">Archive</a> &nbsp;·&nbsp;
     <a href="${DS.siteUrl}">Latest issue</a>
   </p>
-  <p style="margin-top:12px;font-size:12px;color:#bbb;">Original AI thinking, twice a week.</p>
+  <p style="margin-top:12px;font-size:12px;color:#bbb;">Original AI thinking, every Tuesday.</p>
 </footer>
 
 <div class="toast" id="toast"></div>

@@ -45,7 +45,7 @@ function confirmationHtml(email) {
   <td style="background:linear-gradient(135deg,#6c47ff,#a855f7);padding:36px 36px 32px;">
     <p style="margin:0 0 16px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.7);">The Frequency</p>
     <p style="margin:0 0 8px;font-size:26px;font-weight:900;color:#ffffff;line-height:1.2;">You're in.</p>
-    <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.85);line-height:1.5;">Next issue arrives Tuesday or Thursday morning — original AI thinking, real builders, zero hype.</p>
+    <p style="margin:0;font-size:15px;color:rgba(255,255,255,0.85);line-height:1.5;">Next issue arrives Tuesday morning — original AI thinking, real builders, zero hype.</p>
   </td>
 </tr>
 

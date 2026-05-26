@@ -19,12 +19,8 @@ function formatDate(date) {
 
 function nextIssueDate(from) {
   const d = new Date(from);
-  const day = d.getDay(); // 0=Sun,2=Tue,4=Thu
-  let daysUntil;
-  if (day < 2) daysUntil = 2 - day;
-  else if (day === 2) daysUntil = 2;
-  else if (day < 4) daysUntil = 4 - day;
-  else daysUntil = 7 - day + 2;
+  const day = d.getDay();
+  const daysUntil = day === 2 ? 7 : (2 - day + 7) % 7;
   d.setDate(d.getDate() + daysUntil);
   return formatDate(d);
 }
