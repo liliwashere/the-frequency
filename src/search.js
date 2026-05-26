@@ -211,9 +211,9 @@ async function queryTavily({ query, include_domains, topic }, days = 7) {
   return (json.results ?? []).map(parseResult);
 }
 
-export async function fetchArticles() {
+export async function fetchArticles(days = 7) {
   const results = await Promise.allSettled(
-    QUERIES.map(q => queryTavily(q, 7))
+    QUERIES.map(q => queryTavily(q, days))
   );
 
   const allArticles = [];
@@ -239,13 +239,13 @@ export async function fetchArticles() {
     }
   }
 
-  // Filter to last 4 days
-  const filtered = deduped.filter(a => isWithinWindow(a.published_date, 4));
-  console.log(`[search] Found ${allArticles.length} raw → ${deduped.length} deduped → ${filtered.length} within 4-day window`);
+  const windowDays = Math.min(4, days);
+  const filtered = deduped.filter(a => isWithinWindow(a.published_date, windowDays));
+  console.log(`[search] Found ${allArticles.length} raw → ${deduped.length} deduped → ${filtered.length} within ${windowDays}-day window`);
 
   if (filtered.length < 8) {
-    console.warn('[search] Too few results with 4-day filter — relaxing to 7 days');
-    const relaxed = deduped.filter(a => isWithinWindow(a.published_date, 7));
+    console.warn(`[search] Too few results with ${windowDays}-day filter — relaxing to ${days} days`);
+    const relaxed = deduped.filter(a => isWithinWindow(a.published_date, days));
     if (relaxed.length >= 8) return relaxed;
     console.warn('[search] Still too few — returning all deduped results, Claude will filter by relevance');
     return deduped;

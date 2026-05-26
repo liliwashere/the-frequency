@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <script type="application/json" id="cowork-artifact-meta">
 {
-  "name": "The Frequency",
+  "name": "Ai Radar Digest",
   "schemaVersion": 1,
-  "description": "Lilit's twice-weekly AI digest — Issue #2 (May 23, 2026). 12 curated authors including Karpathy, swyx/Latent Space, Ethan Mollick, Matt Rickard, Simon Willison, Ben Tossell, Pieter Levels, Lenny, Paul Graham, plus new voices Jake Cooper (Railway), Tom Aarsen (HF), Ben Cochran (Statewright). 8 tabs: Overview, Builders, Podcasts, Research, AI×Business, Authors, Sources, Archive. Share button included.",
+  "description": "Lilit's twice-weekly AI digest — 9 curated authors including Karpathy, swyx/Latent Space, Ethan Mollick, Matt Rickard, Simon Willison, Ben Tossell, Pieter Levels, Lenny, Paul Graham. 7 tabs: Overview, Builders, Podcasts, Research, AI×Business, Authors, Sources. Share button included.",
   "mcpTools": [],
   "mcpServerNames": []
 }
@@ -12,9 +12,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Frequency — Lilit's AI Digest</title>
+<title>The Frequency — Issue #1 · May 14, 2026</title>
 <meta name="description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
-<meta property="og:title" content="The Frequency — Issue #2 · May 23, 2026">
+<meta property="og:title" content="The Frequency — Issue #1 · May 14, 2026">
 <meta property="og:description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
 <meta property="og:type" content="website">
 
@@ -303,38 +303,6 @@
     border-radius: 12px; padding: 16px 20px; color: #fff;
     margin-bottom: 20px; display: flex; align-items: center; gap: 14px;
   }
-  /* ── SUBSCRIBE BANNER ── */
-  .subscribe-banner {
-    background: var(--white);
-    border: 1.5px solid var(--purple-mid);
-    border-radius: 14px;
-    padding: 22px 24px;
-    margin: 28px 0 0;
-    display: flex; align-items: center; gap: 20px;
-    flex-wrap: wrap;
-  }
-  .subscribe-left { flex: 1; min-width: 200px; }
-  .subscribe-title { font-size: 15px; font-weight: 700; color: #111; margin-bottom: 4px; }
-  .subscribe-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
-  .subscribe-form { display: flex; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
-  .subscribe-input {
-    font-size: 13px; font-family: inherit;
-    padding: 9px 14px; border-radius: 8px;
-    border: 1px solid var(--border);
-    outline: none; width: 210px;
-    transition: border-color 0.15s;
-  }
-  .subscribe-input:focus { border-color: var(--purple); }
-  .subscribe-btn {
-    font-size: 13px; font-weight: 600; font-family: inherit;
-    padding: 9px 18px; border-radius: 8px;
-    background: var(--purple); color: #fff;
-    border: none; cursor: pointer;
-    transition: background 0.15s;
-    white-space: nowrap;
-  }
-  .subscribe-btn:hover { background: #5a38e8; }
-  .subscribe-note { font-size: 11px; color: #aaa; margin-top: 7px; }
   .schedule-icon { font-size: 28px; }
   .schedule-title { font-size: 14px; font-weight: 700; }
   .schedule-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
@@ -385,12 +353,12 @@
     <div class="logo">🧠</div>
     <div>
       <div class="header-title">The Frequency</div>
-      <div class="header-sub">Lilit's curated digest · Tuesdays & Thursdays</div>
+      <div class="header-sub">Lilit's curated digest · Twice a week</div>
     </div>
   </div>
   <div class="header-right">
-    <div class="issue-badge">Issue #2 · May 23, 2026</div>
-    <a class="archive-btn" onclick="switchTab('archive')">📂 Archive</a>
+    <div class="issue-badge">Issue #1 · May 14, 2026</div>
+    <a class="archive-btn" href="archive.html">📂 Archive</a>
     <button class="share-btn" onclick="shareDigest()">
       ↗ Share digest
     </button>
@@ -420,9 +388,6 @@
   <div class="tab" onclick="switchTab('sources')" data-tab="sources">
     <span class="tab-dot" style="background:#888"></span> Sources
   </div>
-  <div class="tab" onclick="switchTab('archive')" data-tab="archive">
-    <span class="tab-dot" style="background:#a855f7"></span> Archive
-  </div>
 </div>
 
 <!-- MAIN -->
@@ -431,115 +396,95 @@
   <!-- ══ OVERVIEW ══ -->
   <div class="panel active" id="panel-overview">
     <div class="date-banner">
-      📅 <strong>Saturday, May 23 2026</strong> — Next issue Tuesday. Curated from 19 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a onclick="switchTab('archive')" style="color:var(--purple);font-weight:600;text-decoration:none;cursor:pointer">Browse past issues →</a>
+      📅 <strong>Wednesday, May 14 2026</strong> — Next issue Saturday. Curated from 17 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
     </div>
     <div class="stat-strip">
-      <div class="stat-box"><div class="stat-number">10</div><div class="stat-label">Stories this issue</div></div>
+      <div class="stat-box"><div class="stat-number">8</div><div class="stat-label">Stories this issue</div></div>
       <div class="stat-box"><div class="stat-number">4</div><div class="stat-label">Podcast picks</div></div>
-      <div class="stat-box"><div class="stat-number">19</div><div class="stat-label">Sources tracked</div></div>
-      <div class="stat-box"><div class="stat-number">12</div><div class="stat-label">Authors on radar</div></div>
+      <div class="stat-box"><div class="stat-number">17</div><div class="stat-label">Sources tracked</div></div>
+      <div class="stat-box"><div class="stat-number">9</div><div class="stat-label">Authors on radar</div></div>
     </div>
 
-    <div class="subscribe-banner">
-      <div class="subscribe-left">
-        <div class="subscribe-title">📬 Get it in your inbox</div>
-        <div class="subscribe-sub">New issue every Tuesday & Thursday morning. No spam, no AI-generated filler — just the digest.</div>
-        <div class="subscribe-note">Free · Unsubscribe anytime</div>
-      </div>
-      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
-        <div>
-          <input class="subscribe-input" type="email" id="sub-email" name="email" placeholder="your@email.com" required>
-        </div>
-        <button class="subscribe-btn" type="submit">Subscribe →</button>
-      </form>
-    </div>
-
-    <div class="card" style="cursor:default;background:#fbfaff;border-color:var(--purple-mid)">
-      <div class="card-body" style="font-size:13px">
-        <strong>Editor's note —</strong> This week was dominated by infrastructure reality checks: Railway's 8-hour outage after Google Cloud suspended their account, and a quieter thread about where agent "memory" actually lives. A transparency note: every story below is verified to the last 4 days (May 19–23). I came up a little short on this-week-dated pieces from women and Global-South authors despite searching hard for them — so I've added the voices I can stand behind to the Authors tab with honest context rather than backfill with stale links. Flag for next issue.
-      </div>
-    </div>
-
-    <div class="section-label" style="margin-top:28px">🔥 Editor's pick</div>
-    <div class="card featured clickable" onclick="window.open('https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage','_blank')">
+    <div class="section-label">🔥 Editor's pick</div>
+    <div class="card featured clickable" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
       <div class="featured-badge">✦ Must read</div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">🚆</div>
+        <div class="card-icon" style="background:#f0edff">🧠</div>
         <div class="card-meta">
-          <div class="card-source">Railway (Jake Cooper) · blog.railway.com · May 19–20</div>
-          <div class="card-title">Incident Report: how an 8-hour outage cascaded from one cloud account suspension</div>
+          <div class="card-source">Andrej Karpathy · karpathy.bearblog.dev</div>
+          <div class="card-title">Software 3.0 — Karpathy's framework for where we actually are</div>
         </div>
       </div>
-      <div class="card-body">On May 19, Google Cloud incorrectly suspended Railway's production account, and an 8-hour platform-wide outage followed — despite a multi-AZ, multi-cloud mesh ring with HA fiber between their Metal, GCP, and AWS deployments. The honest part: workload discoverability was still unintentionally tied to GCP, so a single upstream action cascaded everywhere. Founder Jake Cooper (Canada) takes full ownership rather than hiding behind Google. The eerie timing: Latent Space had just published a Railway "agent-native cloud" deep-dive recorded <em>before</em> the outage. Read the report as a case study in how multi-cloud can still single-thread.</div>
+      <div class="card-body">At Sequoia Ascent 2026, Karpathy laid out what he calls Software 3.0: programs written through prompts, context, tools, memory, and agents — not code. The context window is the new runtime. He gives concrete examples: installers become instruction blocks that agents execute and debug live. This is the clearest conceptual frame I've seen for the current moment — not hype, just a clean model.</div>
       <div class="card-footer">
-        <span class="tag red">Infra</span><span class="tag">Postmortem</span><span class="tag blue">Non-US voice</span>
-        <a class="read-link" href="https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage" target="_blank">Read →</a>
+        <span class="tag">Software 3.0</span><span class="tag blue">Karpathy</span>
+        <a class="read-link" href="https://karpathy.bearblog.dev/sequoia-ascent-2026/" target="_blank">Read →</a>
       </div>
     </div>
 
     <div class="section-label">⚡ Quick hits</div>
 
-    <div class="card clickable" onclick="window.open('https://huggingface.co/blog/huggingface/agent-traces-as-memory','_blank')">
+    <div class="card clickable" onclick="window.open('https://simonwillison.net/2026/May/11/zombie-internet/','_blank')">
       <div class="card-accent" style="background:#6c47ff"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">🧵</div>
+        <div class="card-icon" style="background:#f0edff">📝</div>
         <div class="card-meta">
-          <div class="card-source">Hugging Face · huggingface.co/blog · ~May 20</div>
-          <div class="card-title">Software Forgets: Agent Traces Are the Memory</div>
+          <div class="card-source">Simon Willison · May 11</div>
+          <div class="card-title">Your AI Use Is Breaking My Brain — the zombie internet problem</div>
         </div>
       </div>
-      <div class="card-body">A sharp reframe: codebases are hard to explain because the original author rarely remembers <em>why</em> a decision was made — most reasoning is compressed into commit messages or lost. The HF team's coding agent writes every session to a shared bucket, so agents (and reviewers) can pull the trace that produced a change. Give traces a durable home instead of leaning on PR descriptions.</div>
+      <div class="card-body">An unusually angry post from Willison on how AI writing online has become impossible to avoid — and how it's starting to distort even authentic human writing. Worth reading because Willison has no incentive to be alarmist.</div>
       <div class="card-footer">
-        <span class="tag">Agents</span><span class="tag green">Open source</span>
-        <a class="read-link" href="https://huggingface.co/blog/huggingface/agent-traces-as-memory" target="_blank">Read →</a>
+        <span class="tag orange">Hot take</span>
+        <a class="read-link" href="https://simonwillison.net/2026/May/11/zombie-internet/" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://simonwillison.net/2026/May/21/datasette-agent-charts/','_blank')">
+    <div class="card clickable" onclick="window.open('https://www.oneusefulthing.org/p/what-just-happened','_blank')">
       <div class="card-accent" style="background:#16a34a"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">📊</div>
+        <div class="card-icon" style="background:#f0faf3">🎓</div>
         <div class="card-meta">
-          <div class="card-source">Simon Willison · simonwillison.net · May 20–21</div>
-          <div class="card-title">datasette-agent-charts — letting an agent draw the chart, then checking its work</div>
+          <div class="card-source">Ethan Mollick · One Useful Thing</div>
+          <div class="card-title">What just happened — a professor's honest read on where AI landed</div>
         </div>
       </div>
-      <div class="card-body">Willison shipped a Datasette plugin (two alpha releases in two days) that lets an agent generate charts from query results. The interesting bit isn't the plugin — it's his running, public account of where the agent gets it right and where you still have to supervise. The opposite of a demo: a maintainer documenting the seams.</div>
+      <div class="card-body">Mollick (Wharton) is the rare academic voice that cuts through the noise — he actually uses AI daily, runs experiments, and writes before asking AI for feedback. His "what just happened" post maps the 2025-26 inflection point more clearly than any lab blog post.</div>
       <div class="card-footer">
-        <span class="tag green">Tooling</span><span class="tag blue">Build log</span>
-        <a class="read-link" href="https://simonwillison.net/2026/May/21/datasette-agent-charts/" target="_blank">Read →</a>
+        <span class="tag green">Research-backed</span>
+        <a class="read-link" href="https://www.oneusefulthing.org/p/what-just-happened" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://news.ycombinator.com/item?id=48108778','_blank')">
+    <div class="card clickable" onclick="window.open('https://blog.matt-rickard.com/p/the-spec-layer','_blank')">
       <div class="card-accent" style="background:#2563eb"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">🧭</div>
+        <div class="card-icon" style="background:#eff6ff">⚙️</div>
         <div class="card-meta">
-          <div class="card-source">Show HN · Ben Cochran · May 2026</div>
-          <div class="card-title">Statewright — visual state machines that make AI agents reliable</div>
+          <div class="card-source">Matt Rickard · blog.matt-rickard.com</div>
+          <div class="card-title">The Spec Layer — agents fail differently, and our tooling doesn't know it yet</div>
         </div>
       </div>
-      <div class="card-body">A new builder voice. Cochran (20+ years full-stack, DevOps, and ML at NVIDIA and AMD) shipped Statewright: visual state machines to constrain where agents are allowed to go, addressing the "too much freedom at execution time" problem head-on. Worth reading the HN comments — practitioners poke real holes in it.</div>
+      <div class="card-body">Current tooling was designed for human failure modes. Agents fail differently: when a decision isn't written down, the agent decides it again. Context windows are finite. The real problem is too much freedom at execution time. Short, dense, worth re-reading.</div>
       <div class="card-footer">
-        <span class="tag blue">Agents</span><span class="tag">New builder</span>
-        <a class="read-link" href="https://news.ycombinator.com/item?id=48108778" target="_blank">Read →</a>
+        <span class="tag blue">Agents</span>
+        <a class="read-link" href="https://blog.matt-rickard.com/p/the-spec-layer" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://huggingface.co/blog/ettin-reranker','_blank')">
+    <div class="card clickable" onclick="window.open('https://www.bentossell.com/blog/post.html?slug=how-i-code','_blank')">
       <div class="card-accent" style="background:#ea580c"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#fff8ef">🔎</div>
+        <div class="card-icon" style="background:#fff8ef">🛠️</div>
         <div class="card-meta">
-          <div class="card-source">Tom Aarsen · huggingface.co/blog · ~May 20</div>
-          <div class="card-title">Introducing the Ettin Reranker Family</div>
+          <div class="card-source">Ben Tossell · bentossell.com</div>
+          <div class="card-title">How I code — an honest builder's stack in 2026</div>
         </div>
       </div>
-      <div class="card-body">A new author for the digest. Aarsen (Sentence Transformers maintainer) walks through a fresh open reranker family — training recipe, hard-negative mining, and benchmarks included. Concrete, reproducible RAG-quality work from someone who actually maintains the tooling people use.</div>
+      <div class="card-body">Ben (sold MakerPad to Zapier, built Ben's Bites to $1M+) lays out his real daily AI stack: GPT 5.4 XHigh for code, Opus 4.6 for planning, Codex for syncing agent memory. No hype — he says what broke too.</div>
       <div class="card-footer">
-        <span class="tag orange">Retrieval</span><span class="tag green">Open source</span><span class="tag">New author</span>
-        <a class="read-link" href="https://huggingface.co/blog/ettin-reranker" target="_blank">Read →</a>
+        <span class="tag orange">Workflow</span>
+        <a class="read-link" href="https://www.bentossell.com/blog/post.html?slug=how-i-code" target="_blank">Read →</a>
       </div>
     </div>
   </div>
@@ -555,51 +500,51 @@
 
     <div class="section-label">🔨 Builder stories</div>
 
-    <div class="card clickable" data-tag="tool" onclick="window.open('https://news.ycombinator.com/item?id=48108778','_blank')">
+    <div class="card clickable" data-tag="workflow" onclick="window.open('https://www.bentossell.com/blog/post.html?slug=how-i-code','_blank')">
       <div class="card-accent" style="background:#16a34a"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🧭</div>
+        <div class="card-icon" style="background:#f0faf3">🛠️</div>
         <div class="card-meta">
-          <div class="card-source">Ben Cochran · Show HN · May 2026</div>
-          <div class="card-title">Statewright — visual state machines for reliable AI agents</div>
+          <div class="card-source">Ben Tossell · bentossell.com</div>
+          <div class="card-title">How I code — my honest 2026 AI stack</div>
         </div>
       </div>
-      <div class="card-body">New to the digest. Cochran spent 20+ years in full-stack, DevOps, and ML at NVIDIA and AMD before building Statewright: instead of hoping an agent stays on the rails, you draw the rails as a state machine. A direct answer to the "agents have too much freedom at execution time" problem. The HN thread is half the value — people stress-test the idea in public.</div>
+      <div class="card-body">Ben ran MakerPad (sold to Zapier), then built Ben's Bites into a 7-figure newsletter. His daily stack: GPT 5.4 XHigh for code-heavy tasks · Claude Opus 4.6 for planning · Codex for syncing memories across agent runs. He's the best "what actually works" voice for non-engineers building with AI.</div>
       <div class="card-footer">
-        <span class="tag green">Agents</span><span class="tag">New builder</span>
-        <a class="read-link" href="https://news.ycombinator.com/item?id=48108778" target="_blank">Read →</a>
+        <span class="tag green">Workflow</span><span class="tag">No-code</span>
+        <a class="read-link" href="https://www.bentossell.com/blog/post.html?slug=how-i-code" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" data-tag="workflow" onclick="window.open('https://simonwillison.net/2026/May/21/datasette-agent-charts/','_blank')">
+    <div class="card clickable" data-tag="solo" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
       <div class="card-accent" style="background:#16a34a"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">📊</div>
+        <div class="card-icon" style="background:#f0faf3">🌍</div>
         <div class="card-meta">
-          <div class="card-source">Simon Willison · simonwillison.net · May 20–21</div>
-          <div class="card-title">datasette-agent-charts — shipping an agent feature in public, twice in two days</div>
+          <div class="card-source">Pieter Levels · levelsio.com</div>
+          <div class="card-title">$3.5M ARR, 0 employees — the solo AI founder model</div>
         </div>
       </div>
-      <div class="card-body">Willison cut two alpha releases of a Datasette plugin that hands chart generation to an agent — and narrated the whole thing: what the agent nailed, where it needed a human, what he'd change. The most useful builder content isn't "look what AI can do," it's "here's exactly where it broke."</div>
+      <div class="card-body">Photo AI, Interior AI, Nomad List, RemoteOK — $3.5M annual revenue, 90%+ margins, no team. Pieter uses AI for 95% of coding and customer support. The interesting lesson isn't the tools he uses — it's the philosophy: ship fast, automate ruthlessly, stay small on purpose.</div>
       <div class="card-footer">
-        <span class="tag green">Workflow</span><span class="tag blue">Build log</span>
-        <a class="read-link" href="https://simonwillison.net/2026/May/21/datasette-agent-charts/" target="_blank">Read →</a>
+        <span class="tag green">$3.5M ARR</span><span class="tag">Solo</span>
+        <a class="read-link" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" data-tag="tool" onclick="window.open('https://huggingface.co/blog/ettin-reranker','_blank')">
+    <div class="card clickable" data-tag="workflow" onclick="window.open('https://karpathy.ai/microgpt.html','_blank')">
       <div class="card-accent" style="background:#16a34a"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">🔎</div>
+        <div class="card-icon" style="background:#f0faf3">🔬</div>
         <div class="card-meta">
-          <div class="card-source">Tom Aarsen · huggingface.co/blog · ~May 20</div>
-          <div class="card-title">The Ettin Reranker Family — open rerankers with the full recipe</div>
+          <div class="card-source">Andrej Karpathy · karpathy.ai</div>
+          <div class="card-title">microgpt — 200 lines of pure Python that trains and runs a GPT</div>
         </div>
       </div>
-      <div class="card-body">New author. Aarsen maintains Sentence Transformers, so when he ships a reranker family he includes the boring, important parts: training data, hard-negative mining, eval setup, reproducible benchmarks. If you run RAG and your retrieval quality is the bottleneck, this is a build-along.</div>
+      <div class="card-body">Karpathy released microgpt: a single file, no dependencies, full GPT pipeline — dataset, tokenizer, autograd, neural net, Adam optimizer, training loop, inference. Useful both as a learning artifact and as a benchmark for how small a real implementation can be.</div>
       <div class="card-footer">
-        <span class="tag green">Open source</span><span class="tag blue">RAG</span>
-        <a class="read-link" href="https://huggingface.co/blog/ettin-reranker" target="_blank">Read →</a>
+        <span class="tag green">Open source</span><span class="tag blue">Learning</span>
+        <a class="read-link" href="https://karpathy.ai/microgpt.html" target="_blank">Read →</a>
       </div>
     </div>
 
@@ -608,11 +553,11 @@
       <div class="card-header">
         <div class="card-icon" style="background:#f0faf3">🧡</div>
         <div class="card-meta">
-          <div class="card-source">Hacker News · Ask HN · May 2026</div>
+          <div class="card-source">Hacker News · Ask HN</div>
           <div class="card-title">What are you working on? (May 2026) — raw builder pulse</div>
         </div>
       </div>
-      <div class="card-body">The monthly "What are you working on?" thread is still the best unfiltered signal for what builders are actually shipping — hundreds of mid-build replies, no pitch decks. This month's edition is heavy on agent reliability and self-hosting after the Railway outage. Scroll past the top comments.</div>
+      <div class="card-body">The HN "What are you working on?" thread is consistently the best raw signal for what builders are actually shipping. No pitch decks, no press releases — hundreds of replies from people mid-build. Look past the top comments.</div>
       <div class="card-footer">
         <span class="tag green">Community</span>
         <a class="read-link" href="https://news.ycombinator.com/item?id=48085993" target="_blank">Browse →</a>
@@ -641,20 +586,20 @@
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://www.latent.space/p/railway','_blank')">
+    <div class="card clickable" onclick="window.open('https://www.latent.space/p/2026','_blank')">
       <div class="card-accent" style="background:#ea580c"></div>
       <div class="ep-card">
-        <div class="ep-thumb" style="background:linear-gradient(135deg,#0f172a,#1e3a5f)">🚆</div>
+        <div class="ep-thumb" style="background:linear-gradient(135deg,#0f172a,#1e3a5f)">🚀</div>
         <div class="ep-info">
           <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">Latent Space · swyx & Alessio Fanelli</div>
-          <div class="ep-title">Railway: The Agent-Native Cloud (Jake Cooper) — and the outage that followed days later</div>
-          <div class="ep-desc">Eerie timing: swyx and Alessio sat down with Railway founder Jake Cooper to dig into their multi-cloud "agent-native" architecture — and days later, on May 19, that exact architecture took an 8-hour outage when GCP suspended Railway's account. Listen to the episode, then read the incident report. The gap between the design philosophy and the failure mode is the whole lesson.</div>
-          <div class="ep-meta">⏱ ~70 min · AI engineers + builders · recorded pre-outage</div>
+          <div class="ep-title">Scaling without Slop — the AI Engineer podcast raises the bar for 2026</div>
+          <div class="ep-desc">swyx (Shawn Wang) and Alessio Fanelli run the most technically credible AI engineering podcast. The 2026 plan: more shows, more hosts, AI for Science as the next frontier. Their "three paths AI could take" episode is required listening.</div>
+          <div class="ep-meta">⏱ ~60 min · AI engineers + builders · 175+ episodes</div>
         </div>
       </div>
       <div class="card-footer" style="margin-top:14px">
-        <span class="tag orange">Show rec</span><span class="tag blue">Engineering</span><span class="tag red">Infra</span>
-        <a class="read-link" href="https://www.latent.space/p/railway" target="_blank">Listen →</a>
+        <span class="tag orange">Show rec</span><span class="tag blue">Engineering</span>
+        <a class="read-link" href="https://www.latent.space/" target="_blank">Subscribe →</a>
       </div>
     </div>
 
@@ -697,71 +642,71 @@
   <div class="panel" id="panel-research">
     <div class="section-label">🔬 Models, papers & sharp ideas</div>
 
-    <div class="card featured clickable" onclick="window.open('https://huggingface.co/blog/huggingface/agent-traces-as-memory','_blank')">
-      <div class="featured-badge">✦ Idea of the week</div>
+    <div class="card featured clickable" onclick="window.open('https://karpathy.bearblog.dev/sequoia-ascent-2026/','_blank')">
+      <div class="featured-badge">✦ Framework of the week</div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">🧵</div>
+        <div class="card-icon" style="background:#f0edff">🧠</div>
         <div class="card-meta">
-          <div class="card-source">Hugging Face · huggingface.co/blog · ~May 20</div>
-          <div class="card-title">Software Forgets: Agent Traces Are the Memory</div>
+          <div class="card-source">Andrej Karpathy · Sequoia Ascent 2026</div>
+          <div class="card-title">Software 3.0 — the context window as the new runtime</div>
         </div>
       </div>
       <div class="card-body">
-        The premise: software is hard to explain because the reasoning behind decisions evaporates. The original author forgets <em>why</em>; commit messages and PR descriptions capture a thin slice; the rest lives in someone's head until they leave.
+        Software 1.0 = explicit code. Software 2.0 = neural network weights. Software 3.0 = LLMs programmed through prompts, context, tools, memory, agents. In Software 3.0, the context window is the main lever — the LLM is an interpreter over context performing computation on digital information.
         <br><br>
-        The HF team's move: their coding agent writes every session to a shared bucket, so future agents and human reviewers can pull the exact trace that produced a change. Agent traces become the durable institutional memory the codebase never had. A clean reframe of "memory" away from vector stores and toward execution history.
+        Concrete implication: installers become blocks of instructions pasted into an agent that reads the environment, debugs errors, adapts to the machine. The abstraction layer has shifted.
       </div>
       <div class="card-footer">
-        <span class="tag blue">Agent memory</span><span class="tag">Open source</span>
-        <a class="read-link" href="https://huggingface.co/blog/huggingface/agent-traces-as-memory" target="_blank">Read →</a>
+        <span class="tag blue">Framework</span><span class="tag">Karpathy</span>
+        <a class="read-link" href="https://karpathy.bearblog.dev/sequoia-ascent-2026/" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://huggingface.co/blog/ettin-reranker','_blank')">
+    <div class="card clickable" onclick="window.open('https://blog.matt-rickard.com/p/the-spec-layer','_blank')">
       <div class="card-accent" style="background:#2563eb"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">🔎</div>
+        <div class="card-icon" style="background:#eff6ff">⚙️</div>
         <div class="card-meta">
-          <div class="card-source">Tom Aarsen · huggingface.co/blog · ~May 20</div>
-          <div class="card-title">The Ettin Reranker Family — reproducible open rerankers</div>
+          <div class="card-source">Matt Rickard · blog.matt-rickard.com</div>
+          <div class="card-title">The Spec Layer — agents fail differently from humans</div>
         </div>
       </div>
-      <div class="card-body">A new open reranker family with the full training recipe published: quantile-anchor sampling, hard-negative mining, evaluators, and benchmarks. The kind of work that quietly raises the floor on RAG quality — and you can reproduce it rather than take a vendor's word.</div>
+      <div class="card-body">Most software tooling is optimized for human failure modes. Agents fail differently: undocumented decisions get re-decided; context windows are finite; too much freedom at execution time causes drift. Rickard's framing for why current tooling is mismatched to agentic systems.</div>
       <div class="card-footer">
-        <span class="tag blue">Retrieval</span><span class="tag">Reproducible</span>
-        <a class="read-link" href="https://huggingface.co/blog/ettin-reranker" target="_blank">Read →</a>
+        <span class="tag blue">Agents</span><span class="tag">Tooling</span>
+        <a class="read-link" href="https://blog.matt-rickard.com/p/the-spec-layer" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage','_blank')">
+    <div class="card clickable" onclick="window.open('https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/','_blank')">
       <div class="card-accent" style="background:#2563eb"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">🧯</div>
+        <div class="card-icon" style="background:#eff6ff">🔗</div>
         <div class="card-meta">
-          <div class="card-source">Railway (Jake Cooper) · May 19–20</div>
-          <div class="card-title">Anatomy of a cascading multi-cloud failure</div>
+          <div class="card-source">Simon Willison · May 6</div>
+          <div class="card-title">Vibe coding and agentic engineering are getting closer than I'd like</div>
         </div>
       </div>
-      <div class="card-body">Read as a systems-design paper, not just a status update. A multi-AZ, multi-cloud mesh with HA fiber between Metal, GCP, and AWS still went fully down because workload discoverability stayed coupled to one provider. The lesson — redundancy at the compute layer doesn't help if the control plane single-threads — generalizes well beyond Railway.</div>
+      <div class="card-body">The line between "write a prompt and ship it" and serious engineering is blurring faster than most developers are comfortable with. Willison's reflection on what this means for craft, quality, and accountability — after a podcast on the topic.</div>
       <div class="card-footer">
-        <span class="tag blue">Systems</span><span class="tag red">Reliability</span>
-        <a class="read-link" href="https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage" target="_blank">Read →</a>
+        <span class="tag blue">Agentic AI</span><span class="tag">Craft</span>
+        <a class="read-link" href="https://simonwillison.net/2026/May/6/vibe-coding-and-agentic-engineering/" target="_blank">Read →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://simonwillison.net/2026/May/20/datasette-agent-charts/','_blank')">
+    <div class="card clickable" onclick="window.open('https://simonw.substack.com/p/i-think-agent-may-finally-have-a','_blank')">
       <div class="card-accent" style="background:#2563eb"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#eff6ff">📊</div>
+        <div class="card-icon" style="background:#eff6ff">📖</div>
         <div class="card-meta">
-          <div class="card-source">Simon Willison · simonwillison.net · May 20</div>
-          <div class="card-title">Letting an agent generate charts — and where supervision is still required</div>
+          <div class="card-source">Simon Willison · Substack</div>
+          <div class="card-title">"Agent" may finally have a definition coherent enough to use</div>
         </div>
       </div>
-      <div class="card-body">Beyond the plugin itself, Willison's notes are a small field study in human-agent division of labor: which steps the agent can own end-to-end, which need a checkpoint, and how to structure the task so failures are visible rather than silent. Practical input to anyone designing agent UX.</div>
+      <div class="card-body">Willison argues "agent" as jargon has reached the point where it's actually useful for reasoning — not just marketing. This matters for how we design systems, write specs, and explain capabilities to non-technical people.</div>
       <div class="card-footer">
-        <span class="tag blue">Agent UX</span><span class="tag">Craft</span>
-        <a class="read-link" href="https://simonwillison.net/2026/May/20/datasette-agent-charts/" target="_blank">Read →</a>
+        <span class="tag blue">Terminology</span>
+        <a class="read-link" href="https://simonw.substack.com/p/i-think-agent-may-finally-have-a" target="_blank">Read →</a>
       </div>
     </div>
   </div>
@@ -770,67 +715,67 @@
   <div class="panel" id="panel-business">
     <div class="section-label">💼 AI reshaping work & companies</div>
 
-    <div class="card featured clickable" onclick="window.open('https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage','_blank')">
-      <div class="featured-badge">✦ Story to watch</div>
+    <div class="card featured clickable" onclick="window.open('https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/','_blank')">
+      <div class="featured-badge">✦ Most interesting model to watch</div>
       <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">⚠️</div>
+        <div class="card-icon" style="background:#f0edff">🌍</div>
         <div class="card-meta">
-          <div class="card-source">Railway · blog.railway.com · May 19–20</div>
-          <div class="card-title">Platform risk is back: when your cloud provider can switch you off</div>
+          <div class="card-source">Pieter Levels · Various profiles</div>
+          <div class="card-title">The solo AI empire: $3.5M ARR, 90% margins, 0 employees</div>
         </div>
       </div>
-      <div class="card-body">The Railway outage wasn't a bug — Google Cloud suspended a paying customer's production account, and a whole platform went dark for 8 hours. For any business built on someone else's infrastructure, that's the uncomfortable headline: provider concentration is an existential risk, not a footnote in a vendor agreement.<br><br>Worth studying for the second-order effect too — the HN and self-hosting conversations that spiked right after, as founders re-priced their dependency on a single hyperscaler.</div>
+      <div class="card-body">Pieter Levels is running the most interesting live business experiment of this AI moment. Photo AI, Interior AI, Nomad List, RemoteOK — all profitable, all solo, all automated. The model challenges every assumption about team size, specialization, and growth.<br><br>What's really worth studying: not the tools, but the philosophy — ship fast, automate ruthlessly, stay small on purpose.</div>
       <div class="card-footer">
-        <span class="tag">Platform risk</span><span class="tag red">Infra</span><span class="tag blue">Non-US founder</span>
-        <a class="read-link" href="https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage" target="_blank">Deep dive →</a>
+        <span class="tag">Solo</span><span class="tag green">$3.5M ARR</span><span class="tag red">0 employees</span>
+        <a class="read-link" href="https://buildloop.ai/how-pieter-levels-runs-multiple-1m-ai-products-with-automation-zero-team/" target="_blank">Deep dive →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://huggingface.co/blog/huggingface/state-of-os-hf-spring-2026','_blank')">
+    <div class="card clickable" onclick="window.open('https://news.ycombinator.com/front','_blank')">
       <div class="card-accent" style="background:#dc2626"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#fff1f1">🌏</div>
+        <div class="card-icon" style="background:#fff1f1">💸</div>
         <div class="card-meta">
-          <div class="card-source">Hugging Face · Solaiman, Kaffee, Ghosh, Jernite</div>
-          <div class="card-title">China surpasses the US in monthly model downloads</div>
+          <div class="card-source">Hacker News · May 2026</div>
+          <div class="card-title">Uber burns 2026 AI budget in four months</div>
         </div>
       </div>
-      <div class="card-body">HF's Spring 2026 state-of-open-source report (co-authored by Irene Solaiman and Lucie-Aimée Kaffee) shows China overtaking the US in monthly and overall downloads, 41% of downloads now Chinese-origin, and robotics datasets up 23×. The competitive map of open AI is shifting geographically, and the data is on-platform rather than vibes.</div>
+      <div class="card-body">Uber burned through their entire 2026 Claude Code budget by May — 4 months into the year. This tells you something real about enterprise AI adoption velocity. Ops and finance teams everywhere are scrambling because actual usage is orders of magnitude higher than any projection made in 2025.</div>
       <div class="card-footer">
-        <span class="tag red">Open source</span><span class="tag">Geography</span>
-        <a class="read-link" href="https://huggingface.co/blog/huggingface/state-of-os-hf-spring-2026" target="_blank">Read →</a>
+        <span class="tag red">Enterprise</span><span class="tag">Spend</span>
+        <a class="read-link" href="https://news.ycombinator.com/front" target="_blank">HN thread →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://news.ycombinator.com/item?id=48201484','_blank')">
+    <div class="card clickable" onclick="window.open('https://news.ycombinator.com/front','_blank')">
       <div class="card-accent" style="background:#dc2626"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#fff1f1">🧡</div>
+        <div class="card-icon" style="background:#fff1f1">🍎</div>
         <div class="card-meta">
-          <div class="card-source">Hacker News · May 19</div>
-          <div class="card-title">Railway blocked by Google Cloud — the founder community reaction</div>
+          <div class="card-source">Hacker News · May 2026</div>
+          <div class="card-title">Apple accidentally ships Claude.md files inside a consumer app</div>
         </div>
       </div>
-      <div class="card-body">The HN thread is the better business read than any recap: founders sharing their own near-misses with provider suspensions, debating multi-cloud vs. owning metal, and pricing in the reputational cost when a hyperscaler can pull the plug with no human in the loop. Raw signal on how builders are recalibrating.</div>
+      <div class="card-body">Apple's support app shipped with internal Claude.md configuration files from their AI dev process. Less a gotcha moment, more an accidental window into how even Apple's teams are actually using Claude — and what their internal prompting patterns look like.</div>
       <div class="card-footer">
-        <span class="tag red">Discussion</span><span class="tag blue">Risk</span>
-        <a class="read-link" href="https://news.ycombinator.com/item?id=48201484" target="_blank">HN thread →</a>
+        <span class="tag red">Leak</span><span class="tag blue">Adoption signal</span>
+        <a class="read-link" href="https://news.ycombinator.com/front" target="_blank">HN →</a>
       </div>
     </div>
 
-    <div class="card clickable" onclick="window.open('https://www.latent.space/p/railway','_blank')">
+    <div class="card clickable" onclick="window.open('https://blog.matt-rickard.com/p/the-model-is-not-the-product','_blank')">
       <div class="card-accent" style="background:#dc2626"></div>
       <div class="card-header">
-        <div class="card-icon" style="background:#fff1f1">🚆</div>
+        <div class="card-icon" style="background:#fff1f1">📦</div>
         <div class="card-meta">
-          <div class="card-source">Latent Space × Jake Cooper</div>
-          <div class="card-title">The "agent-native cloud" pitch — and whether infra can keep up with agents</div>
+          <div class="card-source">Matt Rickard · blog.matt-rickard.com</div>
+          <div class="card-title">The Model is Not The Product — and that changes everything about moats</div>
         </div>
       </div>
-      <div class="card-body">Railway's bet is that the next wave of compute demand comes from agents spinning up and tearing down workloads constantly — a different load profile than human-driven deploys. The interview lays out the business thesis; the outage days later is the unplanned stress test of whether the architecture matches the ambition.</div>
+      <div class="card-body">The current wave has been about directly exposing models to users. Rickard argues this is temporary: the model is not the product, data no longer serves as a moat the way people expected, and the real competitive landscape is shifting underneath everyone building on top of models.</div>
       <div class="card-footer">
-        <span class="tag red">Strategy</span><span class="tag">Agent infra</span>
-        <a class="read-link" href="https://www.latent.space/p/railway" target="_blank">Listen →</a>
+        <span class="tag red">Strategy</span><span class="tag">Moats</span>
+        <a class="read-link" href="https://blog.matt-rickard.com/p/the-model-is-not-the-product" target="_blank">Read →</a>
       </div>
     </div>
   </div>
@@ -840,7 +785,7 @@
     <div class="schedule-banner">
       <div class="schedule-icon">✍️</div>
       <div>
-        <div class="schedule-title">12 authors on the radar — growing each issue</div>
+        <div class="schedule-title">9 authors on the radar — growing each issue</div>
         <div class="schedule-sub">Only people who build things, have skin in the game, or do original research. No aggregators.</div>
       </div>
     </div>
@@ -855,6 +800,7 @@
             <div class="author-name">Andrej Karpathy</div>
             <div class="author-handle">karpathy.ai · @karpathy</div>
           </div>
+          <span class="author-new">New</span>
         </div>
         <div class="author-bio">Former Tesla AI Director, OpenAI co-founder, now independent. Built microgpt (200-line pure Python GPT), coined Software 3.0, the LLM wiki pattern. Rare combination: deep theory + practical builder instincts.</div>
         <div class="author-links">
@@ -870,6 +816,7 @@
             <div class="author-name">swyx (Shawn Wang)</div>
             <div class="author-handle">swyx.io · @swyx</div>
           </div>
+          <span class="author-new">New</span>
         </div>
         <div class="author-bio">Founder of Latent Space podcast + smol.ai. Coined "AI Engineer" as a role. The Latent Space podcast (~175 eps) is the most technically rigorous AI engineering podcast running. His 2026 focus: AI for Science.</div>
         <div class="author-links">
@@ -885,6 +832,7 @@
             <div class="author-name">Ethan Mollick</div>
             <div class="author-handle">oneusefulthing.org · @emollick</div>
           </div>
+          <span class="author-new">New</span>
         </div>
         <div class="author-bio">Wharton professor studying entrepreneurship and AI. Writes One Useful Thing — research-backed, personal-use tested. He writes every post himself, only asks AI for feedback after finishing a full draft. Best academic voice that isn't just theoretical.</div>
         <div class="author-links">
@@ -899,6 +847,7 @@
             <div class="author-name">Matt Rickard</div>
             <div class="author-handle">blog.matt-rickard.com</div>
           </div>
+          <span class="author-new">New</span>
         </div>
         <div class="author-bio">Ships a post almost daily. Dense, short, no padding. Covers AI engineering, product strategy, and infrastructure. Highlights: The Spec Layer, The Model is Not The Product, The New AI Moats. No bio fluff — just ideas.</div>
         <div class="author-links">
@@ -980,66 +929,12 @@
         </div>
       </div>
 
-      <div class="author-card">
-        <div class="author-top">
-          <div class="author-avatar" style="background:#eff6ff">🚆</div>
-          <div>
-            <div class="author-name">Jake Cooper</div>
-            <div class="author-handle">Railway · 🇨🇦 Canada</div>
-          </div>
-          <span class="author-new">New</span>
-        </div>
-        <div class="author-bio">Founder/CEO of Railway. Writes and speaks with unusual candor about infrastructure — his May 19 incident report took full ownership of an 8-hour outage instead of blaming Google. A non-US builder voice on what running real production infra in the agent era actually costs.</div>
-        <div class="author-links">
-          <a class="author-link" href="https://blog.railway.com" target="_blank">Blog</a>
-          <a class="author-link" href="https://www.latent.space/p/railway" target="_blank">Interview</a>
-        </div>
-      </div>
-
-      <div class="author-card">
-        <div class="author-top">
-          <div class="author-avatar" style="background:#f0faf3">🔎</div>
-          <div>
-            <div class="author-name">Tom Aarsen</div>
-            <div class="author-handle">huggingface.co · @tomaarsen</div>
-          </div>
-          <span class="author-new">New</span>
-        </div>
-        <div class="author-bio">Maintainer of Sentence Transformers at Hugging Face. Writes reproducible, recipe-first posts on retrieval and rerankers — training data, hard-negative mining, evals all shown. The rare "here's exactly how, run it yourself" voice in a space full of benchmarks-as-marketing.</div>
-        <div class="author-links">
-          <a class="author-link" href="https://huggingface.co/tomaarsen" target="_blank">HF</a>
-          <a class="author-link" href="https://huggingface.co/blog/ettin-reranker" target="_blank">Latest</a>
-        </div>
-      </div>
-
-      <div class="author-card">
-        <div class="author-top">
-          <div class="author-avatar" style="background:#fff8ef">🧭</div>
-          <div>
-            <div class="author-name">Ben Cochran</div>
-            <div class="author-handle">Statewright · Show HN</div>
-          </div>
-          <span class="author-new">New</span>
-        </div>
-        <div class="author-bio">20+ years in full-stack, DevOps, and ML at NVIDIA and AMD; now building Statewright (visual state machines for agent reliability). Ships into the open and defends the design in the HN comments — exactly the skin-in-the-game builder this digest looks for.</div>
-        <div class="author-links">
-          <a class="author-link" href="https://news.ycombinator.com/item?id=48108778" target="_blank">Show HN</a>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="section-label">🌍 Voices we're elevating</div>
-    <div class="card" style="cursor:default">
-      <div class="card-body">
-        Two researchers worth following for the women-in-AI and policy beat: <strong>Irene Solaiman</strong> and <strong>Lucie-Aimée Kaffee</strong>, co-authors of Hugging Face's Spring 2026 open-source report — rigorous, data-driven work on where the open model ecosystem is actually heading (and who's downloading what, where). Added to the watchlist; featured in this issue's Business tab.
-      </div>
     </div>
 
     <div class="section-label">💡 Who should be added next?</div>
     <div class="card" style="cursor:default">
       <div class="card-body">
-        Each issue, Claude scouts for new voices — filtering for real skin in the game, original thinking (not aggregation), and content you couldn't get from a summary. This issue added <strong>Jake Cooper</strong> (Railway), <strong>Tom Aarsen</strong> (HF/Sentence Transformers), and <strong>Ben Cochran</strong> (Statewright). Still actively chasing more this-week-dated writing from women and Global-South builders — current watchlist: <strong>Aishwarya Naresh Reganti</strong> (The Nuanced Perspective, agent-stack writing), <strong>Avijit Ghosh</strong> (HF policy/eval research), <strong>Michael Lynch</strong> (TinyPilot, honest monthly reports), and <strong>Xe Iaso</strong> (infra honesty).
+        Each issue, Claude scouts for new voices to add — filtering for: real skin in the game, original thinking (not aggregation), and content you couldn't get from reading a summary. Current watchlist includes <strong>Michael Lynch</strong> (TinyPilot founder, $450K+ ARR, brutally honest monthly reports), <strong>Xe Iaso</strong> (DevOps/infrastructure honesty), and voices from the AI for Science space that swyx is covering on Latent Space.
       </div>
     </div>
   </div>
@@ -1049,8 +944,8 @@
     <div class="schedule-banner">
       <div class="schedule-icon">📬</div>
       <div>
-        <div class="schedule-title">Refreshes every Tuesday & Thursday at 9am</div>
-        <div class="schedule-sub">19 sources tracked. Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
+        <div class="schedule-title">Refreshes every Wednesday & Saturday at 9am</div>
+        <div class="schedule-sub">17 sources tracked. Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
       </div>
     </div>
 
@@ -1063,18 +958,22 @@
       <a class="source-pill hot" href="https://karpathy.bearblog.dev" target="_blank">
         <div class="source-pill-icon">🧠</div>
         <div><div class="source-pill-name">Andrej Karpathy</div><div class="source-pill-type">Blog · Research</div></div>
+        <span class="new-badge">New</span>
       </a>
       <a class="source-pill hot" href="https://www.latent.space" target="_blank">
         <div class="source-pill-icon">🚀</div>
         <div><div class="source-pill-name">Latent Space</div><div class="source-pill-type">swyx · Podcast</div></div>
+        <span class="new-badge">New</span>
       </a>
       <a class="source-pill hot" href="https://www.oneusefulthing.org" target="_blank">
         <div class="source-pill-icon">🎓</div>
         <div><div class="source-pill-name">One Useful Thing</div><div class="source-pill-type">Ethan Mollick · Research</div></div>
+        <span class="new-badge">New</span>
       </a>
       <a class="source-pill hot" href="https://blog.matt-rickard.com" target="_blank">
         <div class="source-pill-icon">⚙️</div>
         <div><div class="source-pill-name">Matt Rickard</div><div class="source-pill-type">Daily AI/eng takes</div></div>
+        <span class="new-badge">New</span>
       </a>
       <a class="source-pill hot" href="https://www.bentossell.com" target="_blank">
         <div class="source-pill-icon">🛠️</div>
@@ -1092,19 +991,10 @@
         <div class="source-pill-icon">🧡</div>
         <div><div class="source-pill-name">Hacker News</div><div class="source-pill-type">Show HN · Ask HN</div></div>
       </a>
-      <a class="source-pill hot" href="https://huggingface.co/blog" target="_blank">
-        <div class="source-pill-icon">🤗</div>
-        <div><div class="source-pill-name">Hugging Face Blog</div><div class="source-pill-type">Open source · Research</div></div>
-        <span class="new-badge">New</span>
-      </a>
-      <a class="source-pill hot" href="https://blog.railway.com" target="_blank">
-        <div class="source-pill-icon">🚆</div>
-        <div><div class="source-pill-name">Railway Blog</div><div class="source-pill-type">Infra · Postmortems</div></div>
-        <span class="new-badge">New</span>
-      </a>
       <a class="source-pill" href="https://paulgraham.com/articles.html" target="_blank">
         <div class="source-pill-icon">✍️</div>
         <div><div class="source-pill-name">Paul Graham</div><div class="source-pill-type">Essays · paulgraham.com</div></div>
+        <span class="new-badge">New</span>
       </a>
       <a class="source-pill" href="https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688" target="_blank">
         <div class="source-pill-icon">🎙️</div>
@@ -1129,6 +1019,7 @@
       <a class="source-pill" href="https://www.swyx.io" target="_blank">
         <div class="source-pill-icon">💡</div>
         <div><div class="source-pill-name">swyx.io</div><div class="source-pill-type">Blog · Essays</div></div>
+        <span class="new-badge">New</span>
       </a>
       <a class="source-pill" href="https://x.com/bentossell" target="_blank">
         <div class="source-pill-icon">𝕏</div>
@@ -1145,84 +1036,12 @@
     </div>
   </div>
 
-  <!-- ══ ARCHIVE ══ -->
-  <div class="panel" id="panel-archive">
-    <div class="schedule-banner">
-      <div class="schedule-icon">📂</div>
-      <div>
-        <div class="schedule-title">Past issues</div>
-        <div class="schedule-sub">Every issue, archived. New issues every Tuesday & Thursday at 9am. No repeats — each issue is fresh from the last 4 days.</div>
-      </div>
-    </div>
-
-    <div class="section-label">🗂️ Issue archive</div>
-
-    <div class="card clickable" onclick="location.href='./issue-2.html'">
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">📰</div>
-        <div class="card-meta">
-          <div class="card-source">Issue #2 · Saturday, May 23 2026 · current</div>
-          <div class="card-title">Infrastructure reality check — Railway's outage & where agent memory lives</div>
-        </div>
-      </div>
-      <div class="card-body">
-        Lead: Railway's 8-hour cascading outage after a GCP account suspension (Jake Cooper). Also: HF's "agent traces are the memory" reframe, Simon Willison's datasette-agent-charts build log, Show HN: Statewright, Tom Aarsen's Ettin reranker family, and HF's Spring 2026 open-source report (China overtakes US in downloads). New authors: Jake Cooper, Tom Aarsen, Ben Cochran.
-      </div>
-      <div class="card-footer">
-        <span class="tag">10 stories</span><span class="tag green">3 new authors</span><span class="tag blue">19 sources</span>
-        <a href="./issue-2.html" style="margin-left:auto;color:var(--purple);font-weight:600;font-size:13px;text-decoration:none">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="location.href='./issue-1.html'">
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">📰</div>
-        <div class="card-meta">
-          <div class="card-source">Issue #1 · Thursday, May 14 2026</div>
-          <div class="card-title">Software 3.0 — the launch issue</div>
-        </div>
-      </div>
-      <div class="card-body">
-        Lead: Karpathy's Software 3.0 framework (Sequoia Ascent 2026). Also: Simon Willison on the "zombie internet," Ethan Mollick's "What just happened," Matt Rickard's The Spec Layer, Pieter Levels' solo $3.5M ARR model, Ben Tossell's 2026 stack, and microgpt. Launch roster of 9 authors.
-      </div>
-      <div class="card-footer">
-        <span class="tag">8 stories</span><span class="tag green">9 authors</span><span class="tag blue">17 sources</span>
-        <a href="./issue-1.html" style="margin-left:auto;color:var(--purple);font-weight:600;font-size:13px;text-decoration:none">Read →</a>
-      </div>
-    </div>
-
-    <div class="card" style="cursor:default;background:#fbfaff">
-      <div class="card-body" style="font-size:12.5px;color:#666">
-        <strong>Archive policy:</strong> headlines from past issues are tracked so no story repeats. Each new issue is built only from content published in the prior 4 days.
-      </div>
-    </div>
-  </div>
-
 </div><!-- /main -->
 
 <!-- TOAST -->
 <div class="toast" id="toast">✓ Link copied to clipboard</div>
 
 <script>
-  // ── Subscribe
-  async function handleSubscribe(e) {
-    e.preventDefault();
-    const email = document.getElementById('sub-email').value;
-    try {
-      const res = await fetch('https://the-frequency-subscribe.lilitalent.workers.dev', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      if (!res.ok) throw new Error();
-      showToast('Subscribed! See you next issue.');
-      document.getElementById('sub-email').value = '';
-      if (typeof umami !== 'undefined') umami.track('subscribe');
-    } catch {
-      showToast('Something went wrong — try again.');
-    }
-  }
-
   // ── Tab switching + Plausible event
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));

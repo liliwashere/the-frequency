@@ -20,6 +20,14 @@ const DS = {
 
 const CATEGORIES = ['Builders', 'Research', 'AI × Business', 'Tools'];
 
+// Tab config: id, label, dot color, card accent color, icon emoji, icon bg
+const CATEGORY_TAB = {
+  'Builders':      { id: 'builders', dot: '#16a34a', accent: '#16a34a', icon: '🛠️', iconBg: '#f0faf3', tagClass: 'tag green' },
+  'Research':      { id: 'research', dot: '#2563eb', accent: '#2563eb', icon: '🔬', iconBg: '#eff6ff', tagClass: 'tag blue'  },
+  'AI × Business': { id: 'business', dot: '#dc2626', accent: '#dc2626', icon: '💼', iconBg: '#fff1f1', tagClass: 'tag red'   },
+  'Tools':         { id: 'tools',    dot: '#ea580c', accent: '#ea580c', icon: '⚡', iconBg: '#fff8ef', tagClass: 'tag orange' },
+};
+
 const LANG_FLAGS = {
   fr: '🇫🇷', es: '🇪🇸', pt: '🇧🇷', de: '🇩🇪', ja: '🇯🇵',
   zh: '🇨🇳', ko: '🇰🇷', ar: '🇸🇦', ru: '🇷🇺', it: '🇮🇹',
@@ -30,13 +38,6 @@ const LANG_NAMES = {
   ja: 'Japanese', zh: 'Chinese', ko: 'Korean', ar: 'Arabic',
   ru: 'Russian', it: 'Italian', nl: 'Dutch', pl: 'Polish',
   tr: 'Turkish', hi: 'Hindi', sw: 'Swahili',
-};
-
-const CATEGORY_TAG_CLASS = {
-  'Builders': 'tag',
-  'Research': 'tag blue',
-  'AI × Business': 'tag orange',
-  'Tools': 'tag green',
 };
 
 const SUBSCRIBE_HOOK = 'https://the-frequency-subscribe.lilitalent.workers.dev';
@@ -91,10 +92,10 @@ function translatedBlock(article) {
   return `<div class="translated-excerpt"><span class="translated-label">Originally in ${e(name)}</span>${e(article.translated_excerpt)}</div>`;
 }
 
-// ── Full-page issue generator (Workers-site design) ───────────────────────────
+// ── Full-page issue generator (Issue #1 editorial design) ────────────────────
 
 function tagClass(category) {
-  return CATEGORY_TAG_CLASS[category] ?? 'tag';
+  return CATEGORY_TAB[category]?.tagClass ?? 'tag';
 }
 
 function uniqueSources(articles) {
@@ -108,55 +109,18 @@ function uniqueAuthors(articles) {
 function renderFullIssue(ctx) {
   const ep = ctx.editors_pick;
   const rest = ctx.articles.filter(a => !a.editors_pick);
-  const secondaryCards = rest.slice(0, 3);
-  const hitsArticles = rest.slice(3);
 
   const sources = uniqueSources(ctx.articles);
-  const authors = uniqueAuthors(ctx.articles);
-
   const activeTabs = CATEGORIES.filter(cat => ctx.articles.some(a => a.category === cat));
 
-  function renderCategoryPanel(cat) {
-    const arts = ctx.articles.filter(a => a.category === cat);
-    if (!arts.length) return '';
-    const filterBtns = [...new Set(arts.map(a => a.source).filter(Boolean))].slice(0, 5)
-      .map(src => `<button class="filter-btn" onclick="filterCards('${cat.replace(/[^a-zA-Z0-9]/g, '-')}', '${e(src)}')">${e(src)}</button>`).join('\n            ');
-
-    const articleRows = arts.map(a => `<div class="article" data-source="${e(a.source ?? '')}">
-              <div class="article-content">
-                <div class="article-tags"><span class="${tagClass(a.category)}">${e(a.category)}</span>${langBadge(a)}</div>
-                <h3 class="article-title"><a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', a)}>${e(a.title)}</a></h3>
-                <p class="article-summary">${e(a.summary)}</p>
-                ${translatedBlock(a)}
-                ${a.author ? `<p class="article-byline">${e(a.author)}</p>` : ''}
-              </div>
-              <div class="article-source">
-                <span class="source-name">${e(a.source ?? '')}</span>
-                <a href="${e(a.url)}" class="read-btn" target="_blank" rel="noopener" ${umamiAttrs('article-read', a)}>Read →</a>
-              </div>
-            </div>`).join('\n            ');
-
-    const panelId = cat.replace(/[^a-zA-Z0-9]/g, '-');
-    return `<div class="panel" id="panel-${panelId}" style="display:none">
-          <div class="panel-filters">
-            <button class="filter-btn active" onclick="filterCards('${panelId}', null)">All</button>
-            ${filterBtns}
-          </div>
-          <div class="article-list" id="list-${panelId}">
-            ${articleRows}
-          </div>
-        </div>`;
-  }
-
-  // ── Authors tab ──────────────────────────────────────────────────
+  // Build author map
   const authorMap = {};
   for (const a of ctx.articles) {
     if (!a.author) continue;
-    const key = a.author;
-    if (!authorMap[key]) {
-      authorMap[key] = { author: a.author, author_url: a.author_url || '', author_bio: a.author_bio || '', articles: [] };
+    if (!authorMap[a.author]) {
+      authorMap[a.author] = { author: a.author, author_url: a.author_url || '', author_bio: a.author_bio || '', articles: [] };
     }
-    authorMap[key].articles.push(a);
+    authorMap[a.author].articles.push(a);
   }
   const authorList = Object.values(authorMap);
 
@@ -164,45 +128,282 @@ function renderFullIssue(ctx) {
     return name.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
   }
 
-  const authorsPanel = authorList.length ? `<div class="panel" id="panel-authors" style="display:none">
-        <div class="panel-filters" style="margin-bottom:20px">
-          <p style="font-size:14px;color:#555;line-height:1.6;">
-            People who wrote something in this issue — real practitioners, not aggregators.
-          </p>
-        </div>
-        <div class="authors-grid">
-          ${authorList.map(a => `<div class="author-card">
-            <div class="author-top">
-              <div class="author-avatar">${initials(a.author)}</div>
-              <div>
-                <div class="author-name">${e(a.author)}</div>
-                ${a.author_url ? `<div class="author-handle"><a href="${e(a.author_url)}" target="_blank" rel="noopener" style="color:#999;font-size:11px;">${e(new URL(a.author_url).hostname.replace(/^www\./, ''))}</a></div>` : ''}
-              </div>
-            </div>
-            ${a.author_bio ? `<div class="author-bio">${e(a.author_bio)}</div>` : ''}
-            <div class="author-articles">
-              ${a.articles.map(art => `<a class="author-article-link" href="${e(art.url)}" target="_blank" rel="noopener">${e(art.title.slice(0, 70))}${art.title.length > 70 ? '…' : ''}</a>`).join('')}
-            </div>
-          </div>`).join('\n          ')}
-        </div>
-      </div>` : '';
+  function cardAccentStyle(cat) {
+    return 'background:' + (CATEGORY_TAB[cat]?.accent ?? '#6c47ff');
+  }
 
+  function cardIconHtml(article, purpleBg) {
+    const tab = CATEGORY_TAB[article.category];
+    const icon = tab?.icon ?? '📄';
+    const bg = purpleBg ? '#f0edff' : (tab?.iconBg ?? '#f0edff');
+    return '<div class="card-icon" style="background:' + bg + '">' + icon + '</div>';
+  }
+
+  function cardSourceLine(a) {
+    return a.author ? e(a.author) + ' · ' + e(a.source ?? '') : e(a.source ?? '');
+  }
+
+  // ── Category panel ──────────────────────────────────────────────────────────
+  function renderCategoryPanel(cat) {
+    const arts = ctx.articles.filter(a => a.category === cat);
+    if (!arts.length) return '';
+    const tab = CATEGORY_TAB[cat] ?? {};
+    const panelId = tab.id ?? cat.replace(/[^a-zA-Z0-9]/g, '-');
+    const sectionIcon = tab.icon ?? '📋';
+    const filterSources = [...new Set(arts.map(a => a.source).filter(Boolean))].slice(0, 5);
+    const filterBtns = [
+      '<button class="filter-btn active" onclick="filterCards(this,\'all\',\'' + panelId + '\')">All</button>',
+      ...filterSources.map(src => '<button class="filter-btn" onclick="filterCards(this,\'' + src.replace(/'/g, "\\'") + '\',\'' + panelId + '\')">' + e(src) + '</button>'),
+    ].join('\n        ');
+
+    const cards = arts.map(a => `<div class="card clickable" data-source="${e(a.source ?? '')}" onclick="window.open('${e(a.url)}','_blank')">
+        <div class="card-accent" style="${cardAccentStyle(a.category)}"></div>
+        <div class="card-header">
+          ${cardIconHtml(a)}
+          <div class="card-meta">
+            <div class="card-source">${cardSourceLine(a)}</div>
+            <div class="card-title">${e(a.title)}</div>
+          </div>
+        </div>
+        <div class="card-body">${e(a.summary)}${translatedBlock(a)}</div>
+        <div class="card-footer">
+          <span class="${tagClass(a.category)}">${e(a.category)}</span>${langBadge(a)}
+          <a class="read-link" href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', a)}>Read →</a>
+        </div>
+      </div>`).join('\n      ');
+
+    return `<div class="panel" id="panel-${panelId}">
+      <div class="filter-row">
+        ${filterBtns}
+      </div>
+      <div class="section-label">${sectionIcon} ${e(cat)} stories</div>
+      ${cards}
+    </div>`;
+  }
+
+  // ── Authors panel ───────────────────────────────────────────────────────────
+  const AVATAR_BG = {
+    'Builders': '#f0faf3', 'Research': '#eff6ff',
+    'AI × Business': '#fff1f1', 'Tools': '#fff8ef',
+  };
+  function avatarBg(articles) {
+    const cat = articles[0]?.category;
+    return AVATAR_BG[cat] ?? '#f0edff';
+  }
+
+  const authorsPanel = authorList.length ? `<div class="panel" id="panel-authors">
+    <div class="schedule-banner">
+      <div class="schedule-icon">✍️</div>
+      <div>
+        <div class="schedule-title">${authorList.length} author${authorList.length !== 1 ? 's' : ''} on the radar — growing each issue</div>
+        <div class="schedule-sub">Only people who build things, have skin in the game, or do original research. No aggregators.</div>
+      </div>
+    </div>
+    <div class="section-label">👥 Who we track</div>
+    <div class="author-grid">
+      ${authorList.map(a => {
+        const bg = avatarBg(a.articles);
+        const catEmoji = CATEGORY_TAB[a.articles[0]?.category]?.icon ?? '✍️';
+        const handle = a.author_url ? (() => { try { return new URL(a.author_url).hostname.replace(/^www\./, ''); } catch { return ''; } })() : '';
+        return '<div class="author-card">'
+          + '<div class="author-top">'
+          + '<div class="author-avatar" style="background:' + bg + '">' + catEmoji + '</div>'
+          + '<div>'
+          + '<div class="author-name">' + e(a.author) + '</div>'
+          + (handle ? '<div class="author-handle">' + e(handle) + '</div>' : '')
+          + '</div>'
+          + '<span class="author-new">New</span>'
+          + '</div>'
+          + (a.author_bio ? '<div class="author-bio">' + e(a.author_bio) + '</div>' : '')
+          + '<div class="author-links">'
+          + (a.author_url ? '<a class="author-link" href="' + e(a.author_url) + '" target="_blank" rel="noopener">Site</a>' : '')
+          + a.articles.map(art => '<a class="author-link" href="' + e(art.url) + '" target="_blank" rel="noopener">' + e(art.title.slice(0, 38)) + (art.title.length > 38 ? '…' : '') + '</a>').join('')
+          + '</div>'
+          + '</div>';
+      }).join('\n      ')}
+    </div>
+    <div class="section-label">💡 Who should be added next?</div>
+    <div class="card" style="cursor:default">
+      <div class="card-body">
+        Each issue, Claude scouts for new voices to add — filtering for: real skin in the game, original thinking (not aggregation), and content you couldn't get from reading a summary. Priority watchlist: <strong>Chip Huyen</strong> (ML systems at scale), <strong>Vicki Boykis</strong> (ML engineering, honest takes), <strong>Simon Willison</strong> (Django co-creator, practical AI tools), <strong>Ethan Mollick</strong> (Wharton researcher on AI adoption), and voices from Africa, Southeast Asia, and Latin America covering AI from the ground up.
+      </div>
+    </div>
+  </div>` : '';
+
+  // ── Sources panel ───────────────────────────────────────────────────────────
+  const SOURCE_NAME_MAP = {
+    'wired': 'wired.com', 'ars technica': 'arstechnica.com',
+    'mit technology review': 'technologyreview.com', 'the gradient': 'thegradient.pub',
+    'rest of world': 'restofworld.org', 'tech in asia': 'techinasia.com',
+    'tech cabal': 'techcabal.com', 'techcabal': 'techcabal.com',
+    'analytics india magazine': 'analyticsindiamag.com',
+    'hugging face': 'huggingface.co', 'hacker news': 'news.ycombinator.com',
+    'every': 'every.to',
+  };
+
+  const SOURCE_META = {
+    'wired.com':              { icon: '📡', type: 'Publication · Tech journalism' },
+    'arstechnica.com':        { icon: '🔬', type: 'Publication · Tech analysis' },
+    'technologyreview.com':   { icon: '🔬', type: 'MIT Technology Review' },
+    'simonwillison.net':      { icon: '📝', type: 'Blog · Technical AI' },
+    'eugeneyan.com':          { icon: '🧠', type: 'Blog · ML engineering' },
+    'interconnects.ai':       { icon: '🔗', type: 'Newsletter · AI research' },
+    'latent.space':           { icon: '🚀', type: 'Podcast + Blog · AI engineering' },
+    'huyenchip.com':          { icon: '🌏', type: 'Blog · ML systems' },
+    'stratechery.com':        { icon: '📊', type: 'Newsletter · Tech strategy' },
+    'paulgraham.com':         { icon: '✍️', type: 'Essays · YC co-founder' },
+    'oneusefulthing.org':     { icon: '🎓', type: 'Newsletter · AI research' },
+    'blog.matt-rickard.com':  { icon: '⚙️', type: 'Blog · AI engineering' },
+    'techcabal.com':          { icon: '🌍', type: 'Publication · Africa tech' },
+    'techinasia.com':         { icon: '🌏', type: 'Publication · Asia tech' },
+    'restofworld.org':        { icon: '🌐', type: 'Publication · Global tech' },
+    'analyticsindiamag.com':  { icon: '🇮🇳', type: 'Publication · India AI' },
+    'huggingface.co':         { icon: '🤗', type: 'Platform · ML community' },
+    'arxiv.org':              { icon: '📄', type: 'Preprint · Research' },
+    'substack.com':           { icon: '📧', type: 'Newsletter platform' },
+    'every.to':               { icon: '💡', type: 'Bundle · AI writing' },
+    'zenn.dev':               { icon: '🇯🇵', type: 'Platform · Japanese tech' },
+    'habr.com':               { icon: '🇷🇺', type: 'Community · Russian tech' },
+    'thegradient.pub':        { icon: '📐', type: 'Publication · ML research' },
+    'swyx.io':                { icon: '🚀', type: 'Blog · AI engineering' },
+    'levels.io':              { icon: '🌍', type: 'Blog · Solo founder' },
+    'vickiboykis.com':        { icon: '🔬', type: 'Blog · ML engineering' },
+    'sebastianraschka.com':   { icon: '📐', type: 'Blog · ML research' },
+    'hamel.dev':              { icon: '⚙️', type: 'Blog · LLM engineering' },
+  };
+
+  const articlesPerSource = {};
+  const sourceUrlMap = {};
+  for (const a of ctx.articles) {
+    if (a.source) articlesPerSource[a.source] = (articlesPerSource[a.source] ?? 0) + 1;
+    if (a.source && a.url && !sourceUrlMap[a.source]) {
+      try { sourceUrlMap[a.source] = new URL(a.url).origin; } catch {}
+    }
+  }
+
+  const sourcesPanel = `<div class="panel" id="panel-sources">
+    <div class="schedule-banner">
+      <div class="schedule-icon">📬</div>
+      <div>
+        <div class="schedule-title">${sources.length} source${sources.length !== 1 ? 's' : ''} this issue</div>
+        <div class="schedule-sub">Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
+      </div>
+    </div>
+    <div class="section-label">📡 Active sources</div>
+    <div class="sources-grid">
+      ${sources.map(src => {
+        const srcLower = src.toLowerCase().replace(/^www\./, '');
+        const domainKey = SOURCE_NAME_MAP[srcLower] ?? srcLower;
+        const meta = SOURCE_META[domainKey] ?? { icon: '📰', type: 'This issue' };
+        const count = articlesPerSource[src] ?? 0;
+        const hotClass = count >= 2 ? ' hot' : '';
+        const href = sourceUrlMap[src] ?? ('https://' + domainKey);
+        return `<a class="source-pill${hotClass}" href="${e(href)}" target="_blank" rel="noopener">
+        <span class="source-pill-icon">${meta.icon}</span>
+        <div>
+          <div class="source-pill-name">${e(src)}</div>
+          <div class="source-pill-type">${e(meta.type)}</div>
+        </div>
+      </a>`;
+      }).join('\n      ')}
+    </div>
+    <div class="section-label">🚫 What's excluded and why</div>
+    <div class="card" style="cursor:default">
+      <div class="card-body">
+        <strong>Out:</strong> LinkedIn posts recycling TechCrunch · "AI will replace X" think pieces with no data · Newsletter aggregators summarising other newsletters · "I asked ChatGPT to write this" posts · Press releases dressed as blog posts · Top-10 AI tools listicles where the author hasn't used them.<br><br>
+        <strong>The filter:</strong> Does this person build things or have real domain expertise? Do they have skin in the game? Is there something here you couldn't get from a headline? No to any = out.
+      </div>
+    </div>
+  </div>`;
+
+  // ── Podcast picks (static curated shows, updated each issue) ──────────────
+  const PODCAST_PICKS = [
+    {
+      url: 'https://www.latent.space/',
+      host: 'Latent Space · swyx & Alessio Fanelli',
+      title: 'The most technically rigorous AI engineering podcast running',
+      desc: 'swyx and Alessio interview the engineers actually building frontier systems — not the comms teams. 175+ episodes, zero fluff. Their AI for Science arc and the Claude Code Anonymous episode are essential listening for anyone shipping with LLMs.',
+      meta: '⏱ ~60 min · AI engineers + builders · 175+ eps',
+      gradient: 'linear-gradient(135deg,#0f172a,#1e3a5f)',
+      emoji: '🚀',
+      tags: ['Engineering', 'Builders'],
+    },
+    {
+      url: 'https://www.lennysnewsletter.com/p/introducing-how-i-ai',
+      host: 'How I AI · Claire Vo · Lenny\'s spinoff',
+      title: 'Real AI workflows, live screen shares — the format every podcast should steal',
+      desc: '30-minute episodes with practitioners showing their actual AI setup on screen. No scripted hot takes — just what people actually do day to day. Best for product people and builders who learn by watching, not reading.',
+      meta: '⏱ ~30 min · Product + builder audience',
+      gradient: 'linear-gradient(135deg,#6c47ff,#a855f7)',
+      emoji: '🎧',
+      tags: ['Workflows', 'Product'],
+    },
+    {
+      url: 'https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688',
+      host: 'No Priors · Elad Gil & Sarah Guo',
+      title: 'The most technically honest AI investor podcast',
+      desc: 'Elad Gil and Sarah Guo don\'t softball. Episodes with Nat Friedman, Daniel Gross, and leading researchers speak plainly about what AI actually can and can\'t do. No "AI will change everything" non-answers — just sharp investor-grade thinking.',
+      meta: '⏱ ~45 min · Founders + researchers',
+      gradient: 'linear-gradient(135deg,#1a1a2e,#16213e)',
+      emoji: '🧠',
+      tags: ['Research', 'Strategy'],
+    },
+    {
+      url: 'https://twimlai.com/podcast/',
+      host: 'TWIML AI Podcast · Sam Charrington',
+      title: 'Deep technical interviews with ML researchers and practitioners',
+      desc: 'Sam Charrington has been running TWIML (This Week in Machine Learning & AI) since 2016 — one of the longest-running ML podcasts with serious technical depth. Best for following research trends: papers, benchmarks, and practitioner case studies that don\'t make headlines.',
+      meta: '⏱ ~60 min · ML researchers + engineers',
+      gradient: 'linear-gradient(135deg,#0f4c75,#1b262c)',
+      emoji: '🎙️',
+      tags: ['Research', 'ML depth'],
+    },
+  ];
+
+  const podcastsPanel = `<div class="panel" id="panel-pods">
+    <div class="section-label">🎙️ Shows worth your time</div>
+    ${PODCAST_PICKS.map(p => `<div class="card clickable" onclick="window.open('${e(p.url)}','_blank')">
+      <div class="card-accent" style="background:#ea580c"></div>
+      <div class="ep-card">
+        <div class="ep-thumb" style="background:${p.gradient}">${p.emoji}</div>
+        <div class="ep-info">
+          <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">${e(p.host)}</div>
+          <div class="ep-title">${e(p.title)}</div>
+          <div class="ep-desc">${e(p.desc)}</div>
+          <div class="ep-meta">${e(p.meta)}</div>
+        </div>
+      </div>
+      <div class="card-footer" style="margin-top:14px">
+        <span class="tag orange">Show rec</span>${p.tags.map(t => '<span class="tag">' + e(t) + '</span>').join('')}
+        <a class="read-link" href="${e(p.url)}" target="_blank" rel="noopener">Listen →</a>
+      </div>
+    </div>`).join('\n    ')}
+  </div>`;
+
+  // ── Tab buttons — fixed order: Overview · Builders · Podcasts · Research · AI×Business · Tools · Authors · Sources ──
+  const TAB_ORDER = ['Builders', 'Podcasts', 'Research', 'AI × Business', 'Tools'];
   const tabButtons = [
-    `<button class="tab active" data-tab="overview" onclick="switchTab('overview')">Overview</button>`,
-    ...activeTabs.map(cat => {
-      const id = cat.replace(/[^a-zA-Z0-9]/g, '-');
-      return `<button class="tab" data-tab="${id}" onclick="switchTab('${id}')">${e(cat)}</button>`;
+    '<div class="tab active" onclick="switchTab(\'overview\')" data-tab="overview"><span class="tab-dot" style="background:#6c47ff"></span> Overview</div>',
+    ...TAB_ORDER.flatMap(cat => {
+      if (cat === 'Podcasts') {
+        return ['<div class="tab" onclick="switchTab(\'pods\')" data-tab="pods"><span class="tab-dot" style="background:#ea580c"></span> Podcasts</div>'];
+      }
+      if (!activeTabs.includes(cat)) return [];
+      const tab = CATEGORY_TAB[cat] ?? {};
+      const id = tab.id ?? cat.replace(/[^a-zA-Z0-9]/g, '-');
+      return ['<div class="tab" onclick="switchTab(\'' + id + '\')" data-tab="' + id + '"><span class="tab-dot" style="background:' + (tab.dot ?? '#888') + '"></span> ' + e(cat) + '</div>'];
     }),
-    ...(authorList.length ? [`<button class="tab" data-tab="authors" onclick="switchTab('authors')">Authors</button>`] : []),
-  ].join('\n        ');
+    ...(authorList.length ? ['<div class="tab" onclick="switchTab(\'authors\')" data-tab="authors"><span class="tab-dot" style="background:#f59e0b"></span> Authors</div>'] : []),
+    '<div class="tab" onclick="switchTab(\'sources\')" data-tab="sources"><span class="tab-dot" style="background:#888"></span> Sources</div>',
+  ].join('\n  ');
 
-  const categoryPanels = activeTabs.map(renderCategoryPanel).join('\n        ');
+  const categoryPanels = activeTabs.map(renderCategoryPanel).join('\n  ');
 
   const issueUrl = ctx.issue_number === 1
     ? `${DS.siteUrl}/`
     : `${DS.siteUrl}/issue-${ctx.issue_number}`;
   const ogDesc = ep
-    ? `${e(ep.title.slice(0, 120))} — plus ${ctx.articles.length - 1} more. Curated AI thinking, every Tuesday.`
+    ? `${ep.title.slice(0, 120)} — plus ${ctx.articles.length - 1} more. Curated AI thinking, every Tuesday.`
     : 'Curated AI thinking every Tuesday. Real builders, honest takes, zero hype.';
 
   return `<!DOCTYPE html>
@@ -210,28 +411,22 @@ function renderFullIssue(ctx) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Frequency — Curated AI Newsletter · Issue #${ctx.issue_number}</title>
-  <meta name="description" content="${ogDesc}" />
+  <title>The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}</title>
+  <meta name="description" content="${e(ogDesc)}" />
   <link rel="canonical" href="${issueUrl}" />
-
-  <!-- Open Graph -->
   <meta property="og:site_name" content="The Frequency" />
   <meta property="og:title" content="The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}" />
-  <meta property="og:description" content="${ogDesc}" />
+  <meta property="og:description" content="${e(ogDesc)}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${issueUrl}" />
   <meta property="og:image" content="${DS.siteUrl}/logo-512.png" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
   <meta property="og:locale" content="en_US" />
-
-  <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}" />
-  <meta name="twitter:description" content="${ogDesc}" />
+  <meta name="twitter:description" content="${e(ogDesc)}" />
   <meta name="twitter:image" content="${DS.siteUrl}/logo-512.png" />
-
-  <!-- JSON-LD -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -240,314 +435,178 @@ function renderFullIssue(ctx) {
     "headline": "${e(ctx.issue_headline || ep?.title || '')}",
     "datePublished": "${new Date().toISOString().split('T')[0]}",
     "url": "${issueUrl}",
-    "description": "${ogDesc}",
-    "publisher": {
-      "@type": "Person",
-      "name": "Lilit Arutyunyan",
-      "url": "https://lilitarutyunyan.com"
-    },
-    "isPartOf": {
-      "@type": "Periodical",
-      "name": "The Frequency",
-      "url": "${DS.siteUrl}"
-    }
+    "description": "${e(ogDesc)}",
+    "publisher": { "@type": "Person", "name": "Lilit Arutyunyan", "url": "https://lilitarutyunyan.com" },
+    "isPartOf": { "@type": "Periodical", "name": "The Frequency", "url": "${DS.siteUrl}" }
   }
   </script>
-
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
   <link rel="apple-touch-icon" sizes="192x192" href="/logo-192.png" />
   <script defer src="https://cloud.umami.is/script.js" data-website-id="${DS.umamiId}"></script>
   <style>
+    :root {
+      color-scheme: light;
+      --purple: #6c47ff;
+      --purple-light: #f0edff;
+      --purple-mid: #c4b5fd;
+      --green: #16a34a;
+      --green-light: #f0faf3;
+      --orange: #ea580c;
+      --orange-light: #fff8ef;
+      --blue: #2563eb;
+      --blue-light: #eff6ff;
+      --red: #dc2626;
+      --red-light: #fff1f1;
+      --gray: #888;
+      --border: #e8e5df;
+      --bg: #f7f6f3;
+      --white: #fff;
+      --text: #1a1a1a;
+      --muted: #555;
+    }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: ${DS.bg}; font-family: ${DS.font}; color: #1a1a1a; line-height: 1.6; font-size: 15px; }
-    a { color: ${DS.primary}; text-decoration: none; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+    a { color: var(--purple); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
-    /* ── Masthead ── */
-    .masthead {
-      position: sticky; top: 0; z-index: 100;
-      background: #fff; border-bottom: 1px solid #e8e5df;
-      padding: 0 24px;
-    }
-    .masthead-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; gap: 16px;
-      height: 60px;
-    }
-    .logo-mark {
-      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
-      background: ${DS.gradient};
-      display: flex; align-items: center; justify-content: center;
-      font-size: 18px; color: #fff;
-    }
-    .masthead-text { flex: 1; min-width: 0; }
-    .masthead-name { font-size: 16px; font-weight: 800; color: #1a1a1a; line-height: 1.1; }
-    .masthead-tagline { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .issue-badge {
-      background: ${DS.primary}; color: #fff;
-      border-radius: 20px; padding: 3px 12px;
-      font-size: 12px; font-weight: 700; white-space: nowrap;
-    }
-    .masthead-actions { display: flex; gap: 8px; }
-    .btn-ghost {
-      border: 1px solid #e8e5df; background: #fff; color: #555;
-      border-radius: 8px; padding: 6px 14px; font-size: 13px; font-weight: 600;
-      cursor: pointer; white-space: nowrap;
-    }
-    .btn-ghost:hover { border-color: #d4cff7; color: ${DS.primary}; }
+    /* ── HEADER ── */
+    .header { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; gap: 12px; flex-wrap: wrap; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    .logo { width: 38px; height: 38px; background: linear-gradient(135deg, #6c47ff, #a855f7); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+    .header-title { font-size: 17px; font-weight: 700; color: #111; }
+    .header-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .issue-badge { background: var(--purple-light); color: var(--purple); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.3px; }
+    .archive-btn { display: flex; align-items: center; gap: 5px; background: var(--white); color: var(--purple); border: 1px solid var(--purple-mid); cursor: pointer; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 20px; transition: background 0.15s; font-family: inherit; text-decoration: none; }
+    .archive-btn:hover { background: var(--purple-light); }
+    .share-btn { display: flex; align-items: center; gap: 5px; background: var(--purple); color: #fff; border: none; cursor: pointer; font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 20px; transition: background 0.15s, transform 0.1s; font-family: inherit; }
+    .share-btn:hover { background: #5a38e8; transform: translateY(-1px); }
+    .share-btn:active { transform: translateY(0); }
 
-    /* ── Nav tabs ── */
-    .nav-bar {
-      background: #fff; border-bottom: 1px solid #e8e5df;
-      padding: 0 24px;
-    }
-    .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; gap: 0; overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .nav-inner::-webkit-scrollbar { display: none; }
-    .tab {
-      padding: 14px 18px; font-size: 14px; font-weight: 600; color: #666;
-      border: none; background: none; cursor: pointer; white-space: nowrap;
-      border-bottom: 2px solid transparent; margin-bottom: -1px;
-    }
-    .tab:hover { color: ${DS.primary}; }
-    .tab.active { color: ${DS.primary}; border-bottom-color: ${DS.primary}; }
+    .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: #1a1a1a; color: #fff; padding: 10px 20px; border-radius: 30px; font-size: 13px; font-weight: 500; transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 9999; pointer-events: none; white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* ── Subscribe strip ── */
-    .subscribe-strip {
-      background: ${DS.gradient};
-      padding: 20px 24px;
-    }
-    .subscribe-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-    }
-    .subscribe-text { color: #fff; flex: 1; min-width: 200px; }
-    .subscribe-text strong { font-size: 15px; }
-    .subscribe-text span { font-size: 13px; opacity: 0.85; margin-left: 8px; }
+    /* ── TABS ── */
+    .tabs-bar { background: var(--white); border-bottom: 1px solid var(--border); padding: 0 28px; display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+    .tab { padding: 12px 15px; font-size: 13px; font-weight: 500; color: var(--gray); border-bottom: 2px solid transparent; cursor: pointer; white-space: nowrap; transition: color 0.15s, border-color 0.15s; display: flex; align-items: center; gap: 6px; user-select: none; }
+    .tab:hover { color: #444; }
+    .tab.active { color: var(--purple); border-bottom-color: var(--purple); font-weight: 600; }
+    .tab-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── MAIN ── */
+    .main { padding: 24px 28px; max-width: 920px; margin: 0 auto; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ── LABELS ── */
+    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #aaa; margin-bottom: 14px; margin-top: 28px; }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ── CARDS ── */
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; position: relative; overflow: hidden; transition: box-shadow 0.15s, border-color 0.15s; }
+    .card.clickable { cursor: pointer; }
+    .card.clickable:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: var(--purple-mid); }
+    .card-accent { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; border-radius: 3px 0 0 3px; }
+    .card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+    .card-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; margin-top: 1px; }
+    .card-meta { flex: 1; min-width: 0; }
+    .card-source { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+    .card-title { font-size: 15px; font-weight: 650; line-height: 1.35; color: #111; }
+    .card-body { font-size: 13.5px; line-height: 1.65; color: var(--muted); margin-top: 8px; }
+    .card-footer { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .tag { font-size: 11px; font-weight: 500; padding: 3px 9px; border-radius: 20px; background: var(--purple-light); color: #7c5cbf; }
+    .tag.green { background: var(--green-light); color: #2d7a46; }
+    .tag.orange { background: var(--orange-light); color: #b8620f; }
+    .tag.blue { background: var(--blue-light); color: var(--blue); }
+    .tag.red { background: var(--red-light); color: var(--red); }
+    .tag.gray { background: #f3f3f3; color: #666; }
+    .read-link { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--purple); text-decoration: none; display: flex; align-items: center; gap: 4px; white-space: nowrap; flex-shrink: 0; }
+    .read-link:hover { text-decoration: underline; }
+
+    /* ── FEATURED ── */
+    .card.featured { background: linear-gradient(135deg, #fefeff 0%, #f5f3ff 100%); border-color: var(--purple-mid); }
+    .featured-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; background: var(--purple); color: #fff; padding: 2px 8px; border-radius: 20px; margin-bottom: 8px; }
+
+    /* ── STAT STRIP ── */
+    .stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 22px; }
+    .stat-box { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; text-align: center; }
+    .stat-number { font-size: 24px; font-weight: 800; color: var(--purple); }
+    .stat-label { font-size: 11px; color: #aaa; margin-top: 2px; }
+
+    /* ── DATE BANNER ── */
+    .date-banner { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; color: #666; flex-wrap: wrap; }
+    .date-banner strong { color: #111; }
+
+    /* ── FILTER ROW ── */
+    .filter-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .filter-btn { font-size: 12px; font-weight: 500; padding: 5px 13px; border-radius: 20px; border: 1px solid #ddd; background: var(--white); color: #666; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+    .filter-btn:hover { border-color: #a78bfa; color: var(--purple); }
+    .filter-btn.active { background: var(--purple); color: #fff; border-color: var(--purple); }
+
+    /* ── SOURCES GRID ── */
+    .sources-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 9px; margin-bottom: 20px; }
+    .source-pill { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; text-decoration: none; }
+    .source-pill:hover { border-color: var(--purple-mid); box-shadow: 0 2px 8px rgba(108,71,255,0.08); }
+    .source-pill.hot { border-color: var(--purple-mid); background: var(--purple-light); }
+    .source-pill-icon { font-size: 20px; }
+    .source-pill-name { font-size: 13px; font-weight: 600; color: #111; }
+    .source-pill-type { font-size: 11px; color: #aaa; }
+
+    /* ── AUTHOR GRID ── */
+    .author-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .author-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: box-shadow 0.15s, border-color 0.15s; }
+    .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: var(--purple-mid); }
+    .author-top { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
+    .author-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .author-name { font-size: 14px; font-weight: 700; color: #111; }
+    .author-handle { font-size: 11px; color: #aaa; margin-top: 1px; }
+    .author-bio { font-size: 12.5px; color: #666; line-height: 1.5; margin-bottom: 8px; }
+    .author-links { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .author-link { font-size: 11px; font-weight: 600; color: var(--purple); text-decoration: none; background: var(--purple-light); padding: 3px 9px; border-radius: 20px; transition: background 0.15s; }
+    .author-link:hover { background: var(--purple-mid); color: #fff; }
+
+    /* ── PODCAST CARD ── */
+    .ep-card { display: flex; gap: 14px; align-items: flex-start; }
+    .ep-thumb { width: 64px; height: 64px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+    .ep-info { flex: 1; min-width: 0; }
+    .ep-title { font-size: 14.5px; font-weight: 650; color: #111; line-height: 1.3; }
+    .ep-desc { font-size: 13px; color: #666; margin-top: 5px; line-height: 1.5; }
+    .ep-meta { font-size: 11px; color: #aaa; margin-top: 6px; }
+
+    /* ── SCHEDULE BANNER ── */
+    .schedule-banner { background: linear-gradient(135deg, var(--purple), #9333ea); border-radius: 12px; padding: 16px 20px; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
+    .schedule-icon { font-size: 28px; flex-shrink: 0; }
+    .schedule-title { font-size: 14px; font-weight: 700; }
+    .schedule-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+    /* ── SUBSCRIBE BANNER ── */
+    .subscribe-banner { background: linear-gradient(135deg, #6c47ff, #9333ea); border-radius: 12px; padding: 20px 24px; color: #fff; margin-top: 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .subscribe-text { flex: 1; min-width: 200px; }
+    .subscribe-text strong { font-size: 15px; display: block; margin-bottom: 2px; }
+    .subscribe-text span { font-size: 13px; opacity: 0.85; }
     .subscribe-form { display: flex; gap: 8px; }
-    .subscribe-input {
-      border: none; border-radius: 8px; padding: 9px 14px;
-      font-size: 14px; width: 220px; outline: none;
-    }
-    .subscribe-btn {
-      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);
-      color: #fff; border-radius: 8px; padding: 9px 18px;
-      font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap;
-    }
-    .subscribe-btn:hover { background: rgba(255,255,255,0.35); }
+    .subscribe-input { border: none; border-radius: 8px; padding: 9px 14px; font-size: 14px; width: 200px; outline: none; }
+    .subscribe-submit { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5); color: #fff; border-radius: 8px; padding: 9px 16px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; font-family: inherit; }
+    .subscribe-submit:hover { background: rgba(255,255,255,0.35); }
 
-    /* ── Page container ── */
-    .page { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+    /* ── LANGUAGE BADGE ── */
+    .lang-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; background: #fff8ef; color: #b8620f; border: 1px solid #fde68a; margin-left: 6px; vertical-align: middle; }
+    .translated-excerpt { font-size: 13px; color: #555; line-height: 1.6; background: #f8f7ff; border-left: 3px solid #c4b5fd; padding: 8px 12px; margin-top: 10px; border-radius: 0 6px 6px 0; }
+    .translated-label { font-size: 10px; font-weight: 700; color: var(--purple); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 3px; }
 
-    /* ── Stats row ── */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 16px; margin-bottom: 32px;
-    }
-    .stat-cell {
-      background: #fff; border: 1px solid ${DS.border};
-      border-radius: ${DS.radius}; padding: 18px 20px; text-align: center;
-    }
-    .stat-num { font-size: 28px; font-weight: 900; color: ${DS.primary}; }
-    .stat-label { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
-
-    /* ── Lead grid ── */
-    .lead-grid {
-      display: grid; grid-template-columns: 1fr 340px;
-      gap: 20px; margin-bottom: 32px;
-    }
-    @media (max-width: 768px) { .lead-grid { grid-template-columns: 1fr; } }
-
-    .lead-left {
-      background: ${DS.gradient};
-      border-radius: ${DS.radius}; padding: 32px; color: #fff;
-      display: flex; flex-direction: column;
-    }
-    .lead-label {
-      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
-      text-transform: uppercase; opacity: 0.75; margin-bottom: 10px;
-    }
-    .lead-tag {
-      display: inline-flex; align-items: center;
-      background: rgba(255,255,255,0.2); border-radius: 6px;
-      padding: 3px 10px; font-size: 12px; font-weight: 600;
-      margin-bottom: 16px; width: fit-content;
-    }
-    .lead-title {
-      font-size: 22px; font-weight: 900; line-height: 1.3;
-      margin-bottom: 14px;
-    }
-    .lead-title a { color: #fff; }
-    .lead-summary {
-      font-size: 15px; opacity: 0.9; line-height: 1.65;
-      flex: 1; margin-bottom: 20px;
-    }
-    .lead-byline { font-size: 13px; opacity: 0.7; margin-bottom: 18px; }
-    .lead-read {
-      display: inline-block;
-      background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.45);
-      color: #fff; border-radius: 8px; padding: 9px 20px;
-      font-size: 14px; font-weight: 700; align-self: flex-start;
-    }
-    .lead-read:hover { background: rgba(255,255,255,0.35); text-decoration: none; }
-
-    .lead-right { display: flex; flex-direction: column; gap: 14px; }
-
-    .secondary {
-      background: #fff; border: 1px solid ${DS.border};
-      border-radius: ${DS.radius}; padding: 18px 20px;
-      flex: 1; display: flex; flex-direction: column;
-      transition: box-shadow 0.15s, border-color 0.15s;
-    }
-    .secondary:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #d4cff7; }
-    .secondary-tag { margin-bottom: 8px; }
-    .secondary-title { font-size: 15px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; flex: 1; }
-    .secondary-title a { color: #1a1a1a; }
-    .secondary-title a:hover { color: ${DS.primary}; text-decoration: none; }
-    .secondary-meta { font-size: 12px; color: #999; display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-    .secondary-meta a { color: ${DS.primary}; font-weight: 600; }
-
-    /* ── Tags ── */
-    .tag {
-      display: inline-block; background: rgba(108,71,255,0.1);
-      color: ${DS.primary}; border-radius: 5px;
-      padding: 2px 9px; font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.06em;
-    }
-    .tag.green { background: rgba(16,185,129,0.1); color: #059669; }
-    .tag.orange { background: rgba(245,158,11,0.1); color: #d97706; }
-    .tag.blue { background: rgba(59,130,246,0.1); color: #2563eb; }
-    .tag.red { background: rgba(239,68,68,0.1); color: #dc2626; }
-
-    /* ── Hits grid ── */
-    .section-head {
-      font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
-      text-transform: uppercase; color: #888;
-      border-bottom: 1px solid ${DS.border}; padding-bottom: 10px;
-      margin-bottom: 20px;
-    }
-    .hits-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 14px; margin-bottom: 40px;
-    }
-    .hit {
-      background: #fff; border: 1px solid ${DS.border};
-      border-radius: ${DS.radius}; padding: 18px 20px;
-      display: flex; flex-direction: column;
-      transition: box-shadow 0.15s, border-color 0.15s;
-    }
-    .hit:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #d4cff7; }
-    .hit-tag { margin-bottom: 8px; }
-    .hit-title { font-size: 15px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; flex: 1; }
-    .hit-title a { color: #1a1a1a; }
-    .hit-title a:hover { color: ${DS.primary}; text-decoration: none; }
-    .hit-summary { font-size: 13px; color: #555; line-height: 1.55; margin-bottom: 12px; }
-    .hit-meta { font-size: 12px; color: #999; display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-    .hit-meta a { color: ${DS.primary}; font-weight: 600; font-size: 13px; }
-
-    /* ── Category panels ── */
-    .panel-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-    .filter-btn {
-      border: 1px solid ${DS.border}; background: #fff; color: #666;
-      border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 500;
-      cursor: pointer;
-    }
-    .filter-btn:hover, .filter-btn.active { border-color: ${DS.primary}; color: ${DS.primary}; background: rgba(108,71,255,0.06); }
-    .article-list { display: flex; flex-direction: column; gap: 12px; }
-    .article {
-      background: #fff; border: 1px solid ${DS.border};
-      border-radius: ${DS.radius}; padding: 18px 20px;
-      display: grid; grid-template-columns: 1fr 120px;
-      gap: 16px; align-items: start;
-      transition: box-shadow 0.15s, border-color 0.15s;
-    }
-    .article:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #d4cff7; }
-    .article-tags { margin-bottom: 8px; }
-    .article-title { font-size: 16px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
-    .article-title a { color: #1a1a1a; }
-    .article-title a:hover { color: ${DS.primary}; text-decoration: none; }
-    .article-summary { font-size: 14px; color: #444; line-height: 1.6; }
-    .article-byline { font-size: 12px; color: #999; margin-top: 6px; }
-    .article-source { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; padding-top: 4px; }
-    .source-name { font-size: 12px; color: #aaa; font-weight: 500; }
-    .read-btn {
-      display: inline-block; border: 1px solid ${DS.primary};
-      color: ${DS.primary}; border-radius: 7px; padding: 5px 14px;
-      font-size: 13px; font-weight: 700;
-    }
-    .read-btn:hover { background: ${DS.primary}; color: #fff; text-decoration: none; }
-
-    /* ── Language badge & translation ── */
-    .lang-badge {
-      display: inline-block; font-size: 10px; font-weight: 700;
-      padding: 2px 7px; border-radius: 20px;
-      background: #fff8ef; color: #b8620f;
-      border: 1px solid #fde68a; margin-left: 6px;
-      vertical-align: middle;
-    }
-    .translated-excerpt {
-      font-size: 13px; color: #555; line-height: 1.6;
-      background: #f8f7ff; border-left: 3px solid #c4b5fd;
-      padding: 8px 12px; margin-top: 10px; border-radius: 0 6px 6px 0;
-    }
-    .translated-label {
-      font-size: 10px; font-weight: 700; color: ${DS.primary};
-      text-transform: uppercase; letter-spacing: 0.05em;
-      display: block; margin-bottom: 3px;
-    }
-
-    /* ── Authors tab ── */
-    .authors-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;
-    }
-    .author-card {
-      background: #fff; border: 1px solid ${DS.border};
-      border-radius: ${DS.radius}; padding: 20px;
-      transition: box-shadow 0.15s, border-color 0.15s;
-    }
-    .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: #d4cff7; }
-    .author-top { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-    .author-avatar {
-      width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
-      background: ${DS.gradient};
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px; font-weight: 800; color: #fff;
-    }
-    .author-name { font-size: 15px; font-weight: 700; color: #111; line-height: 1.2; }
-    .author-handle { font-size: 11px; color: #999; margin-top: 2px; }
-    .author-bio { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 10px; }
-    .author-articles { font-size: 12px; color: #888; }
-    .author-article-link { color: ${DS.primary}; font-weight: 600; text-decoration: none; display: block; margin-top: 4px; }
-    .author-article-link:hover { text-decoration: underline; }
-
-    /* ── Footer ── */
-    .footer {
-      border-top: 1px solid ${DS.border}; margin-top: 60px; padding-top: 32px;
-      text-align: center; font-size: 13px; color: #999;
-    }
-    .footer a { color: ${DS.primary}; }
+    /* ── FOOTER ── */
+    .footer { border-top: 1px solid var(--border); margin-top: 60px; padding: 32px 0 60px; text-align: center; font-size: 13px; color: #999; }
+    .footer a { color: var(--purple); }
     .footer-brand { font-size: 16px; font-weight: 800; color: #1a1a1a; margin-bottom: 8px; }
 
-    /* ── Toast ── */
-    .toast {
-      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
-      background: #1a1a1a; color: #fff; border-radius: 8px;
-      padding: 10px 22px; font-size: 14px; font-weight: 600;
-      opacity: 0; pointer-events: none; transition: opacity 0.25s;
-      z-index: 9999;
-    }
-    .toast.show { opacity: 1; }
-
     @media (max-width: 600px) {
-      .stats-row { grid-template-columns: repeat(3, 1fr); }
-      .article { grid-template-columns: 1fr; }
-      .article-source { flex-direction: row; align-items: center; justify-content: space-between; text-align: left; }
-      .masthead-tagline { display: none; }
+      .stat-strip { grid-template-columns: repeat(2, 1fr); }
+      .main { padding: 16px; }
+      .header { padding: 12px 16px; }
+      .tabs-bar { padding: 0 16px; }
+      .author-grid { grid-template-columns: 1fr; }
       .subscribe-form { width: 100%; }
       .subscribe-input { flex: 1; min-width: 0; }
     }
@@ -555,179 +614,164 @@ function renderFullIssue(ctx) {
 </head>
 <body>
 
-<!-- Masthead -->
-<header class="masthead">
-  <div class="masthead-inner">
-    <div class="logo-mark">🧠</div>
-    <div class="masthead-text">
-      <div class="masthead-name">The Frequency</div>
-      <div class="masthead-tagline">Original AI thinking, every Tuesday · Real builders · Zero hype</div>
-    </div>
-    <span class="issue-badge">Issue #${ctx.issue_number}</span>
-    <div class="masthead-actions">
-      <a href="${DS.siteUrl}/archive.html"><button class="btn-ghost">Archive</button></a>
-      <button class="btn-ghost" onclick="shareDigest()">Share</button>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="logo">🧠</div>
+    <div>
+      <div class="header-title">The Frequency</div>
+      <div class="header-sub">Lilit's curated digest · Every Tuesday</div>
     </div>
   </div>
-</header>
-
-<!-- Nav tabs -->
-<nav class="nav-bar">
-  <div class="nav-inner">
-    ${tabButtons}
-  </div>
-</nav>
-
-<!-- Subscribe strip -->
-<div class="subscribe-strip">
-  <div class="subscribe-inner">
-    <div class="subscribe-text">
-      <strong>Get The Frequency in your inbox</strong>
-      <span>Every Tuesday</span>
-    </div>
-    <form class="subscribe-form" onsubmit="handleSubscribe(event)">
-      <input class="subscribe-input" type="email" placeholder="your@email.com" required id="sub-email" />
-      <button class="subscribe-btn" type="submit">Subscribe →</button>
-    </form>
+  <div class="header-right">
+    <div class="issue-badge">Issue #${ctx.issue_number} · ${e(ctx.date)}</div>
+    <a class="archive-btn" href="${DS.siteUrl}/archive.html">📂 Archive</a>
+    <button class="share-btn" onclick="shareDigest()">↗ Share digest</button>
   </div>
 </div>
 
-<!-- Main page -->
-<div class="page">
+<!-- TABS -->
+<div class="tabs-bar">
+  ${tabButtons}
+</div>
 
-  <!-- Overview panel -->
-  <div class="panel" id="panel-overview" style="display:block">
+<!-- MAIN -->
+<div class="main">
 
-    <!-- Stats -->
-    <div class="stats-row">
-      <div class="stat-cell">
-        <div class="stat-num">${ctx.articles.length}</div>
-        <div class="stat-label">Stories</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">${sources.length}</div>
-        <div class="stat-label">Sources</div>
-      </div>
-      <div class="stat-cell">
-        <div class="stat-num">${authors.length > 0 ? authors.length : activeTabs.length}</div>
-        <div class="stat-label">${authors.length > 0 ? 'Authors' : 'Topics'}</div>
-      </div>
+  <!-- ══ OVERVIEW ══ -->
+  <div class="panel active" id="panel-overview">
+    <div class="date-banner">
+      📅 <strong>${e(ctx.date)}</strong> — Next issue ${e(ctx.next_date)}. Curated from ${sources.length} sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="${DS.siteUrl}/archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
+    </div>
+    <div class="stat-strip">
+      <div class="stat-box"><div class="stat-number">${ctx.articles.length}</div><div class="stat-label">Stories this issue</div></div>
+      <div class="stat-box"><div class="stat-number">${PODCAST_PICKS.length}</div><div class="stat-label">Podcast picks</div></div>
+      <div class="stat-box"><div class="stat-number">${sources.length}</div><div class="stat-label">Sources tracked</div></div>
+      <div class="stat-box"><div class="stat-number">${authorList.length || activeTabs.length}</div><div class="stat-label">Authors on radar</div></div>
     </div>
 
-    <!-- Lead grid -->
-    <div class="lead-grid">
-      <div class="lead-left">
-        <div class="lead-label">★ Editor's Pick</div>
-        <div class="lead-tag">${e(ep.category)}${langBadge(ep)}</div>
-        <h2 class="lead-title"><a href="${e(ep.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', ep)}>${e(ep.title)}</a></h2>
-        <p class="lead-summary">${e(ep.summary)}</p>
-        ${translatedBlock(ep)}
-        <p class="lead-byline">${ep.author ? e(ep.author) + ' · ' : ''}${e(ep.source)}</p>
-        <a class="lead-read" href="${e(ep.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', ep)}>Read →</a>
-      </div>
-      <div class="lead-right">
-        ${secondaryCards.map(a => `<div class="secondary">
-          <div class="secondary-tag"><span class="${tagClass(a.category)}">${e(a.category)}</span></div>
-          <div class="secondary-title"><a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', a)}>${e(a.title)}</a></div>
-          <div class="secondary-meta">
-            <span>${a.author ? e(a.author) + ' · ' : ''}${e(a.source)}</span>
-            <a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', a)}>Read →</a>
-          </div>
-        </div>`).join('\n        ')}
-      </div>
-    </div>
-
-    ${hitsArticles.length ? `<!-- Quick hits -->
-    <div class="section-head">Quick Hits</div>
-    <div class="hits-grid">
-      ${hitsArticles.map(a => `<div class="hit">
-        <div class="hit-tag"><span class="${tagClass(a.category)}">${e(a.category)}</span>${langBadge(a)}</div>
-        <div class="hit-title"><a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-click', a)}>${e(a.title)}</a></div>
-        <div class="hit-summary">${e(a.summary)}</div>
-        ${translatedBlock(a)}
-        <div class="hit-meta">
-          <span>${a.author ? e(a.author) + ' · ' : ''}${e(a.source)}</span>
-          <a href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', a)}>Read →</a>
+    <div class="section-label">🔥 Editor's pick</div>
+    <div class="card featured clickable" onclick="window.open('${e(ep.url)}','_blank')">
+      <div class="featured-badge">✦ Must read</div>
+      <div class="card-header">
+        ${cardIconHtml(ep, true)}
+        <div class="card-meta">
+          <div class="card-source">${cardSourceLine(ep)}</div>
+          <div class="card-title">${e(ep.title)}</div>
         </div>
-      </div>`).join('\n      ')}
-    </div>` : ''}
+      </div>
+      <div class="card-body">${e(ep.summary)}${translatedBlock(ep)}</div>
+      <div class="card-footer">
+        <span class="${tagClass(ep.category)}">${e(ep.category)}</span>${langBadge(ep)}
+        <a class="read-link" href="${e(ep.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', ep)}>Read →</a>
+      </div>
+    </div>
 
-  </div><!-- /panel-overview -->
+    <div class="section-label">⚡ Quick hits</div>
+
+    ${rest.map(a => `<div class="card clickable" onclick="window.open('${e(a.url)}','_blank')">
+      <div class="card-accent" style="${cardAccentStyle(a.category)}"></div>
+      <div class="card-header">
+        ${cardIconHtml(a)}
+        <div class="card-meta">
+          <div class="card-source">${cardSourceLine(a)}</div>
+          <div class="card-title">${e(a.title)}</div>
+        </div>
+      </div>
+      <div class="card-body">${e(a.summary)}${translatedBlock(a)}</div>
+      <div class="card-footer">
+        <span class="${tagClass(a.category)}">${e(a.category)}</span>${langBadge(a)}
+        <a class="read-link" href="${e(a.url)}" target="_blank" rel="noopener" ${umamiAttrs('article-read', a)}>Read →</a>
+      </div>
+    </div>`).join('\n    ')}
+
+    <div class="subscribe-banner">
+      <div class="subscribe-text">
+        <strong>Get The Frequency in your inbox</strong>
+        <span>Every Tuesday · Real builders, honest takes, zero hype</span>
+      </div>
+      <form class="subscribe-form" onsubmit="handleSubscribe(event)">
+        <input class="subscribe-input" type="email" placeholder="your@email.com" required id="sub-email" />
+        <button class="subscribe-submit" type="submit">Subscribe →</button>
+      </form>
+    </div>
+  </div>
 
   <!-- Category panels -->
   ${categoryPanels}
 
+  <!-- Podcasts panel -->
+  ${podcastsPanel}
+
   <!-- Authors panel -->
   ${authorsPanel}
 
-</div><!-- /page -->
+  <!-- Sources panel -->
+  ${sourcesPanel}
 
-<!-- Footer -->
+</div>
+
+<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-brand">The Frequency</div>
   <p>Next issue: ${e(ctx.next_date)}</p>
-  <p style="margin-top:8px;">
-    <a href="${DS.siteUrl}/archive.html">Archive</a> &nbsp;·&nbsp;
-    <a href="${DS.siteUrl}">Latest issue</a>
-  </p>
-  <p style="margin-top:12px;font-size:12px;color:#bbb;">Original AI thinking, every Tuesday.</p>
+  <p style="margin-top:8px;"><a href="${DS.siteUrl}/archive.html">Archive</a> &nbsp;·&nbsp; <a href="${DS.siteUrl}">Latest issue</a></p>
+  <p style="margin-top:12px;font-size:12px;color:#bbb;">Curated AI thinking, every Tuesday.</p>
 </footer>
 
 <div class="toast" id="toast"></div>
 
 <script>
   function switchTab(id) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
-    const btn = document.querySelector('[data-tab="' + id + '"]');
-    if (btn) btn.classList.add('active');
-    const panel = document.getElementById('panel-' + id);
-    if (panel) panel.style.display = 'block';
+    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
+    var tab = document.querySelector('[data-tab="' + id + '"]');
+    if (tab) tab.classList.add('active');
+    var panel = document.getElementById('panel-' + id);
+    if (panel) panel.classList.add('active');
     if (typeof umami !== 'undefined') umami.track('tab-switch', { tab: id });
   }
 
-  function filterCards(panelId, source) {
-    const list = document.getElementById('list-' + panelId);
-    if (!list) return;
-    list.querySelectorAll('.article').forEach(a => {
-      a.style.display = (!source || a.dataset.source === source) ? '' : 'none';
-    });
-    const panel = document.getElementById('panel-' + panelId);
-    if (panel) panel.querySelectorAll('.filter-btn').forEach(b => {
-      b.classList.toggle('active', b.textContent.trim() === (source ?? 'All'));
+  function filterCards(btn, source, panelId) {
+    document.querySelectorAll('#panel-' + panelId + ' .filter-btn').forEach(function(b) { b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('#panel-' + panelId + ' .card[data-source]').forEach(function(card) {
+      card.style.display = (!source || source === 'all' || card.dataset.source === source) ? '' : 'none';
     });
   }
 
   function shareDigest() {
-    const url = window.location.href;
-    if (navigator.share) {
-      navigator.share({ title: 'The Frequency #${ctx.issue_number}', url });
+    var url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() { showToast('Link copied!'); });
     } else {
-      navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+      var ta = document.createElement('textarea');
+      ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.focus(); ta.select();
+      try { document.execCommand('copy'); showToast('Link copied!'); } catch(err) { showToast('Copy URL from address bar'); }
+      document.body.removeChild(ta);
     }
     if (typeof umami !== 'undefined') umami.track('share');
   }
 
   function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 2200);
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2500);
   }
 
-  async function handleSubscribe(e) {
-    e.preventDefault();
-    const email = document.getElementById('sub-email').value;
+  async function handleSubscribe(evt) {
+    evt.preventDefault();
+    var email = document.getElementById('sub-email').value;
     try {
       await fetch('${SUBSCRIBE_HOOK}', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email })
       });
       showToast('Subscribed! See you next issue.');
       document.getElementById('sub-email').value = '';
       if (typeof umami !== 'undefined') umami.track('subscribe');
-    } catch {
+    } catch(err) {
       showToast('Something went wrong. Try again.');
     }
   }

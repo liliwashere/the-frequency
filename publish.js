@@ -6,10 +6,11 @@ import { curate } from './src/curate.js';
 import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
 import { deploy } from './src/deploy.js';
 import { getSubscribers } from './src/subscribers.js';
-import { sendToAll } from './src/email.js';
+import { sendToAll, sendPreviewEmail } from './src/email.js';
 import { shouldPublishNow, subscribersInCurrentWindow } from './src/scheduler.js';
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
+const PREVIEW_MODE = process.env.PREVIEW_MODE === 'true';
 
 function formatDate(date) {
   return date.toLocaleDateString('en-US', {
@@ -27,7 +28,7 @@ function nextIssueDate(from) {
 
 async function main() {
   // ── Schedule guard — exit early if this cron slot doesn't match ──
-  if (!DRY_RUN && !shouldPublishNow()) {
+  if (!DRY_RUN && !PREVIEW_MODE && !shouldPublishNow()) {
     console.log('\n[scheduler] Not a scheduled publish time — exiting.\n');
     process.exit(0);
   }
@@ -37,7 +38,7 @@ async function main() {
 
   console.log(`\n${'═'.repeat(60)}`);
   console.log(`  The Frequency — Pipeline Start`);
-  console.log(`  ${now.toISOString()}${DRY_RUN ? '  [DRY RUN]' : ''}`);
+  console.log(`  ${now.toISOString()}${DRY_RUN ? '  [DRY RUN]' : PREVIEW_MODE ? '  [PREVIEW]' : ''}`);
   console.log(`${'═'.repeat(60)}\n`);
 
   // ── 1. Load state ────────────────────────────────────────────────
@@ -58,17 +59,49 @@ async function main() {
     process.exit(1);
   }
 
+  // ── 2b. Domain-cap pre-filter (max 2 articles per domain) ───────
+  const _domainBucket = {};
+  const cappedArticles = rawArticles.filter(a => {
+    let domain;
+    try { domain = new URL(a.url).hostname.replace(/^www\./, ''); } catch { return true; }
+    _domainBucket[domain] = (_domainBucket[domain] ?? 0) + 1;
+    return _domainBucket[domain] <= 2;
+  });
+  const _dropped = rawArticles.length - cappedArticles.length;
+  if (_dropped > 0) console.log(`      Domain-cap: dropped ${_dropped} articles — max 2 per domain enforced`);
+
   // ── 3. Curate ────────────────────────────────────────────────────
   console.log('\n[3/8] Curating with Claude...');
   let curateResult;
   try {
-    curateResult = await curate(rawArticles, seenUrls);
+    curateResult = await curate(cappedArticles, seenUrls);
   } catch (err) {
     console.error(`\n[FATAL] Curation failed: ${err.message}`);
     process.exit(1);
   }
 
   const { articles: curatedArticles, issue_headline } = curateResult;
+
+  // ── QA check ─────────────────────────────────────────────────────
+  const qaDomains = new Set(curatedArticles.map(a => {
+    try { return new URL(a.url).hostname.replace(/^www\./, ''); } catch { return ''; }
+  }));
+  const qaDomainCounts = {};
+  curatedArticles.forEach(a => {
+    try { const d = new URL(a.url).hostname.replace(/^www\./, ''); qaDomainCounts[d] = (qaDomainCounts[d] ?? 0) + 1; } catch {}
+  });
+  const KNOWN_WOMEN_LAST_NAMES = ['huyen', 'boykis', 'weng', 'thomas', 'gebru', 'birhane', 'shankar', 'kozyrkov', 'chowdhury', 'bender', 'buolamwini', 'roberts', 'rachna', 'whittaker'];
+  const womenCount = curatedArticles.filter(a =>
+    KNOWN_WOMEN_LAST_NAMES.some(n => (a.author || '').toLowerCase().includes(n))
+  ).length;
+  console.log('\n[QA] ─────────────────────────────────────────────────');
+  console.log(`[QA] Articles: ${curatedArticles.length}${curatedArticles.length < 8 ? ' ⚠️  (target 8+)' : ' ✓'}`);
+  console.log(`[QA] Distinct domains: ${qaDomains.size}${qaDomains.size < 5 ? ' ⚠️  (target 5+)' : ' ✓'}`);
+  const qaMaxFromOne = Math.max(...Object.values(qaDomainCounts));
+  if (qaMaxFromOne > 2) console.warn(`[QA] ⚠️  One domain has ${qaMaxFromOne} articles — hard limit is 2`);
+  if (womenCount < 2) console.warn(`[QA] ⚠️  Only ${womenCount} identified women authors — target 2+`);
+  console.log('[QA] ─────────────────────────────────────────────────\n');
+
   const editorsPick = curatedArticles.find(a => a.editors_pick);
   const issueDate = formatDate(now);
   const nextDate = nextIssueDate(now);
@@ -91,6 +124,27 @@ async function main() {
   } catch (err) {
     console.error(`\n[FATAL] HTML generation failed: ${err.message}`);
     process.exit(1);
+  }
+
+  if (PREVIEW_MODE) {
+    console.log('\n[PREVIEW] Deploying preview to Cloudflare Pages...');
+    let previewUrl = null;
+    try {
+      const previewDeploy = await deploy();
+      previewUrl = previewDeploy?.url ?? null;
+    } catch (err) {
+      console.warn(`[PREVIEW] Deploy failed (continuing): ${err.message}`);
+    }
+    console.log('[PREVIEW] Sending preview email to editor...');
+    try {
+      await sendPreviewEmail(ctx, previewUrl);
+      console.log('[PREVIEW] Preview email sent to lilitalent@gmail.com');
+    } catch (err) {
+      console.warn(`[PREVIEW] Email failed: ${err.message}`);
+    }
+    console.log('\n[PREVIEW] Done. Review before Tuesday 09:00 Lisbon.');
+    console.log('[PREVIEW] State NOT saved — issue number and seen_urls unchanged.\n');
+    return;
   }
 
   if (DRY_RUN) {

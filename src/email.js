@@ -72,3 +72,34 @@ export async function sendToAll(subscribers, ctx) {
 
   return result;
 }
+
+export async function sendPreviewEmail(ctx, previewUrl = null) {
+  const transport = createTransport();
+  const emailHtml = readFileSync(path.join(PUBLIC, 'email-latest.html'), 'utf8');
+  const baseSubject = extractSubject(emailHtml);
+  const subject = `[PREVIEW] ${baseSubject}`;
+  const from = `The Frequency <${process.env.GMAIL_FROM_ADDRESS}>`;
+
+  const previewBanner = previewUrl
+    ? `<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-family:sans-serif;font-size:14px;">
+        <strong>⚠️ PREVIEW — Issue #${ctx.issue_number}</strong><br>
+        This is a Monday preview. The issue goes live Tuesday 09:00 Lisbon.<br>
+        <a href="${previewUrl}" style="color:#6c47ff;">View on site →</a>
+      </div>`
+    : `<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-family:sans-serif;font-size:14px;">
+        <strong>⚠️ PREVIEW — Issue #${ctx.issue_number}</strong><br>
+        This is a Monday preview. The issue goes live Tuesday 09:00 Lisbon.
+      </div>`;
+
+  const previewHtml = emailHtml.replace('<body', '<body').replace(
+    /<body[^>]*>/,
+    match => match + previewBanner
+  );
+
+  await transport.sendMail({
+    from,
+    to: 'lilitalent@gmail.com',
+    subject,
+    html: previewHtml,
+  });
+}

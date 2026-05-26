@@ -1,7 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 
 const SYSTEM_PROMPT = `You are the editorial AI for "The Frequency," a twice-weekly AI digest with zero hype.
-Your job is to select 6–12 stories from a candidate pool and assign them to categories.
+Your job is to select 8–12 stories from a candidate pool and assign them to categories.
 
 CRITICAL: You must ONLY select URLs that appear verbatim in the candidates array you receive. Never invent, modify, or guess URLs.
 
@@ -46,6 +46,11 @@ Non-English content — handling rules:
   The excerpt should be a translation of the article's key insight, not a description of what the article covers.
 - For English articles: language = "en", translated_excerpt = "".
 
+Source diversity — hard rule, no exceptions:
+- No more than 2 articles from the same domain per issue. wired.com, techcrunch.com, arstechnica.com are individual sources too.
+- If one domain has 5 excellent candidates, pick the best 2 and find alternatives from other sources for the rest.
+- Aim for at least 5 distinct domains across the 8–12 stories. Single-source issues are editorially unacceptable.
+
 Summary writing rules (critical):
 - 2 sentences maximum
 - Write like a sharp editor giving a colleague a quick brief — specific, direct, no throat-clearing
@@ -73,7 +78,7 @@ const SELECT_ARTICLES_TOOL = {
     properties: {
       selected: {
         type: 'array',
-        minItems: 6,
+        minItems: 8,
         maxItems: 12,
         items: {
           type: 'object',
@@ -132,12 +137,12 @@ const SELECT_ARTICLES_TOOL = {
   },
 };
 
-export async function curate(rawArticles, seenUrls) {
+export async function curate(rawArticles, seenUrls, { minCandidates = 6 } = {}) {
   const seenSet = new Set(seenUrls);
   const candidates = rawArticles.filter(a => !seenSet.has(a.url));
 
-  if (candidates.length < 6) {
-    throw new Error(`[curate] Only ${candidates.length} unseen candidates — need at least 6`);
+  if (candidates.length < minCandidates) {
+    throw new Error(`[curate] Only ${candidates.length} unseen candidates — need at least ${minCandidates}`);
   }
 
   console.log(`[curate] Sending ${candidates.length} candidates to Claude for curation`);
@@ -199,8 +204,8 @@ export async function curate(rawArticles, seenUrls) {
     }];
   }, []);
 
-  if (curated.length < 6) {
-    throw new Error(`[curate] Only ${curated.length} valid articles after filtering — need at least 6`);
+  if (curated.length < minCandidates) {
+    throw new Error(`[curate] Only ${curated.length} valid articles after filtering — need at least ${minCandidates}`);
   }
 
   // Ensure exactly one editors_pick after filtering
