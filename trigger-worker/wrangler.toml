@@ -1,0 +1,6 @@
+name = "the-frequency-trigger"
+main = "index.js"
+compatibility_date = "2024-01-01"
+
+[triggers]
+crons = ["0 8 * * 2", "0 10 * * 2"]

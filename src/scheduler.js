@@ -67,6 +67,22 @@ export function shouldPublishNow(overrideDate = null) {
     return true;
   }
 
+  // workflow_dispatch is an intentional manual or Cloudflare-triggered run.
+  // Skip the time-window check but still enforce the day in weekly mode.
+  if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
+    console.log('[scheduler] workflow_dispatch detected');
+    if (config.mode === 'weekly') {
+      const tz  = config.timezone || 'Europe/Lisbon';
+      const loc = localParts(overrideDate ?? new Date(), tz);
+      if (loc.weekday !== config.weekly.day.toLowerCase()) {
+        console.log(`[scheduler] workflow_dispatch on wrong day (${loc.weekday}) — skipping`);
+        return false;
+      }
+    }
+    console.log('[scheduler] workflow_dispatch on correct day — running');
+    return true;
+  }
+
   const now = overrideDate ?? new Date();
   const tz  = config.timezone || 'Europe/Lisbon';
   const loc  = localParts(now, tz);

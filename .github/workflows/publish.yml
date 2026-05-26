@@ -1,16 +1,7 @@
 name: Publish Issue
 
 on:
-  schedule:
-    # Three daily slots (UTC) → 09:00, 13:00, 19:00 Lisbon (WEST/UTC+1)
-    # scheduler.js decides whether to actually publish based on schedule.json
-    # weekly mode: only fires on the configured day at 09:00
-    # campaign mode: fires all three slots within the burst window
-    # once mode: fires only on the exact configured datetime
-    - cron: '0 8 * * *'   # 09:00 Lisbon
-    - cron: '0 12 * * *'  # 13:00 Lisbon
-    - cron: '0 18 * * *'  # 19:00 Lisbon
-  workflow_dispatch:   # allow manual trigger from GitHub UI
+  workflow_dispatch:   # triggered by Cloudflare Worker every Tuesday 08:00 UTC (+ 10:00 retry)
 
 permissions:
   contents: write   # allows pushing the updated archive back to main
@@ -47,6 +38,7 @@ jobs:
           GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
           GMAIL_FROM_ADDRESS: ${{ secrets.GMAIL_FROM_ADDRESS }}
           OPEN_TRACKER_URL: ${{ secrets.OPEN_TRACKER_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           DRY_RUN: 'false'
         run: node publish.js
 
