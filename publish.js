@@ -7,6 +7,7 @@ import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
 import { deploy } from './src/deploy.js';
 import { getSubscribers } from './src/subscribers.js';
 import { sendToAll } from './src/email.js';
+import { shouldPublishNow, subscribersInCurrentWindow } from './src/scheduler.js';
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
 
@@ -18,17 +19,19 @@ function formatDate(date) {
 
 function nextIssueDate(from) {
   const d = new Date(from);
-  const day = d.getDay(); // 0=Sun,2=Tue,4=Thu
-  let daysUntil;
-  if (day < 2) daysUntil = 2 - day;
-  else if (day === 2) daysUntil = 2;
-  else if (day < 4) daysUntil = 4 - day;
-  else daysUntil = 7 - day + 2;
+  const day = d.getDay();
+  const daysUntil = day === 2 ? 7 : (2 - day + 7) % 7;
   d.setDate(d.getDate() + daysUntil);
   return formatDate(d);
 }
 
 async function main() {
+  // ── Schedule guard — exit early if this cron slot doesn't match ──
+  if (!DRY_RUN && !shouldPublishNow()) {
+    console.log('\n[scheduler] Not a scheduled publish time — exiting.\n');
+    process.exit(0);
+  }
+
   const startTime = Date.now();
   const now = new Date();
 
@@ -129,8 +132,11 @@ async function main() {
   let emailResult = null;
   if (subscribers.length > 0) {
     console.log('\n[7/8] Sending emails...');
+    // Filter to subscribers whose local time is currently 9am ± 35min
+    const batch = subscribersInCurrentWindow(subscribers);
+    console.log(`      Timezone window: ${batch.length}/${subscribers.length} subscriber(s) in current 9am window`);
     try {
-      emailResult = await sendToAll(subscribers, ctx);
+      emailResult = await sendToAll(batch, ctx);
     } catch (err) {
       console.error(`[email] FAILED: ${err.message}`);
     }

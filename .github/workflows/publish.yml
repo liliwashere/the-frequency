@@ -1,10 +1,7 @@
 name: Publish Issue
 
 on:
-  schedule:
-    # 08:00 UTC = 09:00 Lisbon (WEST/UTC+1) on Tuesdays and Thursdays
-    - cron: '0 8 * * 2,4'
-  workflow_dispatch:   # allow manual trigger from GitHub UI
+  workflow_dispatch:   # triggered by Cloudflare Worker every Tuesday 08:00 UTC (+ 10:00 retry)
 
 permissions:
   contents: write   # allows pushing the updated archive back to main
@@ -21,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -33,10 +30,15 @@ jobs:
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_PROJECT_NAME: the-frequency
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+          GMAIL_FROM_ADDRESS: ${{ secrets.GMAIL_FROM_ADDRESS }}
           OPEN_TRACKER_URL: ${{ secrets.OPEN_TRACKER_URL }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
           DRY_RUN: 'false'
         run: node publish.js
 
