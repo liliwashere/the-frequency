@@ -239,17 +239,6 @@ export async function fetchArticles(days = 7) {
     }
   }
 
-  const windowDays = Math.min(4, days);
-  const filtered = deduped.filter(a => isWithinWindow(a.published_date, windowDays));
-  console.log(`[search] Found ${allArticles.length} raw → ${deduped.length} deduped → ${filtered.length} within ${windowDays}-day window`);
-
-  if (filtered.length < 8) {
-    console.warn(`[search] Too few results with ${windowDays}-day filter — relaxing to ${days} days`);
-    const relaxed = deduped.filter(a => isWithinWindow(a.published_date, days));
-    if (relaxed.length >= 8) return relaxed;
-    console.warn('[search] Still too few — returning all deduped results, Claude will filter by relevance');
-    return deduped;
-  }
-
-  return filtered;
+  console.log(`[search] Found ${allArticles.length} raw → ${deduped.length} deduped`);
+  return deduped;
 }

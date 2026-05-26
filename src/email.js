@@ -1,23 +1,12 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC = path.join(__dirname, '..', 'public');
 
-function createTransport() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.GMAIL_FROM_ADDRESS,
-      clientId: process.env.GMAIL_CLIENT_ID,
-      clientSecret: process.env.GMAIL_CLIENT_SECRET,
-      refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-    },
-  });
-}
+const FROM = 'The Frequency <newsletter@lilitarutyunyan.com>';
 
 function extractSubject(html) {
   const match = html.match(/<!--\s*subject:\s*(.+?)\s*-->/);
@@ -36,18 +25,17 @@ function sleep(ms) {
 }
 
 export async function sendToAll(subscribers, ctx) {
-  const transport = createTransport();
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const emailHtml = readFileSync(path.join(PUBLIC, 'email-latest.html'), 'utf8');
   const subject = extractSubject(emailHtml);
-  const from = `The Frequency <${process.env.GMAIL_FROM_ADDRESS}>`;
   const result = { sent: 0, failed: 0, errors: [] };
 
-  console.log(`[email] Sending Issue #${ctx.issue_number} to ${subscribers.length} subscriber(s) via Gmail...`);
+  console.log(`[email] Sending Issue #${ctx.issue_number} to ${subscribers.length} subscriber(s) via Resend...`);
 
   for (const subscriber of subscribers) {
     try {
-      await transport.sendMail({
-        from,
+      await resend.emails.send({
+        from: FROM,
         to: subscriber.email,
         subject,
         html: personalize(emailHtml, subscriber.id ?? ''),
@@ -74,11 +62,10 @@ export async function sendToAll(subscribers, ctx) {
 }
 
 export async function sendPreviewEmail(ctx, previewUrl = null) {
-  const transport = createTransport();
+  const resend = new Resend(process.env.RESEND_API_KEY);
   const emailHtml = readFileSync(path.join(PUBLIC, 'email-latest.html'), 'utf8');
   const baseSubject = extractSubject(emailHtml);
   const subject = `[PREVIEW] ${baseSubject}`;
-  const from = `The Frequency <${process.env.GMAIL_FROM_ADDRESS}>`;
 
   const previewBanner = previewUrl
     ? `<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-family:sans-serif;font-size:14px;">
@@ -91,13 +78,10 @@ export async function sendPreviewEmail(ctx, previewUrl = null) {
         This is a Monday preview. The issue goes live Tuesday 09:00 Lisbon.
       </div>`;
 
-  const previewHtml = emailHtml.replace('<body', '<body').replace(
-    /<body[^>]*>/,
-    match => match + previewBanner
-  );
+  const previewHtml = emailHtml.replace(/<body[^>]*>/, match => match + previewBanner);
 
-  await transport.sendMail({
-    from,
+  await resend.emails.send({
+    from: FROM,
     to: 'lilitalent@gmail.com',
     subject,
     html: previewHtml,

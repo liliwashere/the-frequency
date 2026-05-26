@@ -37,10 +37,7 @@ jobs:
           CF_PROJECT_NAME: the-frequency
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
-          GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
-          GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
-          GMAIL_FROM_ADDRESS: ${{ secrets.GMAIL_FROM_ADDRESS }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           PREVIEW_MODE: 'true'
         run: node publish.js
