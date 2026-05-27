@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /email-latest.html
 
 Sitemap: https://thefrequency.lilitarutyunyan.com/sitemap.xml

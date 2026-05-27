@@ -106,7 +106,7 @@ function uniqueAuthors(articles) {
   return [...new Set(articles.map(a => a.author).filter(Boolean))];
 }
 
-function renderFullIssue(ctx) {
+function renderFullIssue(ctx, { forHomepage = false } = {}) {
   const ep = ctx.editors_pick;
   const rest = ctx.articles.filter(a => !a.editors_pick);
 
@@ -399,46 +399,103 @@ function renderFullIssue(ctx) {
 
   const categoryPanels = activeTabs.map(renderCategoryPanel).join('\n  ');
 
-  const issueUrl = ctx.issue_number === 1
-    ? `${DS.siteUrl}/`
-    : `${DS.siteUrl}/issue-${ctx.issue_number}`;
-  const ogDesc = ep
-    ? `${ep.title.slice(0, 120)} — plus ${ctx.articles.length - 1} more. Curated AI thinking, every Tuesday.`
-    : 'Curated AI thinking every Tuesday. Real builders, honest takes, zero hype.';
+  const issueUrl = `${DS.siteUrl}/issue-${ctx.issue_number}`;
+  const canonicalUrl = forHomepage ? `${DS.siteUrl}/` : issueUrl;
+  const dateStr = new Date().toISOString().split('T')[0];
+
+  // Titles — keyword-rich, lead with the substance
+  const headlineShort = ctx.issue_headline
+    ? (ctx.issue_headline.length > 65 ? ctx.issue_headline.slice(0, 62) + '…' : ctx.issue_headline)
+    : null;
+  const pageTitle = forHomepage
+    ? 'The Frequency — Weekly AI Digest for Practitioners and Teams'
+    : headlineShort
+      ? `${headlineShort} | The Frequency #${ctx.issue_number}`
+      : `The Frequency #${ctx.issue_number} — ${e(ctx.date)} | Weekly AI Digest`;
+
+  // Descriptions — written for humans clicking from search, not robots
+  const siteDesc = 'The Frequency curates what matters in AI — original research, builder insights, and strategic analysis. For product managers, engineers, and decision-makers. Every Tuesday.';
+  const issueDesc = ctx.issue_headline
+    ? `This week in AI: ${ctx.issue_headline}. Curated for practitioners and teams — zero hype, real signal. Every Tuesday.`
+    : ep
+      ? `${ep.title.slice(0, 100)} — plus ${ctx.articles.length - 1} more stories. Curated AI thinking for practitioners and teams. Every Tuesday.`
+      : siteDesc;
+  const ogDesc = forHomepage ? siteDesc : issueDesc;
+
+  // Schema.org — BlogPosting for issue pages, WebSite + BlogPosting for homepage
+  const schemaAuthor = `{ "@type": "Person", "name": "Lilit Arutyunyan", "url": "https://lilitarutyunyan.com", "sameAs": ["https://lilitarutyunyan.com"] }`;
+  const schemaBlogPosting = `{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "name": "The Frequency #${ctx.issue_number}",
+    "headline": "${e(ctx.issue_headline || ep?.title || '')}",
+    "datePublished": "${dateStr}",
+    "dateModified": "${dateStr}",
+    "url": "${issueUrl}",
+    "description": "${e(issueDesc)}",
+    "author": ${schemaAuthor},
+    "publisher": {
+      "@type": "Organization",
+      "name": "The Frequency",
+      "url": "${DS.siteUrl}",
+      "logo": { "@type": "ImageObject", "url": "${DS.siteUrl}/logo-512.png", "width": 512, "height": 512 }
+    },
+    "mainEntityOfPage": { "@type": "WebPage", "@id": "${issueUrl}" },
+    "isPartOf": { "@type": "Blog", "name": "The Frequency", "url": "${DS.siteUrl}" },
+    "about": [
+      { "@type": "Thing", "name": "Artificial Intelligence" },
+      { "@type": "Thing", "name": "Machine Learning" },
+      { "@type": "Thing", "name": "AI Tools" }
+    ],
+    "keywords": "AI news, artificial intelligence, weekly digest, AI tools, machine learning, product management"
+  }`;
+  const schemaWebSite = `{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "The Frequency",
+    "url": "${DS.siteUrl}",
+    "description": "${e(siteDesc)}",
+    "inLanguage": "en",
+    "author": ${schemaAuthor},
+    "about": { "@type": "Thing", "name": "Artificial Intelligence" }
+  }`;
+  const jsonLd = forHomepage
+    ? `[\n  ${schemaWebSite},\n  ${schemaBlogPosting}\n]`
+    : schemaBlogPosting;
+
+  // Article OG tags (for issue pages only — helps news aggregators pick up the content)
+  const articleOg = forHomepage ? '' : `
+  <meta property="article:author" content="https://lilitarutyunyan.com" />
+  <meta property="article:published_time" content="${dateStr}T09:00:00+01:00" />
+  <meta property="article:section" content="Technology" />
+  <meta property="article:tag" content="Artificial Intelligence" />
+  <meta property="article:tag" content="AI Tools" />
+  <meta property="article:tag" content="Machine Learning" />`;
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}</title>
+  <title>${e(pageTitle)}</title>
   <meta name="description" content="${e(ogDesc)}" />
-  <link rel="canonical" href="${issueUrl}" />
+  <meta name="author" content="Lilit Arutyunyan" />
+  <link rel="canonical" href="${canonicalUrl}" />
   <meta property="og:site_name" content="The Frequency" />
-  <meta property="og:title" content="The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}" />
+  <meta property="og:title" content="${e(pageTitle)}" />
   <meta property="og:description" content="${e(ogDesc)}" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="${issueUrl}" />
+  <meta property="og:type" content="${forHomepage ? 'website' : 'article'}" />
+  <meta property="og:url" content="${canonicalUrl}" />
   <meta property="og:image" content="${DS.siteUrl}/logo-512.png" />
   <meta property="og:image:width" content="512" />
   <meta property="og:image:height" content="512" />
-  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale" content="en_US" />${articleOg}
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="The Frequency — Issue #${ctx.issue_number} · ${e(ctx.date)}" />
+  <meta name="twitter:title" content="${e(pageTitle)}" />
   <meta name="twitter:description" content="${e(ogDesc)}" />
   <meta name="twitter:image" content="${DS.siteUrl}/logo-512.png" />
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "NewsletterIssue",
-    "name": "The Frequency — Issue #${ctx.issue_number}",
-    "headline": "${e(ctx.issue_headline || ep?.title || '')}",
-    "datePublished": "${new Date().toISOString().split('T')[0]}",
-    "url": "${issueUrl}",
-    "description": "${e(ogDesc)}",
-    "publisher": { "@type": "Person", "name": "Lilit Arutyunyan", "url": "https://lilitarutyunyan.com" },
-    "isPartOf": { "@type": "Periodical", "name": "The Frequency", "url": "${DS.siteUrl}" }
-  }
+  ${jsonLd}
   </script>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
@@ -784,9 +841,12 @@ function renderFullIssue(ctx) {
 // ── Public API ────────────────────────────────────────────────────────────────
 
 export function generateIssue(ctx) {
-  const html = renderFullIssue(ctx);
-  writeFileSync(path.join(PUBLIC, 'index.html'), html, 'utf8');
-  writeFileSync(path.join(PUBLIC, `issue-${ctx.issue_number}.html`), html, 'utf8');
+  // index.html: canonical → / (homepage SEO)
+  // issue-N.html: canonical → /issue-N (permalink SEO)
+  const homeHtml = renderFullIssue(ctx, { forHomepage: true });
+  const issueHtml = renderFullIssue(ctx, { forHomepage: false });
+  writeFileSync(path.join(PUBLIC, 'index.html'), homeHtml, 'utf8');
+  writeFileSync(path.join(PUBLIC, `issue-${ctx.issue_number}.html`), issueHtml, 'utf8');
   console.log(`[generate] Wrote index.html and issue-${ctx.issue_number}.html`);
   updateSitemap(ctx);
 }
