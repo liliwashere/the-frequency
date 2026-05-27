@@ -20,12 +20,45 @@ const DS = {
 
 const CATEGORIES = ['Builders', 'Research', 'AI × Business', 'Tools'];
 
-// Tab config: id, label, dot color, card accent color, icon emoji, icon bg
+// ── SVG Icon library (Lucide-style, inline, zero dependency) ─────────────────
+const ICON = {
+  // Header logo — EQ/frequency waveform
+  logo: `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><g stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="3" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="11" y1="4" x2="11" y2="20"/><line x1="15" y1="7" x2="15" y2="17"/><line x1="19" y1="10" x2="19" y2="14"/><line x1="21" y1="12" x2="21" y2="12"/></g></svg>`,
+  // Buttons
+  archive: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="M10 12h4"/></svg>`,
+  share:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16,6 12,2 8,6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>`,
+  // Section labels
+  calendar: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>`,
+  star:     `<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
+  bolt:     `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>`,
+  signal:   `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.4"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.4"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg>`,
+  // Category card icons (18×18)
+  code:       `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16,18 22,12 16,6"/><polyline points="8,6 2,12 8,18"/></svg>`,
+  atom:       `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5z"/></svg>`,
+  briefcase:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="14" x="2" y="7" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>`,
+  cpu:        `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" x2="9" y1="1" y2="4"/><line x1="15" x2="15" y1="1" y2="4"/><line x1="9" x2="9" y1="20" y2="23"/><line x1="15" x2="15" y1="20" y2="23"/><line x1="20" x2="23" y1="9" y2="9"/><line x1="20" x2="23" y1="14" y2="14"/><line x1="1" x2="4" y1="9" y2="9"/><line x1="1" x2="4" y1="14" y2="14"/></svg>`,
+  // Podcast thumbnails (28×28)
+  headphones: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>`,
+  mic:        `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="23"/><line x1="8" x2="16" y1="23" y2="23"/></svg>`,
+  radio:      `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.4"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.4"/><path d="M19.1 4.9C23 8.8 23 15.2 19.1 19.1"/></svg>`,
+  podcast:    `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="11" r="1"/><path d="M11 17a1 1 0 0 1 2 0c0 .5-.34 3-.5 4.5a.5.5 0 0 1-1 0c-.16-1.5-.5-4-.5-4.5Z"/><path d="M8 14a5 5 0 1 1 8 0"/><path d="M17 18.5a9 9 0 1 0-10 0"/></svg>`,
+  // Panel banners (24×24)
+  users:      `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  globe:      `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+  // Source pill icons (16×16)
+  newspaper:  `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg>`,
+  flask:      `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6"/><path d="M14 3v4.3l4.85 8.14a1 1 0 0 1-.85 1.56H5.98a1 1 0 0 1-.85-1.56L10 7.3V3"/></svg>`,
+  blog:       `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>`,
+  link:       `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+  pencil:     `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>`,
+};
+
+// Tab config: id, label, dot color, accent, SVG icon, icon bg/color
 const CATEGORY_TAB = {
-  'Builders':      { id: 'builders', dot: '#16a34a', accent: '#16a34a', icon: '🛠️', iconBg: '#f0faf3', tagClass: 'tag green' },
-  'Research':      { id: 'research', dot: '#2563eb', accent: '#2563eb', icon: '🔬', iconBg: '#eff6ff', tagClass: 'tag blue'  },
-  'AI × Business': { id: 'business', dot: '#dc2626', accent: '#dc2626', icon: '💼', iconBg: '#fff1f1', tagClass: 'tag red'   },
-  'Tools':         { id: 'tools',    dot: '#ea580c', accent: '#ea580c', icon: '⚡', iconBg: '#fff8ef', tagClass: 'tag orange' },
+  'Builders':      { id: 'builders', dot: '#16a34a', accent: '#16a34a', icon: ICON.code,      iconBg: '#f0faf3', iconColor: '#16a34a', tagClass: 'tag green' },
+  'Research':      { id: 'research', dot: '#2563eb', accent: '#2563eb', icon: ICON.atom,      iconBg: '#eff6ff', iconColor: '#2563eb', tagClass: 'tag blue'  },
+  'AI × Business': { id: 'business', dot: '#dc2626', accent: '#dc2626', icon: ICON.briefcase, iconBg: '#fff1f1', iconColor: '#dc2626', tagClass: 'tag red'   },
+  'Tools':         { id: 'tools',    dot: '#ea580c', accent: '#ea580c', icon: ICON.cpu,       iconBg: '#fff8ef', iconColor: '#ea580c', tagClass: 'tag orange' },
 };
 
 const LANG_FLAGS = {
@@ -134,9 +167,10 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
 
   function cardIconHtml(article, purpleBg) {
     const tab = CATEGORY_TAB[article.category];
-    const icon = tab?.icon ?? '📄';
+    const icon = tab?.icon ?? ICON.pencil;
     const bg = purpleBg ? '#f0edff' : (tab?.iconBg ?? '#f0edff');
-    return '<div class="card-icon" style="background:' + bg + '">' + icon + '</div>';
+    const color = purpleBg ? '#6c47ff' : (tab?.iconColor ?? '#6c47ff');
+    return '<div class="card-icon" style="background:' + bg + ';color:' + color + '">' + icon + '</div>';
   }
 
   function cardSourceLine(a) {
@@ -149,7 +183,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     if (!arts.length) return '';
     const tab = CATEGORY_TAB[cat] ?? {};
     const panelId = tab.id ?? cat.replace(/[^a-zA-Z0-9]/g, '-');
-    const sectionIcon = tab.icon ?? '📋';
+    const sectionIcon = tab.icon ?? ICON.pencil;
     const filterSources = [...new Set(arts.map(a => a.source).filter(Boolean))].slice(0, 5);
     const filterBtns = [
       '<button class="filter-btn active" onclick="filterCards(this,\'all\',\'' + panelId + '\')">All</button>',
@@ -193,21 +227,22 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
 
   const authorsPanel = authorList.length ? `<div class="panel" id="panel-authors">
     <div class="schedule-banner">
-      <div class="schedule-icon">✍️</div>
+      <div class="schedule-icon">${ICON.users}</div>
       <div>
         <div class="schedule-title">${authorList.length} author${authorList.length !== 1 ? 's' : ''} on the radar — growing each issue</div>
         <div class="schedule-sub">Only people who build things, have skin in the game, or do original research. No aggregators.</div>
       </div>
     </div>
-    <div class="section-label">👥 Who we track</div>
+    <div class="section-label">${ICON.users} Who we track</div>
     <div class="author-grid">
       ${authorList.map(a => {
         const bg = avatarBg(a.articles);
-        const catEmoji = CATEGORY_TAB[a.articles[0]?.category]?.icon ?? '✍️';
+        const catIcon = CATEGORY_TAB[a.articles[0]?.category]?.icon ?? ICON.pencil;
+        const catIconColor = CATEGORY_TAB[a.articles[0]?.category]?.iconColor ?? '#6c47ff';
         const handle = a.author_url ? (() => { try { return new URL(a.author_url).hostname.replace(/^www\./, ''); } catch { return ''; } })() : '';
         return '<div class="author-card">'
           + '<div class="author-top">'
-          + '<div class="author-avatar" style="background:' + bg + '">' + catEmoji + '</div>'
+          + '<div class="author-avatar" style="background:' + bg + ';color:' + catIconColor + '">' + catIcon + '</div>'
           + '<div>'
           + '<div class="author-name">' + e(a.author) + '</div>'
           + (handle ? '<div class="author-handle">' + e(handle) + '</div>' : '')
@@ -222,7 +257,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
           + '</div>';
       }).join('\n      ')}
     </div>
-    <div class="section-label">💡 Who should be added next?</div>
+    <div class="section-label">${ICON.signal} Who should be added next?</div>
     <div class="card" style="cursor:default">
       <div class="card-body">
         Each issue, Claude scouts for new voices to add — filtering for: real skin in the game, original thinking (not aggregation), and content you couldn't get from reading a summary. Priority watchlist: <strong>Chip Huyen</strong> (ML systems at scale), <strong>Vicki Boykis</strong> (ML engineering, honest takes), <strong>Simon Willison</strong> (Django co-creator, practical AI tools), <strong>Ethan Mollick</strong> (Wharton researcher on AI adoption), and voices from Africa, Southeast Asia, and Latin America covering AI from the ground up.
@@ -242,34 +277,34 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
   };
 
   const SOURCE_META = {
-    'wired.com':              { icon: '📡', type: 'Publication · Tech journalism' },
-    'arstechnica.com':        { icon: '🔬', type: 'Publication · Tech analysis' },
-    'technologyreview.com':   { icon: '🔬', type: 'MIT Technology Review' },
-    'simonwillison.net':      { icon: '📝', type: 'Blog · Technical AI' },
-    'eugeneyan.com':          { icon: '🧠', type: 'Blog · ML engineering' },
-    'interconnects.ai':       { icon: '🔗', type: 'Newsletter · AI research' },
-    'latent.space':           { icon: '🚀', type: 'Podcast + Blog · AI engineering' },
-    'huyenchip.com':          { icon: '🌏', type: 'Blog · ML systems' },
-    'stratechery.com':        { icon: '📊', type: 'Newsletter · Tech strategy' },
-    'paulgraham.com':         { icon: '✍️', type: 'Essays · YC co-founder' },
-    'oneusefulthing.org':     { icon: '🎓', type: 'Newsletter · AI research' },
-    'blog.matt-rickard.com':  { icon: '⚙️', type: 'Blog · AI engineering' },
-    'techcabal.com':          { icon: '🌍', type: 'Publication · Africa tech' },
-    'techinasia.com':         { icon: '🌏', type: 'Publication · Asia tech' },
-    'restofworld.org':        { icon: '🌐', type: 'Publication · Global tech' },
-    'analyticsindiamag.com':  { icon: '🇮🇳', type: 'Publication · India AI' },
-    'huggingface.co':         { icon: '🤗', type: 'Platform · ML community' },
-    'arxiv.org':              { icon: '📄', type: 'Preprint · Research' },
-    'substack.com':           { icon: '📧', type: 'Newsletter platform' },
-    'every.to':               { icon: '💡', type: 'Bundle · AI writing' },
-    'zenn.dev':               { icon: '🇯🇵', type: 'Platform · Japanese tech' },
-    'habr.com':               { icon: '🇷🇺', type: 'Community · Russian tech' },
-    'thegradient.pub':        { icon: '📐', type: 'Publication · ML research' },
-    'swyx.io':                { icon: '🚀', type: 'Blog · AI engineering' },
-    'levels.io':              { icon: '🌍', type: 'Blog · Solo founder' },
-    'vickiboykis.com':        { icon: '🔬', type: 'Blog · ML engineering' },
-    'sebastianraschka.com':   { icon: '📐', type: 'Blog · ML research' },
-    'hamel.dev':              { icon: '⚙️', type: 'Blog · LLM engineering' },
+    'wired.com':              { icon: ICON.newspaper, type: 'Publication · Tech journalism' },
+    'arstechnica.com':        { icon: ICON.flask,     type: 'Publication · Tech analysis' },
+    'technologyreview.com':   { icon: ICON.flask,     type: 'MIT Technology Review' },
+    'simonwillison.net':      { icon: ICON.blog,      type: 'Blog · Technical AI' },
+    'eugeneyan.com':          { icon: ICON.blog,      type: 'Blog · ML engineering' },
+    'interconnects.ai':       { icon: ICON.link,      type: 'Newsletter · AI research' },
+    'latent.space':           { icon: ICON.podcast,   type: 'Podcast + Blog · AI engineering' },
+    'huyenchip.com':          { icon: ICON.blog,      type: 'Blog · ML systems' },
+    'stratechery.com':        { icon: ICON.newspaper, type: 'Newsletter · Tech strategy' },
+    'paulgraham.com':         { icon: ICON.pencil,    type: 'Essays · YC co-founder' },
+    'oneusefulthing.org':     { icon: ICON.pencil,    type: 'Newsletter · AI research' },
+    'blog.matt-rickard.com':  { icon: ICON.blog,      type: 'Blog · AI engineering' },
+    'techcabal.com':          { icon: ICON.globe,     type: 'Publication · Africa tech' },
+    'techinasia.com':         { icon: ICON.globe,     type: 'Publication · Asia tech' },
+    'restofworld.org':        { icon: ICON.globe,     type: 'Publication · Global tech' },
+    'analyticsindiamag.com':  { icon: ICON.newspaper, type: 'Publication · India AI' },
+    'huggingface.co':         { icon: ICON.cpu,       type: 'Platform · ML community' },
+    'arxiv.org':              { icon: ICON.flask,     type: 'Preprint · Research' },
+    'substack.com':           { icon: ICON.pencil,    type: 'Newsletter platform' },
+    'every.to':               { icon: ICON.pencil,    type: 'Bundle · AI writing' },
+    'zenn.dev':               { icon: ICON.blog,      type: 'Platform · Japanese tech' },
+    'habr.com':               { icon: ICON.blog,      type: 'Community · Russian tech' },
+    'thegradient.pub':        { icon: ICON.flask,     type: 'Publication · ML research' },
+    'swyx.io':                { icon: ICON.blog,      type: 'Blog · AI engineering' },
+    'levels.io':              { icon: ICON.blog,      type: 'Blog · Solo founder' },
+    'vickiboykis.com':        { icon: ICON.flask,     type: 'Blog · ML engineering' },
+    'sebastianraschka.com':   { icon: ICON.flask,     type: 'Blog · ML research' },
+    'hamel.dev':              { icon: ICON.blog,      type: 'Blog · LLM engineering' },
   };
 
   const articlesPerSource = {};
@@ -283,18 +318,18 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
 
   const sourcesPanel = `<div class="panel" id="panel-sources">
     <div class="schedule-banner">
-      <div class="schedule-icon">📬</div>
+      <div class="schedule-icon">${ICON.globe}</div>
       <div>
         <div class="schedule-title">${sources.length} source${sources.length !== 1 ? 's' : ''} this issue</div>
         <div class="schedule-sub">Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
       </div>
     </div>
-    <div class="section-label">📡 Active sources</div>
+    <div class="section-label">${ICON.signal} Active sources</div>
     <div class="sources-grid">
       ${sources.map(src => {
         const srcLower = src.toLowerCase().replace(/^www\./, '');
         const domainKey = SOURCE_NAME_MAP[srcLower] ?? srcLower;
-        const meta = SOURCE_META[domainKey] ?? { icon: '📰', type: 'This issue' };
+        const meta = SOURCE_META[domainKey] ?? { icon: ICON.newspaper, type: 'This issue' };
         const count = articlesPerSource[src] ?? 0;
         const hotClass = count >= 2 ? ' hot' : '';
         const href = sourceUrlMap[src] ?? ('https://' + domainKey);
@@ -307,7 +342,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       </a>`;
       }).join('\n      ')}
     </div>
-    <div class="section-label">🚫 What's excluded and why</div>
+    <div class="section-label">${ICON.bolt} What's excluded and why</div>
     <div class="card" style="cursor:default">
       <div class="card-body">
         <strong>Out:</strong> LinkedIn posts recycling TechCrunch · "AI will replace X" think pieces with no data · Newsletter aggregators summarising other newsletters · "I asked ChatGPT to write this" posts · Press releases dressed as blog posts · Top-10 AI tools listicles where the author hasn't used them.<br><br>
@@ -325,7 +360,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       desc: 'swyx and Alessio interview the engineers actually building frontier systems — not the comms teams. 175+ episodes, zero fluff. Their AI for Science arc and the Claude Code Anonymous episode are essential listening for anyone shipping with LLMs.',
       meta: '⏱ ~60 min · AI engineers + builders · 175+ eps',
       gradient: 'linear-gradient(135deg,#0f172a,#1e3a5f)',
-      emoji: '🚀',
+      icon: ICON.headphones,
       tags: ['Engineering', 'Builders'],
     },
     {
@@ -333,9 +368,9 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       host: 'How I AI · Claire Vo · Lenny\'s spinoff',
       title: 'Real AI workflows, live screen shares — the format every podcast should steal',
       desc: '30-minute episodes with practitioners showing their actual AI setup on screen. No scripted hot takes — just what people actually do day to day. Best for product people and builders who learn by watching, not reading.',
-      meta: '⏱ ~30 min · Product + builder audience',
+      meta: '~30 min · Product + builder audience',
       gradient: 'linear-gradient(135deg,#6c47ff,#a855f7)',
-      emoji: '🎧',
+      icon: ICON.mic,
       tags: ['Workflows', 'Product'],
     },
     {
@@ -343,9 +378,9 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       host: 'No Priors · Elad Gil & Sarah Guo',
       title: 'The most technically honest AI investor podcast',
       desc: 'Elad Gil and Sarah Guo don\'t softball. Episodes with Nat Friedman, Daniel Gross, and leading researchers speak plainly about what AI actually can and can\'t do. No "AI will change everything" non-answers — just sharp investor-grade thinking.',
-      meta: '⏱ ~45 min · Founders + researchers',
+      meta: '~45 min · Founders + researchers',
       gradient: 'linear-gradient(135deg,#1a1a2e,#16213e)',
-      emoji: '🧠',
+      icon: ICON.radio,
       tags: ['Research', 'Strategy'],
     },
     {
@@ -353,19 +388,19 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       host: 'TWIML AI Podcast · Sam Charrington',
       title: 'Deep technical interviews with ML researchers and practitioners',
       desc: 'Sam Charrington has been running TWIML (This Week in Machine Learning & AI) since 2016 — one of the longest-running ML podcasts with serious technical depth. Best for following research trends: papers, benchmarks, and practitioner case studies that don\'t make headlines.',
-      meta: '⏱ ~60 min · ML researchers + engineers',
+      meta: '~60 min · ML researchers + engineers',
       gradient: 'linear-gradient(135deg,#0f4c75,#1b262c)',
-      emoji: '🎙️',
+      icon: ICON.podcast,
       tags: ['Research', 'ML depth'],
     },
   ];
 
   const podcastsPanel = `<div class="panel" id="panel-pods">
-    <div class="section-label">🎙️ Shows worth your time</div>
+    <div class="section-label">${ICON.podcast} Shows worth your time</div>
     ${PODCAST_PICKS.map(p => `<div class="card clickable" onclick="window.open('${e(p.url)}','_blank')">
       <div class="card-accent" style="background:#ea580c"></div>
       <div class="ep-card">
-        <div class="ep-thumb" style="background:${p.gradient}">${p.emoji}</div>
+        <div class="ep-thumb" style="background:${p.gradient};color:rgba(255,255,255,0.9)">${p.icon}</div>
         <div class="ep-info">
           <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">${e(p.host)}</div>
           <div class="ep-title">${e(p.title)}</div>
@@ -523,14 +558,37 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       --muted: #555;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    /* ── IRIDESCENT BACKGROUND ── */
+    @keyframes iridescentFlow {
+      0%   { background-position: 0% center; }
+      100% { background-position: 200% center; }
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #FF2A8510, #00D4FF0a, #9D00FF10, #FF2A8508);
+      background-size: 200% auto;
+      animation: iridescentFlow 10s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .header, .tabs-bar, .main, .footer { position: relative; z-index: 1; }
     a { color: var(--purple); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
     /* ── HEADER ── */
     .header { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; gap: 12px; flex-wrap: wrap; }
     .header-left { display: flex; align-items: center; gap: 12px; }
-    .logo { width: 38px; height: 38px; background: linear-gradient(135deg, #6c47ff, #a855f7); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; flex-shrink: 0; }
+    .logo { width: 38px; height: 38px; background: linear-gradient(135deg, #FF2A85, #9D00FF, #00D4FF, #FF2A85); background-size: 200% auto; animation: iridescentFlow 4s linear infinite; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .header-title { font-size: 17px; font-weight: 700; color: #111; }
     .header-sub { font-size: 12px; color: var(--gray); margin-top: 1px; }
     .header-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -558,8 +616,9 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     .panel.active { display: block; }
 
     /* ── LABELS ── */
-    .section-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #aaa; margin-bottom: 14px; margin-top: 28px; }
+    .section-label { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #aaa; margin-bottom: 14px; margin-top: 28px; }
     .section-label:first-child { margin-top: 0; }
+    .section-label svg { width: 13px; height: 13px; flex-shrink: 0; }
 
     /* ── CARDS ── */
     .card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin-bottom: 12px; position: relative; overflow: hidden; transition: box-shadow 0.15s, border-color 0.15s; }
@@ -607,7 +666,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     .source-pill { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 11px 13px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; text-decoration: none; }
     .source-pill:hover { border-color: var(--purple-mid); box-shadow: 0 2px 8px rgba(108,71,255,0.08); }
     .source-pill.hot { border-color: var(--purple-mid); background: var(--purple-light); }
-    .source-pill-icon { font-size: 20px; }
+    .source-pill-icon { display: flex; align-items: center; flex-shrink: 0; }
     .source-pill-name { font-size: 13px; font-weight: 600; color: #111; }
     .source-pill-type { font-size: 11px; color: #aaa; }
 
@@ -616,7 +675,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     .author-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 16px; transition: box-shadow 0.15s, border-color 0.15s; }
     .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: var(--purple-mid); }
     .author-top { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
-    .author-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800; color: #fff; flex-shrink: 0; }
+    .author-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .author-name { font-size: 14px; font-weight: 700; color: #111; }
     .author-handle { font-size: 11px; color: #aaa; margin-top: 1px; }
     .author-bio { font-size: 12.5px; color: #666; line-height: 1.5; margin-bottom: 8px; }
@@ -626,7 +685,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
 
     /* ── PODCAST CARD ── */
     .ep-card { display: flex; gap: 14px; align-items: flex-start; }
-    .ep-thumb { width: 64px; height: 64px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+    .ep-thumb { width: 64px; height: 64px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .ep-info { flex: 1; min-width: 0; }
     .ep-title { font-size: 14.5px; font-weight: 650; color: #111; line-height: 1.3; }
     .ep-desc { font-size: 13px; color: #666; margin-top: 5px; line-height: 1.5; }
@@ -634,7 +693,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
 
     /* ── SCHEDULE BANNER ── */
     .schedule-banner { background: linear-gradient(135deg, var(--purple), #9333ea); border-radius: 12px; padding: 16px 20px; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; }
-    .schedule-icon { font-size: 28px; flex-shrink: 0; }
+    .schedule-icon { flex-shrink: 0; display: flex; align-items: center; }
     .schedule-title { font-size: 14px; font-weight: 700; }
     .schedule-sub { font-size: 12px; opacity: 0.8; margin-top: 2px; }
 
@@ -674,7 +733,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
-    <div class="logo">🧠</div>
+    <div class="logo">${ICON.logo}</div>
     <div>
       <div class="header-title">The Frequency</div>
       <div class="header-sub">Lilit's curated digest · Every Tuesday</div>
@@ -682,8 +741,8 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
   </div>
   <div class="header-right">
     <div class="issue-badge">Issue #${ctx.issue_number} · ${e(ctx.date)}</div>
-    <a class="archive-btn" href="${DS.siteUrl}/archive.html">📂 Archive</a>
-    <button class="share-btn" onclick="shareDigest()">↗ Share digest</button>
+    <a class="archive-btn" href="${DS.siteUrl}/archive.html">${ICON.archive} Archive</a>
+    <button class="share-btn" onclick="shareDigest()">${ICON.share} Share digest</button>
   </div>
 </div>
 
@@ -698,7 +757,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
   <!-- ══ OVERVIEW ══ -->
   <div class="panel active" id="panel-overview">
     <div class="date-banner">
-      📅 <strong>${e(ctx.date)}</strong> — Next issue ${e(ctx.next_date)}. Curated from ${sources.length} sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="${DS.siteUrl}/archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
+      ${ICON.calendar} <strong>${e(ctx.date)}</strong> — Next issue ${e(ctx.next_date)}. Curated from ${sources.length} sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="${DS.siteUrl}/archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
     </div>
     <div class="stat-strip">
       <div class="stat-box"><div class="stat-number">${ctx.articles.length}</div><div class="stat-label">Stories this issue</div></div>
@@ -707,7 +766,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       <div class="stat-box"><div class="stat-number">${authorList.length || activeTabs.length}</div><div class="stat-label">Authors on radar</div></div>
     </div>
 
-    <div class="section-label">🔥 Editor's pick</div>
+    <div class="section-label">${ICON.star} Editor's pick</div>
     <div class="card featured clickable" onclick="window.open('${e(ep.url)}','_blank')">
       <div class="featured-badge">✦ Must read</div>
       <div class="card-header">
@@ -724,7 +783,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       </div>
     </div>
 
-    <div class="section-label">⚡ Quick hits</div>
+    <div class="section-label">${ICON.bolt} Quick hits</div>
 
     ${rest.map(a => `<div class="card clickable" onclick="window.open('${e(a.url)}','_blank')">
       <div class="card-accent" style="${cardAccentStyle(a.category)}"></div>
@@ -1002,7 +1061,7 @@ export function updateArchive(ctx) {
   const headline = ctx.issue_headline
     || `${ctx.editors_pick.title.slice(0, 60)}${ctx.editors_pick.title.length > 60 ? '…' : ''}`;
 
-  const newCard = `<a class="issue-card" href="${DS.siteUrl}/issue-${ctx.issue_number}.html">
+  const newCard = `<a class="issue-card" href="${DS.siteUrl}/issue-${ctx.issue_number}">
     <div class="issue-num">#${ctx.issue_number}</div>
     <div class="issue-info">
       <div class="issue-date">${e(ctx.date)} <span class="current-badge">● Latest</span></div>
@@ -1068,11 +1127,20 @@ export function updateArchive(ctx) {
     const list = root.querySelector('#issues-list');
     if (!list) throw new Error('[generate] archive.html is missing #issues-list div');
 
+    // Remove any existing card(s) for this issue number (prevents duplicates from reruns)
+    const existingCards = list.querySelectorAll('a.issue-card');
+    for (const card of existingCards) {
+      const href = card.getAttribute('href') || '';
+      if (href.includes(`/issue-${ctx.issue_number}`)) {
+        card.remove();
+      }
+    }
+
     // Strip "current" badge from previously-latest card
     const prevBadge = list.querySelector('.current-badge');
     if (prevBadge) prevBadge.remove();
 
-    // Prepend new card
+    // Prepend new card (latest always first)
     list.set_content(newCard + '\n  ' + list.innerHTML);
 
     // Update issue count in stats pill

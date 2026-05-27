@@ -390,7 +390,7 @@
   </div>
   <div class="header-right">
     <div class="issue-badge">Issue #2 · May 23, 2026</div>
-    <a class="archive-btn" onclick="switchTab('archive')">📂 Archive</a>
+    <a class="archive-btn" href="https://thefrequency.lilitarutyunyan.com/archive.html">📂 Archive</a>
     <button class="share-btn" onclick="shareDigest()">
       ↗ Share digest
     </button>
@@ -420,9 +420,6 @@
   <div class="tab" onclick="switchTab('sources')" data-tab="sources">
     <span class="tab-dot" style="background:#888"></span> Sources
   </div>
-  <div class="tab" onclick="switchTab('archive')" data-tab="archive">
-    <span class="tab-dot" style="background:#a855f7"></span> Archive
-  </div>
 </div>
 
 <!-- MAIN -->
@@ -431,7 +428,7 @@
   <!-- ══ OVERVIEW ══ -->
   <div class="panel active" id="panel-overview">
     <div class="date-banner">
-      📅 <strong>Saturday, May 23 2026</strong> — Next issue Tuesday. Curated from 19 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a onclick="switchTab('archive')" style="color:var(--purple);font-weight:600;text-decoration:none;cursor:pointer">Browse past issues →</a>
+      📅 <strong>Saturday, May 23 2026</strong> — Next issue Tuesday. Curated from 19 sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="https://thefrequency.lilitarutyunyan.com/archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
     </div>
     <div class="stat-strip">
       <div class="stat-box"><div class="stat-number">10</div><div class="stat-label">Stories this issue</div></div>
@@ -1145,58 +1142,6 @@
     </div>
   </div>
 
-  <!-- ══ ARCHIVE ══ -->
-  <div class="panel" id="panel-archive">
-    <div class="schedule-banner">
-      <div class="schedule-icon">📂</div>
-      <div>
-        <div class="schedule-title">Past issues</div>
-        <div class="schedule-sub">Every issue, archived. New issues every Tuesday & Thursday at 9am. No repeats — each issue is fresh from the last 4 days.</div>
-      </div>
-    </div>
-
-    <div class="section-label">🗂️ Issue archive</div>
-
-    <div class="card clickable" onclick="location.href='./issue-2.html'">
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0edff">📰</div>
-        <div class="card-meta">
-          <div class="card-source">Issue #2 · Saturday, May 23 2026 · current</div>
-          <div class="card-title">Infrastructure reality check — Railway's outage & where agent memory lives</div>
-        </div>
-      </div>
-      <div class="card-body">
-        Lead: Railway's 8-hour cascading outage after a GCP account suspension (Jake Cooper). Also: HF's "agent traces are the memory" reframe, Simon Willison's datasette-agent-charts build log, Show HN: Statewright, Tom Aarsen's Ettin reranker family, and HF's Spring 2026 open-source report (China overtakes US in downloads). New authors: Jake Cooper, Tom Aarsen, Ben Cochran.
-      </div>
-      <div class="card-footer">
-        <span class="tag">10 stories</span><span class="tag green">3 new authors</span><span class="tag blue">19 sources</span>
-        <a href="./issue-2.html" style="margin-left:auto;color:var(--purple);font-weight:600;font-size:13px;text-decoration:none">Read →</a>
-      </div>
-    </div>
-
-    <div class="card clickable" onclick="location.href='./issue-1.html'">
-      <div class="card-header">
-        <div class="card-icon" style="background:#f0faf3">📰</div>
-        <div class="card-meta">
-          <div class="card-source">Issue #1 · Thursday, May 14 2026</div>
-          <div class="card-title">Software 3.0 — the launch issue</div>
-        </div>
-      </div>
-      <div class="card-body">
-        Lead: Karpathy's Software 3.0 framework (Sequoia Ascent 2026). Also: Simon Willison on the "zombie internet," Ethan Mollick's "What just happened," Matt Rickard's The Spec Layer, Pieter Levels' solo $3.5M ARR model, Ben Tossell's 2026 stack, and microgpt. Launch roster of 9 authors.
-      </div>
-      <div class="card-footer">
-        <span class="tag">8 stories</span><span class="tag green">9 authors</span><span class="tag blue">17 sources</span>
-        <a href="./issue-1.html" style="margin-left:auto;color:var(--purple);font-weight:600;font-size:13px;text-decoration:none">Read →</a>
-      </div>
-    </div>
-
-    <div class="card" style="cursor:default;background:#fbfaff">
-      <div class="card-body" style="font-size:12.5px;color:#666">
-        <strong>Archive policy:</strong> headlines from past issues are tracked so no story repeats. Each new issue is built only from content published in the prior 4 days.
-      </div>
-    </div>
-  </div>
 
 </div><!-- /main -->
 
