@@ -67,19 +67,11 @@ export function shouldPublishNow(overrideDate = null) {
     return true;
   }
 
-  // workflow_dispatch is an intentional manual or Cloudflare-triggered run.
-  // Skip the time-window check but still enforce the day in weekly mode.
+  // workflow_dispatch is an intentional manual trigger — always run.
+  // The operator knows what day it is; the idempotency guard in publish.js
+  // prevents accidental double-sends on the same calendar day.
   if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
-    console.log('[scheduler] workflow_dispatch detected');
-    if (config.mode === 'weekly') {
-      const tz  = config.timezone || 'Europe/Lisbon';
-      const loc = localParts(overrideDate ?? new Date(), tz);
-      if (loc.weekday !== config.weekly.day.toLowerCase()) {
-        console.log(`[scheduler] workflow_dispatch on wrong day (${loc.weekday}) — skipping`);
-        return false;
-      }
-    }
-    console.log('[scheduler] workflow_dispatch on correct day — running');
+    console.log('[scheduler] workflow_dispatch — running unconditionally');
     return true;
   }
 
@@ -91,9 +83,15 @@ export function shouldPublishNow(overrideDate = null) {
 
   // ── weekly ────────────────────────────────────────────────────────────────
   if (config.mode === 'weekly') {
-    const { day, time } = config.weekly;
-    const match = loc.weekday === day.toLowerCase() && withinWindow(loc, time);
-    if (!match) console.log(`[scheduler] Skipping — not ${day} ${time} ${tz}`);
+    const { day } = config.weekly;
+    // For scheduled runs we check only the weekday, NOT the clock time.
+    // GitHub Actions schedule is unreliable and can fire hours late — a ±35min
+    // window causes silent skips on publish day. The idempotency guard in
+    // publish.js (alreadyPublishedToday) prevents double-sends if both cron
+    // slots (08:00 + 10:00 UTC) fire on the same calendar day.
+    const match = loc.weekday === day.toLowerCase();
+    if (!match) console.log(`[scheduler] Skipping — today is ${loc.weekday}, publish day is ${day}`);
+    else        console.log(`[scheduler] Correct publish day (${day}) — running`);
     return match;
   }
 
