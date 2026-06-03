@@ -18,6 +18,14 @@ function formatDate(date) {
   });
 }
 
+// Returns the nearest Tuesday: upcoming if Mon/Tue, previous if Wed–Sat.
+// Ensures all issues show a Tuesday date regardless of when the pipeline runs.
+function thisOrNextTuesday(from) {
+  const d = new Date(from);
+  d.setDate(d.getDate() + (2 - d.getDay())); // Mon→+1, Tue→0, Wed→-1, Thu→-2…
+  return d;
+}
+
 function nextIssueDate(from) {
   const d = new Date(from);
   const day = d.getDay();
@@ -112,8 +120,9 @@ async function main() {
   console.log('[QA] ─────────────────────────────────────────────────\n');
 
   const editorsPick = curatedArticles.find(a => a.editors_pick);
-  const issueDate = formatDate(now);
-  const nextDate = nextIssueDate(now);
+  const publicationDay = thisOrNextTuesday(now);
+  const issueDate = formatDate(publicationDay);
+  const nextDate = nextIssueDate(publicationDay);
 
   const ctx = {
     issue_number: issueNumber,
