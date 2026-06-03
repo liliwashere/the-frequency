@@ -195,9 +195,16 @@ async function main() {
   let emailResult = null;
   if (subscribers.length > 0) {
     console.log('\n[7/8] Sending emails...');
-    // Filter to subscribers whose local time is currently 9am ± 35min
-    const batch = subscribersInCurrentWindow(subscribers);
-    console.log(`      Timezone window: ${batch.length}/${subscribers.length} subscriber(s) in current 9am window`);
+    // Manual (workflow_dispatch) catch-up sends skip the timezone window and
+    // go to all subscribers immediately — the issue is already overdue.
+    // Scheduled runs use the 9am ± 35min window per subscriber timezone.
+    const isManual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch';
+    const batch = isManual ? subscribers : subscribersInCurrentWindow(subscribers);
+    if (isManual) {
+      console.log(`      Manual send — bypassing timezone window, sending to all ${batch.length} subscriber(s)`);
+    } else {
+      console.log(`      Timezone window: ${batch.length}/${subscribers.length} subscriber(s) in current 9am window`);
+    }
     try {
       emailResult = await sendToAll(batch, ctx);
     } catch (err) {
