@@ -91,9 +91,12 @@ export function shouldPublishNow(overrideDate = null) {
 
   // ── weekly ────────────────────────────────────────────────────────────────
   if (config.mode === 'weekly') {
-    const { day, time } = config.weekly;
-    const match = loc.weekday === day.toLowerCase() && withinWindow(loc, time);
-    if (!match) console.log(`[scheduler] Skipping — not ${day} ${time} ${tz}`);
+    const { day } = config.weekly;
+    // Only check the day for cron-triggered runs — GitHub delays the cron by
+    // up to 60+ minutes, which would fail a tight time-window check. The
+    // alreadyPublishedToday() guard in publish.js handles deduplication.
+    const match = loc.weekday === day.toLowerCase();
+    if (!match) console.log(`[scheduler] Skipping — not ${day} (${tz})`);
     return match;
   }
 
