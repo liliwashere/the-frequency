@@ -99,9 +99,24 @@ Key elements (all required):
 
 ---
 
+## Claude Code on the Web — Session Setup
+
+**Every session working on this repo needs two things:**
+
+### 1. Repository scope
+When starting a new Claude Code web session, make sure `liliwashere/the-frequency` is included in the session's repository scope. If it isn't, load `mcp__claude-code-remote__list_repos` via ToolSearch and call `add_repo` to add it before attempting any GitHub pushes via `mcp__github__push_files`.
+
+### 2. GITHUB_TOKEN secret
+The session-start hook (`.claude/hooks/session-start.sh`) configures git credentials automatically using a `GITHUB_TOKEN` session secret. Without it, `git push` will fail.
+
+To add the secret: **Claude Code on the web → Settings → Secrets → Add `GITHUB_TOKEN`** (a GitHub PAT with `repo` scope for `liliwashere/the-frequency`).
+
+---
+
 ## Environment Variables Required
 
 ```
+GITHUB_TOKEN          — GitHub PAT (repo scope) — for git push from Claude Code sessions
 ANTHROPIC_API_KEY     — Claude API
 TAVILY_API_KEY        — Tavily search
 CF_ACCOUNT_ID         — Cloudflare
