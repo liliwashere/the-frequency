@@ -7,7 +7,7 @@ import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
 import { deploy } from './src/deploy.js';
 import { getSubscribers } from './src/subscribers.js';
 import { sendToAll, sendPreviewEmail } from './src/email.js';
-import { shouldPublishNow, subscribersInCurrentWindow } from './src/scheduler.js';
+import { shouldPublishNow, subscribersInCurrentWindow, isSkippedUntil } from './src/scheduler.js';
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
 const PREVIEW_MODE = process.env.PREVIEW_MODE === 'true';
@@ -27,6 +27,13 @@ function nextIssueDate(from) {
 }
 
 async function main() {
+  // ── Skip-until guard — blocks both publish and preview scheduled runs ──
+  // workflow_dispatch bypasses this (manual triggers are intentional).
+  if (!DRY_RUN && process.env.GITHUB_EVENT_NAME !== 'workflow_dispatch' && isSkippedUntil()) {
+    console.log('\n[skip_until] Skipping — skip_until date not yet passed. Nothing to do.\n');
+    process.exit(0);
+  }
+
   // ── Schedule guard — exit early if this cron slot doesn't match ──
   if (!DRY_RUN && !PREVIEW_MODE && !shouldPublishNow()) {
     console.log('\n[scheduler] Not a scheduled publish time — exiting.\n');
