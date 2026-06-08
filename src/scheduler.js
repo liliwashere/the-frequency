@@ -67,11 +67,31 @@ export function shouldPublishNow(overrideDate = null) {
     return true;
   }
 
-  // workflow_dispatch is an intentional manual trigger — always run.
-  // The operator knows what day it is; the idempotency guard in publish.js
-  // prevents accidental double-sends on the same calendar day.
+  // workflow_dispatch is an intentional manual trigger.
+  // On the scheduled publish day: always run (catch-up sends).
+  // On any other day: require CONFIRM_OFF_SCHEDULE=yes to avoid accidental
+  // off-day sends (e.g. triggering publish.yml on a Monday by mistake).
+  // Only enforced in weekly mode where a specific publish day is configured.
   if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
-    console.log('[scheduler] workflow_dispatch — running unconditionally');
+    if (config.mode === 'weekly') {
+      const publishDay = (config.weekly?.day || 'tuesday').toLowerCase();
+      const now = overrideDate ?? new Date();
+      const tz  = config.timezone || 'Europe/Lisbon';
+      const loc  = localParts(now, tz);
+
+      if (loc.weekday !== publishDay) {
+        if (process.env.CONFIRM_OFF_SCHEDULE !== 'yes') {
+          console.warn(`[scheduler] workflow_dispatch on ${loc.weekday} but publish day is ${publishDay}.`);
+          console.warn('[scheduler] Set CONFIRM_OFF_SCHEDULE=yes in the workflow_dispatch input to send off-schedule.');
+          return false;
+        }
+        console.log(`[scheduler] Off-schedule send confirmed (${loc.weekday}) — running`);
+      } else {
+        console.log('[scheduler] workflow_dispatch on publish day — running');
+      }
+    } else {
+      console.log('[scheduler] workflow_dispatch — running unconditionally');
+    }
     return true;
   }
 

@@ -117,6 +117,18 @@
 
 ---
 
+## Incident 10 — Issue #5 sent on Monday via accidental workflow_dispatch (June 2026)
+
+**What broke:** Issue #5 went out to all subscribers on Monday June 8 instead of Tuesday June 9.
+
+**Root cause:** `publish.yml` was manually triggered via `workflow_dispatch` on Monday. The Incident 4 fix made `workflow_dispatch` bypass `shouldPublishNow()` entirely so that catch-up sends work on any day. But this removed the last guard against off-day accidental triggers — there was nothing stopping a manual run on a Monday from going to all subscribers.
+
+**Fix applied:** `workflow_dispatch` on `publish.yml` now requires an explicit `confirm_off_schedule: yes` input when triggered on a non-Tuesday. Tuesday `workflow_dispatch` runs (the normal catch-up case) are unaffected. Campaign and once modes are unaffected.
+
+**Permanent rule:** Bypassing the scheduler for manual triggers is necessary, but it must not silently allow off-day sends. Off-schedule overrides require explicit opt-in confirmation.
+
+---
+
 ## Open Issues (not yet fixed)
 
 | Issue | Status |
