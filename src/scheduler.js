@@ -101,6 +101,14 @@ export function shouldPublishNow(overrideDate = null) {
 
   console.log(`[scheduler] mode=${config.mode} | local=${loc.weekday} ${String(loc.hour).padStart(2,'0')}:${String(loc.minute).padStart(2,'0')} (${tz})`);
 
+  // ── skip_until — one-off skip for a specific date ────────────────────────
+  // Set "skip_until": "YYYY-MM-DD" in schedule.json to block all scheduled
+  // runs on or before that date. Self-expiring: has no effect after the date.
+  if (config.skip_until && loc.date <= config.skip_until) {
+    console.log(`[scheduler] skip_until ${config.skip_until} — skipping scheduled run on ${loc.date}`);
+    return false;
+  }
+
   // ── weekly ────────────────────────────────────────────────────────────────
   if (config.mode === 'weekly') {
     const { day } = config.weekly;

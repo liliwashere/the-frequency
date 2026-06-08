@@ -7,6 +7,8 @@
     "time": "09:00"
   },
 
+  "skip_until": "2026-06-09",
+
   "campaign": {
     "active": false,
     "start": "2026-06-01",
