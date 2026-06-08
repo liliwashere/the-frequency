@@ -7,7 +7,7 @@ import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
 import { deploy } from './src/deploy.js';
 import { getSubscribers } from './src/subscribers.js';
 import { sendToAll, sendPreviewEmail } from './src/email.js';
-import { shouldPublishNow, subscribersInCurrentWindow } from './src/scheduler.js';
+import { shouldPublishNow, subscribersInCurrentWindow, isSkippedUntil } from './src/scheduler.js';
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
 const PREVIEW_MODE = process.env.PREVIEW_MODE === 'true';
@@ -16,6 +16,14 @@ function formatDate(date) {
   return date.toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
+}
+
+// Returns the nearest Tuesday: next Tuesday if Mon/Tue, previous Tuesday if Wed–Sun.
+// Ensures all issues always show a Tuesday date regardless of when the pipeline runs.
+function thisOrNextTuesday(from) {
+  const d = new Date(from);
+  d.setDate(d.getDate() + (2 - d.getDay())); // Mon→+1, Tue→0, Wed→-1, Thu→-2…
+  return d;
 }
 
 function nextIssueDate(from) {
@@ -27,6 +35,13 @@ function nextIssueDate(from) {
 }
 
 async function main() {
+  // ── Skip-until guard — blocks both publish and preview scheduled runs ──
+  // workflow_dispatch bypasses this (manual triggers are intentional).
+  if (!DRY_RUN && process.env.GITHUB_EVENT_NAME !== 'workflow_dispatch' && isSkippedUntil()) {
+    console.log('\n[skip_until] Skipping — skip_until date not yet passed. Nothing to do.\n');
+    process.exit(0);
+  }
+
   // ── Schedule guard — exit early if this cron slot doesn't match ──
   if (!DRY_RUN && !PREVIEW_MODE && !shouldPublishNow()) {
     console.log('\n[scheduler] Not a scheduled publish time — exiting.\n');
@@ -112,8 +127,9 @@ async function main() {
   console.log('[QA] ─────────────────────────────────────────────────\n');
 
   const editorsPick = curatedArticles.find(a => a.editors_pick);
-  const issueDate = formatDate(now);
-  const nextDate = nextIssueDate(now);
+  const publicationDay = thisOrNextTuesday(now);
+  const issueDate = formatDate(publicationDay);
+  const nextDate = nextIssueDate(publicationDay);
 
   const ctx = {
     issue_number: issueNumber,

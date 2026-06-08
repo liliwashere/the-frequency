@@ -4,7 +4,12 @@ on:
   schedule:
     - cron: '0 8 * * 2'    # Tuesday 08:00 UTC = 09:00 Lisbon (primary)
     - cron: '0 10 * * 2'   # Tuesday 10:00 UTC = 11:00 Lisbon (retry)
-  workflow_dispatch:         # manual override
+  workflow_dispatch:
+    inputs:
+      confirm_off_schedule:
+        description: 'Sending on a non-Tuesday? Type "yes" to confirm.'
+        required: false
+        default: ''
 
 permissions:
   contents: write   # allows pushing the updated archive back to main
@@ -39,6 +44,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           OPEN_TRACKER_URL: ${{ secrets.OPEN_TRACKER_URL }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          CONFIRM_OFF_SCHEDULE: ${{ github.event.inputs.confirm_off_schedule }}
           DRY_RUN: 'false'
         run: node publish.js
 

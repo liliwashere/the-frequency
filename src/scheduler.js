@@ -67,11 +67,31 @@ export function shouldPublishNow(overrideDate = null) {
     return true;
   }
 
-  // workflow_dispatch is an intentional manual trigger — always run.
-  // The operator knows what day it is; the idempotency guard in publish.js
-  // prevents accidental double-sends on the same calendar day.
+  // workflow_dispatch is an intentional manual trigger.
+  // On the scheduled publish day: always run (catch-up sends).
+  // On any other day: require CONFIRM_OFF_SCHEDULE=yes to avoid accidental
+  // off-day sends (e.g. triggering publish.yml on a Monday by mistake).
+  // Only enforced in weekly mode where a specific publish day is configured.
   if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
-    console.log('[scheduler] workflow_dispatch — running unconditionally');
+    if (config.mode === 'weekly') {
+      const publishDay = (config.weekly?.day || 'tuesday').toLowerCase();
+      const now = overrideDate ?? new Date();
+      const tz  = config.timezone || 'Europe/Lisbon';
+      const loc  = localParts(now, tz);
+
+      if (loc.weekday !== publishDay) {
+        if (process.env.CONFIRM_OFF_SCHEDULE !== 'yes') {
+          console.warn(`[scheduler] workflow_dispatch on ${loc.weekday} but publish day is ${publishDay}.`);
+          console.warn('[scheduler] Set CONFIRM_OFF_SCHEDULE=yes in the workflow_dispatch input to send off-schedule.');
+          return false;
+        }
+        console.log(`[scheduler] Off-schedule send confirmed (${loc.weekday}) — running`);
+      } else {
+        console.log('[scheduler] workflow_dispatch on publish day — running');
+      }
+    } else {
+      console.log('[scheduler] workflow_dispatch — running unconditionally');
+    }
     return true;
   }
 
@@ -80,6 +100,7 @@ export function shouldPublishNow(overrideDate = null) {
   const loc  = localParts(now, tz);
 
   console.log(`[scheduler] mode=${config.mode} | local=${loc.weekday} ${String(loc.hour).padStart(2,'0')}:${String(loc.minute).padStart(2,'0')} (${tz})`);
+
 
   // ── weekly ────────────────────────────────────────────────────────────────
   if (config.mode === 'weekly') {
@@ -121,6 +142,25 @@ export function shouldPublishNow(overrideDate = null) {
 
   console.warn(`[scheduler] Unknown mode "${config.mode}" — skipping`);
   return false;
+}
+
+/**
+ * Returns true if schedule.json has a skip_until date >= today (Lisbon).
+ * Applies to both publish and preview scheduled runs. Self-expiring.
+ * workflow_dispatch runs bypass this — manual triggers are intentional.
+ */
+export function isSkippedUntil(overrideDate = null) {
+  let config;
+  try {
+    config = JSON.parse(readFileSync(CONFIG_PATH, 'utf8'));
+  } catch {
+    return false;
+  }
+  if (!config.skip_until) return false;
+  const now = overrideDate ?? new Date();
+  const tz  = config.timezone || 'Europe/Lisbon';
+  const loc = localParts(now, tz);
+  return loc.date <= config.skip_until;
 }
 
 /**
