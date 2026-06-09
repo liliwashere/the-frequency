@@ -1,0 +1,28 @@
+name: Supabase Keep-Alive
+
+# Runs every 3 days to prevent Supabase free-tier auto-pause (7-day inactivity limit).
+# Does one lightweight SELECT — nothing is written, nothing is published.
+on:
+  schedule:
+    - cron: '0 9 */3 * *'   # Every 3 days at 09:00 UTC
+  workflow_dispatch:          # Manual trigger if needed
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            "${SUPABASE_URL}/rest/v1/newsletter_state?key=eq.issue_number&select=value" \
+            -H "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            -H "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}")
+          echo "Supabase ping status: $STATUS"
+          if [ "$STATUS" != "200" ]; then
+            echo "WARNING: unexpected status $STATUS — project may need manual restore"
+            exit 1
+          fi
+          echo "OK — project is active"

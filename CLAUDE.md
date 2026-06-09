@@ -1,7 +1,12 @@
 # The Frequency — Project Instructions
 
 ## What This Is
-A twice-weekly AI newsletter (thefrequency.lilitarutyunyan.com). Automated pipeline: Tavily search → Claude curation → HTML generation → Cloudflare Pages deploy → Gmail send. Publishes every Tuesday 09:00 Lisbon.
+A twice-weekly AI newsletter (thefrequency.lilitarutyunyan.com). Automated pipeline: Tavily search → Claude curation → HTML generation → Cloudflare Pages deploy → Resend email. Publishes every Tuesday 09:00 Lisbon.
+
+Email: **Resend** (`RESEND_API_KEY`). Gmail OAuth2 was removed — it expired every 7 days. Never reintroduce it.
+Supabase account: **pukkala@gmail.com** · project ref: `mhociwppaqolnlnsynfu`
+
+**Lessons Learned log:** `LESSONS.md` — read it before touching the pipeline.
 
 ---
 
