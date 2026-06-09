@@ -566,20 +566,10 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
+      background: radial-gradient(ellipse 70% 50% at 5% 5%, rgba(255,42,133,0.07) 0%, transparent 100%), radial-gradient(ellipse 60% 50% at 95% 95%, rgba(0,212,255,0.06) 0%, transparent 100%), radial-gradient(ellipse 50% 60% at 95% 5%, rgba(157,0,255,0.05) 0%, transparent 100%), var(--bg);
       color: var(--text);
       min-height: 100vh;
       position: relative;
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #FF2A8510, #00D4FF0a, #9D00FF10, #FF2A8508);
-      background-size: 200% auto;
-      animation: iridescentFlow 10s linear infinite;
-      pointer-events: none;
-      z-index: 0;
     }
     .header, .tabs-bar, .main, .footer { position: relative; z-index: 1; }
     a { color: var(--purple); text-decoration: none; }
