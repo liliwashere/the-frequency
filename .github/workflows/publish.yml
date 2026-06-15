@@ -5,6 +5,12 @@ on:
     - cron: '0 8 * * 2'    # Tuesday 08:00 UTC = 09:00 Lisbon (primary)
     - cron: '0 10 * * 2'   # Tuesday 10:00 UTC = 11:00 Lisbon (retry)
   workflow_dispatch:         # manual override
+    inputs:
+      confirm_offday_send:
+        description: 'Confirm sending on a non-Tuesday (intentional catch-up send — emails ALL subscribers immediately)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write   # allows pushing the updated archive back to main
@@ -39,6 +45,7 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           OPEN_TRACKER_URL: ${{ secrets.OPEN_TRACKER_URL }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
+          CONFIRM_OFFDAY_SEND: ${{ inputs.confirm_offday_send }}
           DRY_RUN: 'false'
         run: node publish.js
 

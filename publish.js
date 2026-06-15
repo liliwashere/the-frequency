@@ -148,7 +148,7 @@ async function main() {
     console.log('\n[PREVIEW] Deploying preview to Cloudflare Pages...');
     let previewUrl = null;
     try {
-      const previewDeploy = await deploy();
+      const previewDeploy = await deploy({ preview: true });
       previewUrl = previewDeploy?.url ?? null;
     } catch (err) {
       console.warn(`[PREVIEW] Deploy failed (continuing): ${err.message}`);
@@ -156,7 +156,7 @@ async function main() {
     console.log('[PREVIEW] Sending preview email to editor...');
     try {
       await sendPreviewEmail(ctx, previewUrl);
-      console.log('[PREVIEW] Preview email sent to lilitalent@gmail.com');
+      console.log('[PREVIEW] Preview email sent to hello@lilitarutyunyan.com');
     } catch (err) {
       console.warn(`[PREVIEW] Email failed: ${err.message}`);
     }

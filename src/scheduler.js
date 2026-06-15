@@ -67,19 +67,31 @@ export function shouldPublishNow(overrideDate = null) {
     return true;
   }
 
-  // workflow_dispatch is an intentional manual trigger — always run.
-  // The operator knows what day it is; the idempotency guard in publish.js
-  // prevents accidental double-sends on the same calendar day.
-  if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
-    console.log('[scheduler] workflow_dispatch — running unconditionally');
-    return true;
-  }
-
   const now = overrideDate ?? new Date();
   const tz  = config.timezone || 'Europe/Lisbon';
   const loc  = localParts(now, tz);
 
   console.log(`[scheduler] mode=${config.mode} | local=${loc.weekday} ${String(loc.hour).padStart(2,'0')}:${String(loc.minute).padStart(2,'0')} (${tz})`);
+
+  // workflow_dispatch is a manual trigger. By default it still only runs on
+  // the configured publish day — accidental manual runs on the wrong day
+  // (e.g. a Monday) must not fully publish + email subscribers. Set
+  // CONFIRM_OFFDAY_SEND=true (workflow input) for an intentional catch-up
+  // send on a non-publish day.
+  if (process.env.GITHUB_EVENT_NAME === 'workflow_dispatch') {
+    const confirmed = process.env.CONFIRM_OFFDAY_SEND === 'true';
+    const publishDay = config.mode === 'weekly' ? config.weekly.day.toLowerCase() : 'tuesday';
+    if (loc.weekday !== publishDay && !confirmed) {
+      console.log(`[scheduler] workflow_dispatch on ${loc.weekday}, publish day is ${publishDay} — skipping. Re-run with "Confirm off-day send" checked to override.`);
+      return false;
+    }
+    if (loc.weekday !== publishDay) {
+      console.log(`[scheduler] workflow_dispatch on ${loc.weekday} with confirm_offday_send=true — running anyway (catch-up send).`);
+    } else {
+      console.log('[scheduler] workflow_dispatch on publish day — running.');
+    }
+    return true;
+  }
 
   // ── weekly ────────────────────────────────────────────────────────────────
   if (config.mode === 'weekly') {

@@ -45,7 +45,7 @@ If any check fails, report it immediately. Do NOT mark the issue as done until Q
 Every Monday morning, the pipeline runs in `PREVIEW_MODE=true` via GitHub Actions (`.github/workflows/preview.yml`). This:
 - Searches and curates content for the upcoming Tuesday issue
 - Deploys to Cloudflare Pages (preview URL, not production alias)
-- Sends a preview email to `lilitalent@gmail.com` with `[PREVIEW]` subject prefix
+- Sends a preview email to `hello@lilitarutyunyan.com` with `[PREVIEW]` subject prefix
 - Does NOT update Supabase state (issue number + seen_urls unchanged)
 
 **Lilit reviews the Monday preview and can:**
@@ -150,6 +150,6 @@ node regen-issue3-fresh.js   # does NOT update Supabase state
 # Full pipeline dry run
 DRY_RUN=true node publish.js
 
-# Monday preview (sends to lilitalent@gmail.com only)
+# Monday preview (sends to hello@lilitarutyunyan.com only)
 PREVIEW_MODE=true node publish.js
 ```
