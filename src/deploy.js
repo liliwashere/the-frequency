@@ -7,14 +7,15 @@ const PROJECT_ROOT = path.join(__dirname, '..');
 const PUBLIC = path.join(PROJECT_ROOT, 'public');
 const WRANGLER = path.join(PROJECT_ROOT, 'node_modules', '.bin', 'wrangler');
 
-export async function deploy() {
+export async function deploy({ preview = false } = {}) {
   const projectName = process.env.CF_PROJECT_NAME;
   const accountId = process.env.CF_ACCOUNT_ID;
+  const branchFlag = preview ? ' --branch=preview' : '';
 
-  console.log(`[deploy] Deploying public/ to Cloudflare Pages project "${projectName}"...`);
+  console.log(`[deploy] Deploying public/ to Cloudflare Pages project "${projectName}"${preview ? ' (preview branch)' : ''}...`);
 
   const output = execSync(
-    `"${WRANGLER}" pages deploy "${PUBLIC}" --project-name="${projectName}"`,
+    `"${WRANGLER}" pages deploy "${PUBLIC}" --project-name="${projectName}"${branchFlag}`,
     {
       env: {
         ...process.env,

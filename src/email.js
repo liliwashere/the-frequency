@@ -82,7 +82,7 @@ export async function sendPreviewEmail(ctx, previewUrl = null) {
 
   await resend.emails.send({
     from: FROM,
-    to: 'lilitalent@gmail.com',
+    to: 'hello@lilitarutyunyan.com',
     subject,
     html: previewHtml,
   });
