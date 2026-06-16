@@ -6,7 +6,9 @@
   "scripts": {
     "publish": "node publish.js",
     "publish:dry": "DRY_RUN=true node publish.js",
-    "test": "node tests/e2e.test.js"
+    "test": "node tests/e2e.test.js",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.26.0",
@@ -18,6 +20,6 @@
     "resend": "^6.12.3"
   },
   "devDependencies": {
-    "wrangler": "^4.93.0"
+    "wrangler": "^4.100.0"
   }
 }
