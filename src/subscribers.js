@@ -8,7 +8,7 @@ export async function getSubscribers() {
 
   const { data, error } = await supabase
     .from('subscribers')
-    .select('id, email, timezone, created_at')
+    .select('id, email, timezone, last_emailed_issue, created_at')
     .order('created_at', { ascending: true })
     .limit(10000);
 
