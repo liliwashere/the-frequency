@@ -47,6 +47,21 @@ export async function alreadyPublishedToday() {
   return updatedDate === today;
 }
 
+/**
+ * Records that the given subscribers have now received `issueNumber`,
+ * so later cron slots (other timezone windows) don't email them again.
+ */
+export async function markEmailed(subscriberIds, issueNumber) {
+  if (!subscriberIds.length) return;
+  const supabase = getSupabase();
+  const { error } = await supabase
+    .from('subscribers')
+    .update({ last_emailed_issue: issueNumber })
+    .in('id', subscriberIds);
+
+  if (error) throw new Error(`[state] Failed to mark subscribers emailed: ${error.message}`);
+}
+
 export async function getSeenUrls() {
   const supabase = getSupabase();
   const { data, error } = await supabase

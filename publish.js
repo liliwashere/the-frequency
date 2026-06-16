@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config(); // do NOT use override:true — shell env vars (e.g. DRY_RUN=true) must take precedence over .env
-import { getIssueNumber, saveIssueNumber, getSeenUrls, appendSeenUrls, alreadyPublishedToday } from './src/state.js';
+import { getIssueNumber, saveIssueNumber, getSeenUrls, appendSeenUrls, alreadyPublishedToday, markEmailed } from './src/state.js';
 import { fetchArticles } from './src/search.js';
 import { curate } from './src/curate.js';
 import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
@@ -34,6 +34,34 @@ function nextIssueDate(from) {
   return formatDate(d);
 }
 
+// Sends the already-published issue to subscribers whose 9am timezone
+// window has only just arrived (e.g. the São Paulo slot, hours after the
+// primary Lisbon send). Used when the pipeline has already published today.
+async function sendCatchUpEmails() {
+  const issueNumber = await getIssueNumber();
+  let subscribers = [];
+  try {
+    subscribers = await getSubscribers();
+  } catch (err) {
+    console.error(`[catch-up] Failed to fetch subscribers: ${err.message}`);
+    return;
+  }
+
+  const pending = subscribersInCurrentWindow(subscribers)
+    .filter(s => s.last_emailed_issue !== issueNumber);
+
+  if (pending.length === 0) {
+    console.log('[catch-up] No subscribers in their timezone window yet — nothing to send.');
+    return;
+  }
+
+  console.log(`[catch-up] ${pending.length} subscriber(s) now in their 9am window for Issue #${issueNumber}.`);
+  const result = await sendToAll(pending, { issue_number: issueNumber });
+  const failed = new Set(result.errors.map(e => e.email));
+  const sentIds = pending.filter(s => !failed.has(s.email)).map(s => s.id);
+  if (sentIds.length) await markEmailed(sentIds, issueNumber);
+}
+
 async function main() {
   // ── Schedule guard — exit early if this cron slot doesn't match ──
   if (!DRY_RUN && !PREVIEW_MODE && !shouldPublishNow()) {
@@ -41,11 +69,14 @@ async function main() {
     process.exit(0);
   }
 
-  // ── Idempotency guard — skip if already published today ──────────
+  // ── Idempotency guard — skip regen if already published today ────
+  // Content/deploy only happen once per day, but subscribers in later
+  // timezone windows (e.g. São Paulo) still need their catch-up email.
   if (!DRY_RUN && !PREVIEW_MODE) {
     const alreadyDone = await alreadyPublishedToday();
     if (alreadyDone) {
-      console.log('\n[idempotency] Issue already published today — skipping duplicate run.\n');
+      console.log('\n[idempotency] Issue already published today — checking for timezone catch-up sends...\n');
+      await sendCatchUpEmails();
       process.exit(0);
     }
   }
@@ -206,18 +237,28 @@ async function main() {
     console.log('\n[7/8] Sending emails...');
     // Manual (workflow_dispatch) catch-up sends skip the timezone window and
     // go to all subscribers immediately — the issue is already overdue.
-    // Scheduled runs use the 9am ± 35min window per subscriber timezone.
+    // Scheduled runs use the 9am ± 35min window per subscriber timezone;
+    // subscribers outside this window get caught up by sendCatchUpEmails()
+    // on a later cron slot the same day.
     const isManual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch';
-    const batch = isManual ? subscribers : subscribersInCurrentWindow(subscribers);
+    const batch = (isManual ? subscribers : subscribersInCurrentWindow(subscribers))
+      .filter(s => s.last_emailed_issue !== issueNumber);
     if (isManual) {
       console.log(`      Manual send — bypassing timezone window, sending to all ${batch.length} subscriber(s)`);
     } else {
       console.log(`      Timezone window: ${batch.length}/${subscribers.length} subscriber(s) in current 9am window`);
     }
-    try {
-      emailResult = await sendToAll(batch, ctx);
-    } catch (err) {
-      console.error(`[email] FAILED: ${err.message}`);
+    if (batch.length > 0) {
+      try {
+        emailResult = await sendToAll(batch, ctx);
+        const failed = new Set(emailResult.errors.map(e => e.email));
+        const sentIds = batch.filter(s => !failed.has(s.email)).map(s => s.id);
+        if (sentIds.length) await markEmailed(sentIds, issueNumber);
+      } catch (err) {
+        console.error(`[email] FAILED: ${err.message}`);
+      }
+    } else {
+      console.log('      No subscribers pending for this window.');
     }
   } else {
     console.log('\n[7/8] No subscribers — skipping email step.');
