@@ -7,7 +7,7 @@ import { generateIssue, generateEmail, updateArchive } from './src/generate.js';
 import { deploy } from './src/deploy.js';
 import { getSubscribers } from './src/subscribers.js';
 import { sendToAll, sendPreviewEmail } from './src/email.js';
-import { shouldPublishNow, subscribersInCurrentWindow } from './src/scheduler.js';
+import { shouldPublishNow } from './src/scheduler.js';
 
 const DRY_RUN = process.env.DRY_RUN === 'true';
 const PREVIEW_MODE = process.env.PREVIEW_MODE === 'true';
@@ -34,9 +34,8 @@ function nextIssueDate(from) {
   return formatDate(d);
 }
 
-// Sends the already-published issue to subscribers whose 9am timezone
-// window has only just arrived (e.g. the São Paulo slot, hours after the
-// primary Lisbon send). Used when the pipeline has already published today.
+// Retry path: if the issue was already published today but some subscribers
+// weren't emailed (e.g. the primary send partially failed), send to them now.
 async function sendCatchUpEmails() {
   const issueNumber = await getIssueNumber();
   let subscribers = [];
@@ -47,15 +46,14 @@ async function sendCatchUpEmails() {
     return;
   }
 
-  const pending = subscribersInCurrentWindow(subscribers)
-    .filter(s => s.last_emailed_issue !== issueNumber);
+  const pending = subscribers.filter(s => s.last_emailed_issue !== issueNumber);
 
   if (pending.length === 0) {
-    console.log('[catch-up] No subscribers in their timezone window yet — nothing to send.');
+    console.log('[catch-up] All subscribers already received Issue #' + issueNumber + ' — nothing to do.');
     return;
   }
 
-  console.log(`[catch-up] ${pending.length} subscriber(s) now in their 9am window for Issue #${issueNumber}.`);
+  console.log(`[catch-up] Sending Issue #${issueNumber} to ${pending.length} subscriber(s) not yet reached...`);
   const result = await sendToAll(pending, { issue_number: issueNumber });
   const failed = new Set(result.errors.map(e => e.email));
   const sentIds = pending.filter(s => !failed.has(s.email)).map(s => s.id);
@@ -75,7 +73,7 @@ async function main() {
   if (!DRY_RUN && !PREVIEW_MODE) {
     const alreadyDone = await alreadyPublishedToday();
     if (alreadyDone) {
-      console.log('\n[idempotency] Issue already published today — checking for timezone catch-up sends...\n');
+      console.log('\n[idempotency] Issue already published today — checking for any subscribers not yet reached...\n');
       await sendCatchUpEmails();
       process.exit(0);
     }
@@ -235,19 +233,12 @@ async function main() {
   let emailResult = null;
   if (subscribers.length > 0) {
     console.log('\n[7/8] Sending emails...');
-    // Manual (workflow_dispatch) catch-up sends skip the timezone window and
-    // go to all subscribers immediately — the issue is already overdue.
-    // Scheduled runs use the 9am ± 35min window per subscriber timezone;
-    // subscribers outside this window get caught up by sendCatchUpEmails()
-    // on a later cron slot the same day.
+    // Send to all subscribers regardless of timezone — every subscriber gets
+    // the issue on publish day. last_emailed_issue deduplicates across the
+    // retry cron slots (10:00, 12:00 UTC) in case the primary send failed.
     const isManual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch';
-    const batch = (isManual ? subscribers : subscribersInCurrentWindow(subscribers))
-      .filter(s => s.last_emailed_issue !== issueNumber);
-    if (isManual) {
-      console.log(`      Manual send — bypassing timezone window, sending to all ${batch.length} subscriber(s)`);
-    } else {
-      console.log(`      Timezone window: ${batch.length}/${subscribers.length} subscriber(s) in current 9am window`);
-    }
+    const batch = subscribers.filter(s => s.last_emailed_issue !== issueNumber);
+    console.log(`      Sending to ${batch.length}/${subscribers.length} subscriber(s)${isManual ? ' (manual trigger)' : ''}`);
     if (batch.length > 0) {
       try {
         emailResult = await sendToAll(batch, ctx);
