@@ -63,9 +63,18 @@ export async function sendToAll(subscribers, ctx) {
 
 export async function sendPreviewEmail(ctx, previewUrl = null) {
   const resend = new Resend(process.env.RESEND_API_KEY);
-  const emailHtml = readFileSync(path.join(PUBLIC, 'email-latest.html'), 'utf8');
+  let emailHtml = readFileSync(path.join(PUBLIC, 'email-latest.html'), 'utf8');
   const baseSubject = extractSubject(emailHtml);
   const subject = `[PREVIEW] ${baseSubject}`;
+
+  // The email body's own links ("Read the full issue", Archive, Latest issue)
+  // are generated pointing at the production domain. Preview mode never
+  // updates production, so without this rewrite every link in the email
+  // would lead back to last week's issue instead of the freshly deployed
+  // preview build.
+  if (previewUrl) {
+    emailHtml = emailHtml.split('https://thefrequency.lilitarutyunyan.com').join(previewUrl);
+  }
 
   const previewBanner = previewUrl
     ? `<div style="background:#fef3c7;border:2px solid #f59e0b;border-radius:8px;padding:12px 16px;margin-bottom:20px;font-family:sans-serif;font-size:14px;">
