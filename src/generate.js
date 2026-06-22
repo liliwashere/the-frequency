@@ -335,7 +335,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
         const href = sourceUrlMap[src] ?? ('https://' + domainKey);
         return `<a class="source-pill${hotClass}" href="${e(href)}" target="_blank" rel="noopener">
         <span class="source-pill-icon">${meta.icon}</span>
-        <div>
+        <div class="source-pill-info">
           <div class="source-pill-name">${e(src)}</div>
           <div class="source-pill-type">${e(meta.type)}</div>
         </div>
@@ -657,8 +657,9 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     .source-pill:hover { border-color: var(--purple-mid); box-shadow: 0 2px 8px rgba(108,71,255,0.08); }
     .source-pill.hot { border-color: var(--purple-mid); background: var(--purple-light); }
     .source-pill-icon { display: flex; align-items: center; flex-shrink: 0; }
-    .source-pill-name { font-size: 13px; font-weight: 600; color: #111; }
-    .source-pill-type { font-size: 11px; color: #aaa; }
+    .source-pill-info { flex: 1; min-width: 0; }
+    .source-pill-name { font-size: 13px; font-weight: 600; color: #111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .source-pill-type { font-size: 11px; color: #aaa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* ── AUTHOR GRID ── */
     .author-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
