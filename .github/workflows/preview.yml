@@ -43,5 +43,4 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           PREVIEW_MODE: 'true'
           NO_PROXY: api.anthropic.com
-          no_proxy: api.anthropic.com
         run: node publish.js
