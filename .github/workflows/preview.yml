@@ -42,4 +42,6 @@ jobs:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           PREVIEW_MODE: 'true'
+          NO_PROXY: api.anthropic.com
+          no_proxy: api.anthropic.com
         run: node publish.js

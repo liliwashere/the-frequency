@@ -50,6 +50,8 @@ jobs:
           GITHUB_EVENT_NAME: ${{ github.event_name }}
           CONFIRM_OFFDAY_SEND: ${{ inputs.confirm_offday_send }}
           DRY_RUN: 'false'
+          NO_PROXY: api.anthropic.com
+          no_proxy: api.anthropic.com
         run: node publish.js
 
       - name: Commit updated archive and issue files
