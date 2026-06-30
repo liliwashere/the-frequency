@@ -243,7 +243,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
         return '<div class="author-card">'
           + '<div class="author-top">'
           + '<div class="author-avatar" style="background:' + bg + ';color:' + catIconColor + '">' + catIcon + '</div>'
-          + '<div>'
+          + '<div class="author-info">'
           + '<div class="author-name">' + e(a.author) + '</div>'
           + (handle ? '<div class="author-handle">' + e(handle) + '</div>' : '')
           + '</div>'
@@ -335,7 +335,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
         const href = sourceUrlMap[src] ?? ('https://' + domainKey);
         return `<a class="source-pill${hotClass}" href="${e(href)}" target="_blank" rel="noopener">
         <span class="source-pill-icon">${meta.icon}</span>
-        <div>
+        <div class="source-pill-info">
           <div class="source-pill-name">${e(src)}</div>
           <div class="source-pill-type">${e(meta.type)}</div>
         </div>
@@ -657,8 +657,9 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     .source-pill:hover { border-color: var(--purple-mid); box-shadow: 0 2px 8px rgba(108,71,255,0.08); }
     .source-pill.hot { border-color: var(--purple-mid); background: var(--purple-light); }
     .source-pill-icon { display: flex; align-items: center; flex-shrink: 0; }
-    .source-pill-name { font-size: 13px; font-weight: 600; color: #111; }
-    .source-pill-type { font-size: 11px; color: #aaa; }
+    .source-pill-info { flex: 1; min-width: 0; }
+    .source-pill-name { font-size: 13px; font-weight: 600; color: #111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .source-pill-type { font-size: 11px; color: #aaa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* ── AUTHOR GRID ── */
     .author-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-bottom: 20px; }
@@ -666,8 +667,10 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     .author-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); border-color: var(--purple-mid); }
     .author-top { display: flex; align-items: center; gap: 10px; margin-bottom: 9px; }
     .author-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .author-name { font-size: 14px; font-weight: 700; color: #111; }
-    .author-handle { font-size: 11px; color: #aaa; margin-top: 1px; }
+    .author-info { flex: 1; min-width: 0; }
+    .author-name { font-size: 14px; font-weight: 700; color: #111; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .author-handle { font-size: 11px; color: #aaa; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .author-new { flex-shrink: 0; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; text-transform: uppercase; background: var(--purple-light); color: var(--purple); padding: 3px 9px; border-radius: 20px; }
     .author-bio { font-size: 12.5px; color: #666; line-height: 1.5; margin-bottom: 8px; }
     .author-links { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
     .author-link { font-size: 11px; font-weight: 600; color: var(--purple); text-decoration: none; background: var(--purple-light); padding: 3px 9px; border-radius: 20px; transition: background 0.15s; }

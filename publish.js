@@ -46,7 +46,16 @@ async function sendCatchUpEmails() {
     return;
   }
 
-  const pending = subscribers.filter(s => s.last_emailed_issue !== issueNumber);
+  // Guard against backwards numbering (e.g. manual renumber without syncing subscriber state).
+  // If any subscriber already received a higher-numbered issue, the counter went backwards —
+  // sending now would double-deliver an old issue.
+  const maxReceived = Math.max(0, ...subscribers.map(s => s.last_emailed_issue || 0));
+  if (maxReceived > issueNumber) {
+    console.warn(`[catch-up] Aborting — subscriber(s) already received Issue #${maxReceived} but current issue_number is #${issueNumber}. Issue counter went backwards; manual intervention required.`);
+    return;
+  }
+
+  const pending = subscribers.filter(s => (s.last_emailed_issue || 0) < issueNumber);
 
   if (pending.length === 0) {
     console.log('[catch-up] All subscribers already received Issue #' + issueNumber + ' — nothing to do.');
