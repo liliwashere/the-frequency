@@ -145,6 +145,14 @@ export async function curate(rawArticles, seenUrls, { minCandidates = 6 } = {}) 
     throw new Error(`[curate] Only ${candidates.length} unseen candidates — need at least ${minCandidates}`);
   }
 
+  // Cap candidates to keep the request payload manageable and avoid
+  // network timeouts in GitHub Actions (~80s kill threshold).
+  const MAX_CANDIDATES = 40;
+  if (candidates.length > MAX_CANDIDATES) {
+    candidates.splice(MAX_CANDIDATES);
+    console.log(`[curate] Capped candidate pool to ${MAX_CANDIDATES} articles`);
+  }
+
   console.log(`[curate] Sending ${candidates.length} candidates to Claude for curation`);
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
