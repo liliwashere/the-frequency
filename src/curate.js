@@ -149,7 +149,7 @@ export async function curate(rawArticles, seenUrls, { minCandidates = 6 } = {}) 
 
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-  const response = await client.messages.create({
+  const requestParams = {
     model: 'claude-sonnet-4-6',
     max_tokens: 6000,
     system: SYSTEM_PROMPT,
@@ -170,7 +170,27 @@ export async function curate(rawArticles, seenUrls, { minCandidates = 6 } = {}) 
     ],
     tools: [SELECT_ARTICLES_TOOL],
     tool_choice: { type: 'tool', name: 'select_articles' },
-  });
+  };
+
+  // Curation regularly takes 70-90s+. A plain non-streaming call sits idle
+  // waiting for the full response, which intermediary network hops (GitHub
+  // Actions egress, Anthropic's gateway) can kill with "Premature close".
+  // Streaming keeps the connection active with incremental chunks, which
+  // avoids that class of failure. A couple of retries with backoff cover
+  // any other transient connection drop on top of that.
+  let response;
+  let lastErr;
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      response = await client.messages.stream(requestParams).finalMessage();
+      break;
+    } catch (err) {
+      lastErr = err;
+      console.warn(`[curate] Attempt ${attempt}/3 failed: ${err.message}`);
+      if (attempt < 3) await new Promise(r => setTimeout(r, attempt * 5000));
+    }
+  }
+  if (!response) throw lastErr;
 
   const toolUse = response.content.find(b => b.type === 'tool_use');
   if (!toolUse) throw new Error('[curate] Claude did not return a tool_use block');
