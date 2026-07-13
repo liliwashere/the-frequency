@@ -321,7 +321,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
       <div class="schedule-icon">${ICON.globe}</div>
       <div>
         <div class="schedule-title">${sources.length} source${sources.length !== 1 ? 's' : ''} this issue</div>
-        <div class="schedule-sub">Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
+        <div class="schedule-sub">Original practitioner writing, not LinkedIn recaps or aggregator noise.</div>
       </div>
     </div>
     <div class="section-label">${ICON.signal} Active sources</div>
@@ -750,7 +750,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
   <!-- ══ OVERVIEW ══ -->
   <div class="panel active" id="panel-overview">
     <div class="date-banner">
-      ${ICON.calendar} <strong>${e(ctx.date)}</strong> — Next issue ${e(ctx.next_date)}. Curated from ${sources.length} sources. Zero LinkedIn fluff, zero AI-generated summaries of AI news. &nbsp;·&nbsp; <a href="${DS.siteUrl}/archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
+      ${ICON.calendar} <strong>${e(ctx.date)}</strong> — Next issue ${e(ctx.next_date)}. ${sources.length} sources — original practitioner writing, not recycled takes. &nbsp;·&nbsp; <a href="${DS.siteUrl}/archive.html" style="color:var(--purple);font-weight:600;text-decoration:none">Browse past issues →</a>
     </div>
     <div class="stat-strip">
       <div class="stat-box"><div class="stat-number">${ctx.articles.length}</div><div class="stat-label">Stories this issue</div></div>
