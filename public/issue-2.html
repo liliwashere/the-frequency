@@ -13,9 +13,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Frequency — Lilit's AI Digest</title>
-<meta name="description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
+<meta name="description" content="Weekly digest of the most original AI thinking. Real builders, honest takes.">
 <meta property="og:title" content="The Frequency — Issue #2 · May 23, 2026">
-<meta property="og:description" content="Twice-weekly digest of the most original AI thinking. Real builders, honest takes, zero hype.">
+<meta property="og:description" content="Weekly digest of the most original AI thinking. Real builders, honest takes.">
 <meta property="og:type" content="website">
 
 <!-- ═══ UMAMI ANALYTICS (FREE) ═══
@@ -78,9 +78,15 @@
     flex-wrap: wrap;
   }
   .header-left { display: flex; align-items: center; gap: 12px; }
+  @keyframes iridescentFlow {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
   .logo {
     width: 38px; height: 38px;
-    background: linear-gradient(135deg, #6c47ff, #a855f7);
+    background: linear-gradient(135deg, #FF2A85, #9D00FF, #00D4FF, #FF2A85);
+    background-size: 200% auto;
+    animation: iridescentFlow 4s linear infinite;
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
     font-size: 19px; flex-shrink: 0;
@@ -382,7 +388,7 @@
 <!-- HEADER -->
 <div class="header">
   <div class="header-left">
-    <div class="logo">🧠</div>
+    <div class="logo"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><g stroke="white" stroke-width="2.5" stroke-linecap="round"><line x1="3" y1="12" x2="3" y2="12"/><line x1="7" y1="8" x2="7" y2="16"/><line x1="11" y1="4" x2="11" y2="20"/><line x1="15" y1="7" x2="15" y2="17"/><line x1="19" y1="10" x2="19" y2="14"/><line x1="21" y1="12" x2="21" y2="12"/></g></svg></div>
     <div>
       <div class="header-title">The Frequency</div>
       <div class="header-sub">Lilit's curated digest · Tuesdays & Thursdays</div>
@@ -440,7 +446,7 @@
     <div class="subscribe-banner">
       <div class="subscribe-left">
         <div class="subscribe-title">📬 Get it in your inbox</div>
-        <div class="subscribe-sub">New issue every Tuesday & Thursday morning. No spam, no AI-generated filler — just the digest.</div>
+        <div class="subscribe-sub">New issue every Tuesday morning. No spam, no AI-generated filler — just the digest.</div>
         <div class="subscribe-note">Free · Unsubscribe anytime</div>
       </div>
       <form class="subscribe-form" onsubmit="handleSubscribe(event)">
@@ -658,7 +664,7 @@
     <div class="card clickable" onclick="window.open('https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688','_blank')">
       <div class="card-accent" style="background:#ea580c"></div>
       <div class="ep-card">
-        <div class="ep-thumb" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">🧠</div>
+        <div class="ep-thumb" style="background:linear-gradient(135deg,#1a1a2e,#16213e)">🎙️</div>
         <div class="ep-info">
           <div class="card-source" style="font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px">No Priors · Elad Gil & Sarah Guo</div>
           <div class="ep-title">The most technically honest AI investor podcast</div>
@@ -847,7 +853,7 @@
 
       <div class="author-card">
         <div class="author-top">
-          <div class="author-avatar" style="background:#f0edff">🧠</div>
+          <div class="author-avatar" style="background:#f0edff">💭</div>
           <div>
             <div class="author-name">Andrej Karpathy</div>
             <div class="author-handle">karpathy.ai · @karpathy</div>
@@ -1046,7 +1052,7 @@
     <div class="schedule-banner">
       <div class="schedule-icon">📬</div>
       <div>
-        <div class="schedule-title">Refreshes every Tuesday & Thursday at 9am</div>
+        <div class="schedule-title">Refreshes every Tuesday at 9am</div>
         <div class="schedule-sub">19 sources tracked. Zero AI-generated summaries of AI news. Zero LinkedIn recycled takes.</div>
       </div>
     </div>
@@ -1058,7 +1064,7 @@
         <div><div class="source-pill-name">Simon Willison</div><div class="source-pill-type">Blog · Technical AI</div></div>
       </a>
       <a class="source-pill hot" href="https://karpathy.bearblog.dev" target="_blank">
-        <div class="source-pill-icon">🧠</div>
+        <div class="source-pill-icon">💭</div>
         <div><div class="source-pill-name">Andrej Karpathy</div><div class="source-pill-type">Blog · Research</div></div>
       </a>
       <a class="source-pill hot" href="https://www.latent.space" target="_blank">

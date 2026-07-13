@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 
-const SYSTEM_PROMPT = `You are the editorial AI for "The Frequency," a twice-weekly AI digest with zero hype.
+const SYSTEM_PROMPT = `You are the editorial AI for "The Frequency," a weekly AI digest with zero hype.
 Your job is to select 8–12 stories from a candidate pool and assign them to categories.
 
 CRITICAL: You must ONLY select URLs that appear verbatim in the candidates array you receive. Never invent, modify, or guess URLs.

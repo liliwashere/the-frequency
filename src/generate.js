@@ -443,17 +443,17 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     ? (ctx.issue_headline.length > 65 ? ctx.issue_headline.slice(0, 62) + '…' : ctx.issue_headline)
     : null;
   const pageTitle = forHomepage
-    ? 'The Frequency — Weekly AI Digest for Practitioners and Teams'
+    ? 'The Frequency: What Matters in AI This Week'
     : headlineShort
       ? `${headlineShort} | The Frequency #${ctx.issue_number}`
       : `The Frequency #${ctx.issue_number} — ${e(ctx.date)} | Weekly AI Digest`;
 
   // Descriptions — written for humans clicking from search, not robots
-  const siteDesc = 'The Frequency curates what matters in AI — original research, builder insights, and strategic analysis. For product managers, engineers, and decision-makers. Every Tuesday.';
+  const siteDesc = 'A weekly AI newsletter for builders and product teams: curated research, practitioner insights, and analysis worth your time. Every Tuesday.';
   const issueDesc = ctx.issue_headline
-    ? `This week in AI: ${ctx.issue_headline}. Curated for practitioners and teams — zero hype, real signal. Every Tuesday.`
+    ? `This week in AI: ${ctx.issue_headline}. Curated research and analysis for builders and product teams. Every Tuesday.`
     : ep
-      ? `${ep.title.slice(0, 100)} — plus ${ctx.articles.length - 1} more stories. Curated AI thinking for practitioners and teams. Every Tuesday.`
+      ? `${ep.title.slice(0, 100)} — plus ${ctx.articles.length - 1} more stories. Curated AI insight for builders and product teams. Every Tuesday.`
       : siteDesc;
   const ogDesc = forHomepage ? siteDesc : issueDesc;
 
@@ -797,7 +797,7 @@ function renderFullIssue(ctx, { forHomepage = false } = {}) {
     <div class="subscribe-banner">
       <div class="subscribe-text">
         <strong>Get The Frequency in your inbox</strong>
-        <span>Every Tuesday · Real builders, honest takes, zero hype</span>
+        <span>Every Tuesday · Real builders, honest takes</span>
       </div>
       <form class="subscribe-form" onsubmit="handleSubscribe(event)">
         <input class="subscribe-input" type="email" placeholder="your@email.com" required id="sub-email" />
